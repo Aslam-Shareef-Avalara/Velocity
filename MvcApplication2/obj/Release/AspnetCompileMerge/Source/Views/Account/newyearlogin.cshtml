@@ -1,0 +1,152 @@
+﻿@using MvcApplication2.ViewModel
+@{
+    ViewBag.Title = "Velocity Login - Performance Evaluation Tool";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+<link rel="stylesheet" href="~/content/normalize.css">
+<link rel="stylesheet" href="~/content/bootstrap.min.css">
+<link rel="stylesheet" href="~/content/bootstrap-theme.min.css">
+<!-- FONTS -->
+<link href="~/content/css" rel="stylesheet" type="text/css">
+<link href="~/content/css(1)" rel="stylesheet" type="text/css">
+<!-- FONT ICONS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="~/content/simple-line-icons.css">
+<link rel="stylesheet" href="~/content/pe-icon-7-stroke.css">
+<link rel="stylesheet" href="~/content/themify-icons.css">
+
+<link rel="stylesheet" href="~/content/main.css">
+<link rel="stylesheet" href="~/content/responsive.css">
+<div class="preloader" style="display: none;">
+    <div class="do-loader">&nbsp;</div>
+</div>
+<div style="background:#FFF url(../images/newyear.png) no-repeat scroll  center 110px /  auto auto; height:100vh;">
+    <header>
+        <!-- Navigation Menu start-->
+        <nav class="navbar do-main-menu" role="navigation" style="background-color:#fff">
+            <div class="container">
+                <!-- Navbar Toggle -->
+                <div class="navbar-header">
+
+                    <!-- Logo -->
+                    <a class="navbar-brand"><img class="logo" src="~/images/logo_trans.png" alt="Avalara" width="250"></a>
+
+                </div>
+                <img src="~/Images/VelocityLogo.png" />
+                <!-- Navbar Toggle End -->
+                <!-- navbar-collapse start-->
+                <div id="nav-menu" class="navbar-collapse do-menu-wrapper collapse" role="navigation" style="float:right; max-height: 749px;">
+
+                    <div style="padding-top:20px;">
+                        <nav class="navbar navbar-default" style="width:600px;float:right;background-color:#fff;background-image:none;border-color: #979797;">
+                            <div class="container-fluid">
+                                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color: #fff;">
+
+                                    @using (Html.BeginForm("login", "account", new { returnUrl = string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) || Request.QueryString["ReturnUrl"].ToLower().Contains("logout") ? "~/" : Request.QueryString["ReturnUrl"] }, FormMethod.Post, new { @class = "navbar-form navbar-right" }))
+                                {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true)
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input id="UserName" type="text" class="form-control" name="UserName" value="" placeholder="firstname.lastname">
+                                </div>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input id="Password" type="password" class="form-control" name="Password" value="" placeholder="Password">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    Login&nbsp;  <i class="glyphicon glyphicon-log-in"></i>
+                                </button>
+                                }
+
+                                </div>
+                            </div>
+                        </nav>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </nav>
+        <!-- Navigation Menu end-->
+    </header>
+    <section>
+        @*<div style="background:rgba(255,255,255,0.1) url(../images/lanternrunner.png) repeat-x; height:60px">
+
+        </div>*@
+
+    </section>
+    <div class="sticktobottom">
+        <footer class="do-footer bricks">
+            <div class="container">
+                <div class="row">
+                    <!-- FOOTER TOP -->
+                    <div class="do-footer-top" style="vertical-align:top;text-align:center;">
+                        <a href="www.avalara.com" style="vertical-align:top;text-align:center;" class="do-footer-author-name">Avalara Technologies Pvt. Ltd.</a>
+                    </div>
+                    <!-- FOOTER TOP END -->
+                    <!-- FOOTER BOTTOM -->
+                    <div class="do-footer-bottom">
+
+                    </div>
+                    <!-- FOOTER BOTTOM END -->
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="~/scripts/jquery-1.9.1.min.js"></script>
+
+<!-- PLUGINS -->
+<script src="~/scripts/plugins.js"></script>
+<!-- CUSTOM SCRIPTS -->
+<script src="~/scripts/login/main.js"></script>
+<style>
+    footer.do-footer .do-footer-top
+    {
+        padding-top:0px!important;
+    letter-spacing:3px;
+    }
+    .sticktobottom{
+        position:fixed;
+        bottom:-120px;
+        width:100%
+    }
+    .humble {
+        background: rgba(0, 0, 0, 0) url("@Url.Content("~/images/humble.png")") no-repeat scroll 0 0;
+        display: block;
+        height: 28px;
+        left: 50%;
+        position: relative;
+        text-align: center;
+        transform: translateX(-4px);
+        width: 18px;
+    }
+    .input-group{
+        margin-right:30px;
+    }
+    .form-control{
+        height  :30px!important;
+        width:150px!important;
+    }
+    #signin{
+    padding: 0px ! important; text-align: left;
+    }
+    #bs-example-navbar-collapse-1{
+    float: left; padding: 0px
+    }
+    .navbar-form .input-group > .form-control {
+    font-family: verdana;
+    font-size: 11px;
+
+}
+    .do-main-menu{
+    box-shadow:0 0 12px #333;
+    }
+
+</style>

@@ -1,0 +1,35 @@
+﻿@model List<DataService.EvaluationCycle>
+@functions{
+    public string getMonthAndYear(DateTime dt, bool isStartDate)
+    {
+        if (isStartDate)
+        {
+            dt = new DateTime(dt.Year, 1, 1);
+        }
+        else
+        {
+            int year = dt.Year;
+            if (dt.Month < 6)// flow over to next year
+            {
+                year--;
+            }
+            dt = new DateTime(year, 12, 31);
+        }
+        return dt.ToString("MMM/yyyy");
+    }
+    
+}
+@if (Model != null && Model.Count>0)
+{
+    <text>Select Cycle: </text>
+    <select id="evaluationcycleselection"  onchange="evalcycleselected($(this))" style="width:auto;">
+        <option value="0">--Select--</option>
+        @foreach (DataService.EvaluationCycle evalcycle in Model)
+        {
+            <option value="@evalcycle.Id">@evalcycle.Title </option>
+            //(@getMonthAndYear(evalcycle.GoalStartDate.Value,true) - @getMonthAndYear(evalcycle.EvaluationEnd.Value, false))
+        }
+    </select>
+    <br/>
+}
+

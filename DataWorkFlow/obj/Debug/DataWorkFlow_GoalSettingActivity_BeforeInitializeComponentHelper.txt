@@ -1,0 +1,2 @@
+GoalSettingActivity.g.xaml
+XamlStaticHelperNamespace._XamlStaticHelper

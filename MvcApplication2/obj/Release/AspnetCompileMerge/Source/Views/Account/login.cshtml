@@ -1,0 +1,112 @@
+﻿@model MvcApplication2.Controllers.LoginModel
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+<script src="~/Scripts/backgroundblur.min.js"></script>
+@using (Html.BeginForm(new { returnUrl = string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) || Request.QueryString["ReturnUrl"].ToLower().Contains("logout") ? "~/" : Request.QueryString["ReturnUrl"] }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="row" id="loginrow">
+        <div style="position:absolute;left:50%;transform:translateX(-50%)">
+            <h1 style="text-shadow:2px 2px white">Avalara 360&ordm; Feedback</h1>
+        </div>
+        <div class="large-4 medium-push-2 medium-4 push-4 small-3 small-push-2 columns" id="logincontainer">
+
+            <!-- LOGIN WIDGET -->
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h2>Log In</h2>
+                    <p>Please enter your workstation credentials:</p>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input name="UserName" type="text" placeholder="Login or E-mail" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input name="Password" type="password" placeholder="Your Password" class="form-control">
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="RememberMe" type="checkbox" checked="" value="1"> Remember me
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-success btn-block">Log In</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END LOGIN WIDGET -->
+        </div>
+    </div>
+}
+<style>
+    body {
+        letter-spacing: 1px;
+    }
+    input.form-control {
+    border-radius: 7px;
+    height: 40px;
+}
+    #logincontainer {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%) translateX(-50%);
+        left: 50%;
+    }
+    #loginrow {
+    background: #223564 url("@Url.Content("~/images/loginbackgrounds/background ("+GetRandomNumber(27)+").jpg")") no-repeat scroll 0 0;
+
+    background-size: 100%  ;
+
+    }
+    .panel {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        opacity: 1;
+       box-shadow: 10px 10px 20px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .panel-body {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+    }
+    svg{
+    left: 0;
+    position: absolute;
+    }
+</style>
+@functions{
+    public int GetRandomNumber(int max) {
+        Random r = new Random();
+        int rnd =r.Next(max);
+        if (rnd == 0)
+        {
+            rnd++;
+        }
+        return rnd;
+        
+    }
+}
+<script>
+    $(document).ready(function () {
+
+        $("#loginrow").height($(window).innerHeight());
+        $(window).resize(function () {
+            $("#loginrow").height($(window).innerHeight());
+        });
+        @*$("#loginrow").backgroundBlur({
+            imageURL : '@Url.Content("~/images/loginbackgrounds/background ("+GetRandomNumber(27)+").jpg")',
+            blurAmount: 0,
+            imageClass: 'bg-blur'
+        });*@
+    });
+</script>

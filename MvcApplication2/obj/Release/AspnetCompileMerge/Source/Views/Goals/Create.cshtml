@@ -1,0 +1,238 @@
+﻿@using System.Web.Mvc.Html
+@model List<DataService.Goal>
+
+@{
+    ViewBag.Title = "Create";
+    @*Layout = "~/Views/Shared/_2Col_Layout.cshtml";*@
+}
+
+<h3 id="GoalViewTitle" class="title">@ViewBag.EmployeeName Goals</h3>
+<br/>
+@*<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+<script src="~/Scripts/ckeditor/adapters/jquery.js"></script>*@
+
+@using (Html.BeginForm("Goals", "Create", FormMethod.Post, new {id="creategoalform", enctype = "multipart/form-data" })) 
+{ int i=1;
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div id="GoalsContainer" @*style="overflow:hidden; height:250px;"*@>
+@*<div style="background-color:yellow;border:solid 1px gray;position:absolute;top:0px;right:0px" onclick="scrollDiv(-100)">UP</div>
+<div style="background-color:yellow;border:solid 1px gray;position:absolute;bottom :0px;right:0px" onclick="scrollDiv(100)">DOWN</div>*@
+            @foreach (var item in Model) {
+<div  class="containerclass">
+            <h4 >Goal @(i++) :</h4>
+            <textarea class="goaltextarea" data-goalid="@item.gid" style="width: 90%; height: 100px;" id="_@item.gid" onfocus="fadeItIn($(this))" onblur="fadeItOut($(this))">
+                    @item.Goal1.Trim()
+            </textarea>
+</div>
+            }
+        </div>
+        <a href="javascript:AddGoal()">Add +</a>
+    </div>
+<input type="submit" value="Save"  />
+if(ViewBag.ActionButtonToShow=="Publish")
+{
+<input type="submit" value="Submit to Manager" onclick="SetAction('publish');"  />
+}
+else
+{
+    <input type="submit" value="Approve"  onclick="SetAction('approve')"/>
+}
+}
+<script>
+    
+    function scrollDiv(scrollstep)
+    {
+        $("#GoalsContainer").scrollTop($("#GoalsContainer").scrollTop()+scrollstep);
+    }
+    function fadeItIn(obj) {
+        obj.parent().css("opacity",1.0);
+    }
+    function fadeItOut(obj)
+    {
+        obj.parent().css("opacity",0.2);
+    }
+    var actionToPerform="";
+    function SetAction(actionValue)
+    {
+        actionToPerform=actionValue;
+    }
+    function AddGoal() {
+        var i = $(".goal").length;
+        var inputAndValidtion = '<textarea data-goalid="0" style="width: 90%; height: 100px;" id="Goal"' + i + ' class="form-control goal" name="Goal1[' + i + ']"></textarea><span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="Goal"' + i + '></span>';
+        var fieldPrefixHtml = '<div class="containerclass"><label class="control-label col-md-2">Please enter a goal for the next performance evaluation  : </label><div class="col-md-10">';
+        var fieldPostHtml = '</div></div>';
+        $("#GoalsContainer").append(fieldPrefixHtml + inputAndValidtion + fieldPostHtml);
+
+    }
+    $(document).ready(function () {
+        
+        fadeItOut($("#GoalsContainer textarea"));
+        
+        var r = @Html.Raw(ViewBag.GoalJson);
+        //$('.containerclass').bind('inview', function (event, visible) {
+        //    console.log("in view");
+        //    if (visible == true) {
+        //        // element is now visible in the viewport
+        //        console.log("VISIBLE");
+        //        $(this).fadeTo("medium", 1.0);
+        //        $(this).find("textarea").focus();
+        //    } else {
+        //        console.log("NOT inview");
+        //        // element has gone out of viewport
+        //        $(this).fadeTo("medium", 0.2);
+        //    }
+        //});
+        var r_array=[]; 
+        $("#creategoalform").submit(function (e) {
+            e.preventDefault();
+            var urlToPostTo = "@Url.Content("~/goals/create?reporteeid=")@ViewBag.ReporteeId";
+            if(actionToPerform=="publish")
+            {
+                urlToPostTo = "@Url.Content("~/goals/publish?reporteeid=")@ViewBag.ReporteeId";
+            }
+            else if(actionToPerform=="approve"){
+                urlToPostTo = "@Url.Content("~/goals/approve?reporteeid=")@ViewBag.ReporteeId";
+            }
+            $("#GoalsContainer textarea").each(function (id, obj) {
+                r = {};
+                r.Goal1=$(obj).val();
+                if($(obj).data("goalid")!="0")
+                {
+                    r.gid=$(obj).data("goalid");
+                }
+                r_array.push(r);
+            });
+            var rr = {goals:r_array};
+            $.ajax({
+                type: 'post',
+                url: urlToPostTo,
+                data: JSON.stringify(r_array),
+                contentType: "application/json; charset=utf-8",
+                traditional: true,
+                success: function (data) {
+                    $("#maincontent").html(data);
+                }
+            });
+          
+            //$.post('@Url.Content("~/goals/create")',);    
+        });
+        AddGoal();
+        //$(".tempo").appear();
+        //$(document.body).on('appear', ".tempo",function(event, $all_appeared_elements) {
+        //    $all_appeared_elements.each(function(){
+
+        //        fadeItIn($(this).find(".goaltextarea"));//click("slow",1.0);
+        //    });
+        //});
+        //$(document.body).on('disappear', ".tempo", function(event, $all_disappeared_elements) {
+        //    fadeItOut($(this).find(".goaltextarea"));//.fadeTo("slow",0.2);
+        //    //$all_disappeared_elements.each(function(){
+        //    //    $(this).fadeTo("slow",0.2);
+        //    //});
+        //});
+        //$.when( $("#GoalsContainer textarea").ckeditor().promise ).then( function() {
+        //    $(".tempo").appear();
+        //    $(document.body).on('appear', ".tempo",function(event, $all_appeared_elements) {
+        //        $all_appeared_elements.each(function(){
+
+        //            $(this).parent().find(".cke").focus();//click("slow",1.0);
+        //        });
+        //    });
+        //    $(document.body).on('disappear', ".tempo", function(event, $all_disappeared_elements) {
+        //        $(this).parent().find(".cke").focus();//.fadeTo("slow",0.2);
+        //        //$all_disappeared_elements.each(function(){
+        //        //    $(this).fadeTo("slow",0.2);
+        //        //});
+        //    });
+        //} );
+      
+        //$(".tempo").appear();
+        //$(document.body).on('appear',".tempo", function(event, $all_appeared_elements) {
+        //    $all_appeared_elements.each(function(){
+
+        //        $(this).addClass("focus");
+        //    });
+        //});
+        //$(document.body).on('disappear', ".tempo", function(event, $all_disappeared_elements) {
+        //    $all_appeared_elements.each(function(){
+        //        $(this).removeClass("focus");
+        //    });
+        //});
+       
+
+        //$(window).one('scroll', function(){
+        //    var $btn =;
+        //    if($(window).scrollTop() > ($btn.offset().top+$btn.height())) {
+        //        console.log('out');
+        //    }
+        //});
+        //
+        starttour("goalscreate");
+    });
+</script>
+<style>
+ input, textarea {
+    font-size: 16px;
+    line-height: 30px;
+}
+    .containerclass {
+    /*opacity:0.2;*/
+    }
+        .containerclass textarea {
+            /*border:none;*/
+        }
+    #GoalsContainer .containerclass:hover textarea{
+    border-color: gray!important;
+    border-radius: 5px!important;
+    border-style: dashed!important;
+    border-width: 3px!important;
+    
+    }
+ #GoalsContainer  textarea:focus {
+background-color: #ffffff!important;
+    border-color: gray!important;
+    border-radius: 5px!important;
+    border-style: dashed!important;
+    border-width: 3px!important;
+    box-shadow: none!important;
+    box-sizing: border-box!important;
+    color: rgba(0, 0, 0, 0.75)!important;
+    display: block!important;
+    font-family: inherit!important;
+    font-size: 0.875rem;
+    height: 2.3125rem;
+    margin: 0 0 1rem;
+    padding: 0.5rem;
+    transition: none!important;
+    width: 100%;
+    }
+  #GoalsContainer  textarea {
+background-color: #ffffff!important;
+    border-color: none!important;
+    border-radius: 0!important;
+    border-style: none!important;
+    border-width: 0px!important;
+    box-shadow: none!important;
+    box-sizing: border-box!important;
+    color: rgba(0, 0, 0, 0.75)!important;
+    display: block!important;
+    font-family: inherit!important;
+    font-size: 0.875rem;
+    height: 2.3125rem;
+    margin: 0 0 1rem;
+    padding: 0.5rem;
+    transition: none!important;
+    width: 100%;
+    }
+    /*.cke,.tempo {
+    opacity:0.2;    
+}
+    .cke.focus, .tempo.focus {
+opacity:1;    
+}*/
+</style>
+@*<script src="~/Scripts/appear.js"></script>*@

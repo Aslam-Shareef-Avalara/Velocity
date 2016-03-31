@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+		<link rel="stylesheet" href="@Url.Content("~/content/bootstrap.min.css")">
+        <link rel="stylesheet" href="@Url.Content("~/content/templatemo_style.css")">
+		<link rel="stylesheet" href="@Url.Content("~/content/font-awesome.min.css")">
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
+        <!--
+        Composite Template
+        http://www.templatemo.com/preview/templatemo_444_composite
+        -->
+	<title>@ViewBag.Title - Velocity</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+   @* @Styles.Render("~/Content/foundation/css")*@
+
+    @RenderSection("head", required: false)
+    @*@Scripts.Render("~/bundles/modernizr")*@
+    @Scripts.Render("~/bundles/jquery")
+        <script src="@Url.Content("~/Scripts/jquery.flexslider.js")"></script>
+        <script src="@Url.Content("~/Scripts/smoothscroll.js")"></script>
+
+@*<script src="~/Scripts/badger.min.js"></script>*@
+</head>
+@*<link href="~/Content/badger.min.css" rel="stylesheet" />*@
+	<body id="top" data-spy="scroll" data-target=".navbar-collapse">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container" style="width:100%;">
+			<div class="navbar-header">
+				<button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon icon-bar"></span>
+					<span class="icon icon-bar"></span>
+					<span class="icon icon-bar"></span>
+				</button>
+				<a href="#" class="navbar-brand" style="width:227px;height:76px;background-image:url(@Url.Content("~/images/logo-tagline-extend-FF6600-2x.png"))"></a>
+			</div>
+			<div class="collapse navbar-collapse" style="float:right;">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#top" class="smoothScroll">HOME</a></li>
+					<li><span id="mainbadgecount" title="You have new actionable items. Click 'Dashboard' view them." class="custombadge"></span><a href="~/employee/aboutme" class="smoothScroll">DASHBOARD</a></li>
+                    @if(User.IsInRole("HrAdmin"))
+                    {
+                        <li><span title="You have new actionable items. Click 'HR Dashboard' to view them." id="hrbadgecount" class="custombadge"></span><a href="~/controlcenter" class="smoothScroll">HR DASHBOARD</a></li>
+                    }
+					<li><a href="#contact" class="smoothScroll">CONTACT</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+    @RenderBody()
+
+        <div id="downtimewarning">
+            @Html.Partial("MaintenenceWarning");
+        </div>
+        <script>
+    $(document).ready(function () {
+        setInterval(function () {
+            $.post("@Url.Content("~/home/keepalive")", function (r) {
+                if (r.isoffline)
+                    window.location.reload();
+                if (r.scheduled) {
+                    $("#downtimewarning").load("@Url.Content("~/home/ScheduledDowntimeWarning")");
+                }
+            });
+        }, 15000);
+
+
+    });
+
+        </script>
+
+<style>
+.badgeable{
+
+    position:relative;
+}
+.custombadge {
+   background: #ff0000 none repeat scroll 0 0;
+    border: 2px solid #fff;
+    border-radius: 11px;
+    color: #fff;
+    display: none;
+    font-weight: 600;
+    height: 22px;
+    padding: 1px;
+    position: absolute;
+    right: 4px;
+    text-align: center;
+    top: 0;
+    width: 22px;
+    z-index: 999;
+box-shadow: 2px 1px lightgray;
+}
+</style>
+      
+
+   @* @Scripts.Render("~/bundles/foundation")*@
+    <script>
+        // $(document).foundation();
+        $(document).ready(function () {
+
+            $.get('@Url.Content("~/employee/getallbadges")', function (badgeCount) {
+                if (badgeCount.toString() != "0")
+                    $('#mainbadgecount').html(badgeCount.toString()).fadeIn();
+            });
+        });
+    </script>
+    @*Use the Scripts section to define page specific scripts*@
+    @RenderSection("scripts", required: false)
+></body>
+</html>

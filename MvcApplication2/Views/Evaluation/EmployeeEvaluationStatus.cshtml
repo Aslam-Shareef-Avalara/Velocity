@@ -1,0 +1,131 @@
+﻿@model List<MvcApplication2.Controllers.EmployeeEvaluationListModel>
+@{
+    ViewBag.Title = "EmployeeEvaluationStatus";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+    int counter = 0;
+    string progressbarclass = "success";
+}
+@functions{
+
+    public string GetProgressBarClass(int goalstatus, DataService.PECycle pecycle)
+    {
+        if (pecycle == DataService.PECycle.EVALUATION)
+        {
+            if (goalstatus <= DataService.GoalStatus.EMPLOYEE_GOAL_PUBLISHED)
+            {
+                return "danger";
+            }
+            else if (goalstatus <= DataService.GoalStatus.MANAGER_EVAL_SAVED)
+                return "warning";
+            else
+                return "success";
+        }
+        else if (pecycle == DataService.PECycle.GOAL_SETTING)
+        {
+            if (goalstatus <= DataService.GoalStatus.EMPLOYEE_GOAL_SAVED)
+            {
+                return "danger";
+            }
+            else if (goalstatus <= DataService.GoalStatus.MANAGER_EVAL_SAVED)
+                return "warning";
+            else
+                return "success";
+        }
+        return "info";
+    }
+
+    public string GetProgressPercent(int goalstatus)
+    {
+        return ((goalstatus ) * 10).ToString() + "%";
+    }
+
+}
+<div class="row">
+    
+    <div class="columns large-12" id="wrapperforlist" style="padding-left:10px;">
+        <h2>Employee Evaluation Status</h2>
+        <ul class="nav nav-tabs" style="margin-right: 10px;">
+            @foreach (MvcApplication2.Controllers.EmployeeEvaluationListModel peviewmodel in Model)
+    {
+
+            <li class="@(counter++ == 0 ? "active" : "")"><a data-toggle="tab" href="#employeelist_@peviewmodel.PECycleId">@peviewmodel.PECycleTitle (@(peviewmodel.PEType == DataService.PECycle.GOAL_SETTING ? "Goal Setting Phase   " : "Evaluation Phase"))</a></li>
+
+    }
+        </ul>
+        @{counter = 0;}
+        <div class="tab-content" style="background-color: white; border-radius: 5px; padding: 5px; margin-right:10px;">
+            @foreach (MvcApplication2.Controllers.EmployeeEvaluationListModel peviewmodel in Model)
+            {
+            <text>
+                <div id="employeelist_@peviewmodel.PECycleId" class="tab-pane @(counter++==0?"active":"") fadein">
+                    <div class="table-responsive">
+                        <table class="table table-hover  table-condensed table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Employee Id</th>
+                                    <th>Employee</th>
+                                    
+                                    <th>Manager</th>
+                                    <th>Status</th>
+                                    <th>Overall Progress</th>
+                                    <th class="controls-head"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            </text>
+                foreach (MvcApplication2.Controllers.EmployeeEvaluationStatusModel empevalstatus in peviewmodel.EmployeeEvaluationStatus)
+                {
+                                <tr>
+                                    <td>@empevalstatus.EmpOrgId</td>
+                                    <td>@empevalstatus.Name</td>
+                                    
+                                    <td>@empevalstatus.ManagerName</td>
+                                    <td>@DataService.GoalStatus.Translate(empevalstatus.Status)</td>
+                                    <td style="width:150px;">
+                                        <div class="progress" style="width:100%">
+                                            <div style="width: @GetProgressPercent(empevalstatus.Status);" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-@GetProgressBarClass(empevalstatus.Status,peviewmodel.PEType)"><span style="font-size:10px; top:-4px;position:relative"> @GetProgressPercent(empevalstatus.Status)</span></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (peviewmodel.PEType == DataService.PECycle.EVALUATION && empevalstatus.Status >= DataService.GoalStatus.MANAGER_EVAL_PUBLISHED)
+                                        {
+                                        <a href="javascript:void(0)" class="btn btn-xs btn-info edit" onclick="openevaluation(@peviewmodel.PECycleId,'@empevalstatus.EmployeeId')">View</a>
+                                        }
+                                        else
+                                        {
+                                        <text>
+                                            No Preview Available
+                                        </text>
+                                        }
+                                    </td>
+                                </tr>
+                }
+
+                                @:</tbody></table></div></div>
+            }
+        </div>
+    </div>
+    <div class="columns large-6" id="wrapperforevaluationview" style="display:none; background-color: #fff;
+    padding: 5px;border-radius:5px;border-right: 1px solid lightgray;">
+
+    </div>
+</div>
+<script>
+    function openevaluation(evalid, empid) {
+        window.scrollTo(1, 1);
+        $("#wrapperforevaluationview").html("Loading evaluation...")
+        $.post("@Url.Content("~/evaluation/hrevaluation")", { "employeeid": empid, "evalcycleid": evalid }, function (r) {
+
+            $(r != null)
+            {
+                $("#wrapperforlist").removeClass("large-12").addClass("large-6");
+                $("#wrapperforevaluationview").html(r).fadeIn();
+            }
+        });
+    }
+    function closereview() {
+        $("#wrapperforevaluationview").html("").fadeOut();
+        $("#wrapperforlist").removeClass("large-6").addClass("large-12");
+
+    }
+</script>

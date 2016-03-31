@@ -1,0 +1,303 @@
+﻿@using System.Collections;
+@using X.Scaffolding.Core;
+@model Hashtable
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/jquery.leanModal.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+@*<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+<link href="~/Content/bootstrap-datepicker3.css" rel="stylesheet" />
+@*<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />*@
+<div id="myteam" class="row">
+    <div class="large-11 columns card" style="text-align:center;">
+        <h2>My Team</h2>
+        <ul id="teammembers">
+            @foreach (Guid u in Model.Keys)
+            {
+                <li>
+                    <a href="javascript:void(0)" onclick="loadEmployeeGoals('@u.ToString()')">
+                        <img src="@Url.Content("~/images/follower-man-user-login-round-512.png")" style="width:100px" />
+                    </a>
+                    <br />
+                    @Model[u]
+                </li>
+            }
+
+        </ul>
+    </div>
+
+</div>
+<div class="row">
+    <div class="large-2 columns card" style="text-align:center;">
+        <h3>Actions Items/ Updates :</h3>
+        <a href="#dialog-form" onmouseover="switchimage(this)" onmouseout="switchimage(this)" onclick="ShowPEConfig()">
+            <img src="~/Images/startpe_sepia.png" /><br>Click to start PE cycle
+
+        </a>
+        <div id="dialog-form" class="modal fade" title="Start PE" style="display:none;width:400px;background:white; border-radius: 5px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);padding:10px;">
+            <div id="signup-header" class="modal-header">
+                <h2>New PE Cycle</h2>
+                <p>Create a new PE cycle.</p>
+                <a class="modal_close" href="#"></a>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <fieldset>
+                        <label for="pename">PE Name</label>
+                        <input type="text" name="pename" id="pename" class="text ui-widget-content ui-corner-all">
+                        <label for="description">Description</label>
+                        <input type="text" name="description" id="description" class="text ui-widget-content ui-corner-all">
+                        <h4>Goal Setting </h4>
+                        <div class="floatleft">
+                            <div>
+                                <label for="goalstart">Starts On</label>
+                                <input type="text" name="goalstart" data-provide="datepicker" id="goalstart" class="text ui-widget-content ui-corner-all">
+                            </div><div>
+                                <label for="goalend">Ends On </label>
+                                <input type="text" name="goalend" id="goalend" data-provide="datepicker" class="text ui-widget-content ui-corner-all">
+                            </div>
+                        </div>
+                        <h4>Evaluation:</h4>
+                        <div class="floatleft">
+                            <div>
+                                <label for="evaluationstart"> Starts On </label>
+                                <input type="text" name="evaluationstart" data-provide="datepicker" id="evaluationstart" class="text ui-widget-content ui-corner-all">
+                            </div><div>
+                                <label for="evaluationend">Ends On </label>
+                                <input type="text" name="evaluationend" id="evaluationend" data-provide="datepicker" class="text ui-widget-content ui-corner-all">
+                            </div>
+                        </div>
+                        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                        <input type="submit" value="Start" tabindex="-1" style="width:100%;">
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div id="lean_overlay" style="display: none; opacity: 0.5;"></div>
+        @*<div id="PECofig" style="display:none;">
+                PE Name : <input type="text" name="PeName"/>
+                Description : <input type="text" name="PeName"/>
+            <input type="button" name="startpe" onclick="FireWorkflow('start')"/>
+            </div>*@
+    </div>
+
+    <div class="large-2 columns card end " style="text-align:center;">
+        <h3>Set common goals</h3>
+        <a href="~/goals/getfixedgoals" onmouseover="switchimage(this)" onmouseout="switchimage(this)">  <img src="~/Images/goals_sepia.png" /><br>Click to set common goals</a>
+    </div>
+    <div class="large-4 columns card end " style="min-height:194px; text-align:center;">
+        <h3>Current Cycle(s)</h3>
+        <div class="pull-left" style="margin-top: 55px;">
+            <img src="~/Images/icon_sustainability_sepia.png" class="pull-left" />
+        </div>
+        <div id="cyclecontainer" class="pull-left">
+            <div id="currentcyclestatus0" class="currentcyclestatus">
+                <span id="cycletype0">Checking PE Cycle Status</span>
+                <br><span id="percentcomplete0" class="medium-text-center">0%</span>
+                <div class="progress">
+                    <div style="width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success"></div>
+                </div>
+            </div>
+            <div id="currentcyclestatus1" class="currentcyclestatus" style="display:none;">
+                <span id="cycletype1">Checking PE Cycle Status</span>
+                <br><span id="percentcomplete1" class="medium-text-center">0%</span>
+                <div class="progress">
+                    <div style="width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+
+    <div class="columns large-11 card" id="maincontent">
+    </div>
+
+</div>
+<script>
+    function switchimage(obj) {
+        imgsrc = $(obj).children("img").attr("src");
+        if (imgsrc.indexOf("sepia") < 0) {
+            imgsrc = imgsrc.replace(".png", "_sepia.png");
+            $(obj).parent().children("h3").css("color", "#8F8080");
+        }
+        else {
+            imgsrc = imgsrc.replace("_sepia.png", ".png");
+            $(obj).parent().children("h3").css("color", "#EFC849");
+        }
+        $(obj).children("img").attr("src", imgsrc);
+
+    }
+    var dialog, form;
+    function loadEmployeeGoals(eid) {
+        $.get('@Url.Content("~/goals?")reporteeid=' + eid, function (response) {
+            $("#maincontent").html(response);
+            window.location.href = "#maincontent";
+        });
+
+    }
+    function ShowPEConfig() {
+        //  $("#dialog-form").show();
+        $("#dialog-form").modal('show');
+        setTimeout(function () {
+            $("#dialog-form").css({
+                //'margin-top': function () { //vertical centering
+                //    return -($(this).height() / 2);
+                //},
+                'margin-left': function () { //Horizontal centering
+                    return -($(this).width() / 2);
+                }
+            });
+        }, 200);
+
+
+    }
+    function FireWorkflow(actionCommand) {
+        $.post("~/ControlCenter/Start");
+    }
+    $(document).ready(function () {
+
+        //$.get('@Url.Content("~/controlcenter/CreateFixedGoals")', function (response) {
+        //    $("#maincontent").html(response);
+        //    window.location.href="#maincontent";
+        //});
+        //$("#evaluationend").datepicker();
+        //  $('#dialog-form').modal();
+
+        $("#dialog-form").find("form").on("submit", function (event) {
+            event.preventDefault();
+            $.post("@Url.Content("~/controlCenter/StartPECycle")", $("#dialog-form").find("form").serialize(), function () {
+                $("#dialog-form").modal("hide");
+            });
+        });
+
+        $(".row").each(function (i, o) {
+            var maxht = $(o).outerHeight();
+            console.log(maxht);
+            $(o).find(".columns").each(function (idx, obj) {
+
+                //  $(obj).css("height",maxht);
+                //
+            });
+
+        });
+        $.get("@Url.Content("~/controlcenter/currentcyclestatus")", function (resp) {
+            $("#currentcyclestatus1").hide();
+            if (resp.title == "undefined" || resp.title == undefined) {
+                for (i = 0; i < resp.length; i++) {
+                    if (resp[i].title != "") {
+                        $("#currentcyclestatus" + i + " .progress .progress-bar").css("width", resp[i].percentComplete + "%");
+                        $("#percentcomplete" + i).html(resp[i].percentComplete + " %");
+                        $("#cycletype" + i).html(resp[i].cycletype);
+                        $("#currentcyclestatus"+i).show();
+                    }
+
+                }
+            }
+            else{
+                $("#currentcyclestatus0 .progress").hide();
+                $("#percentcomplete0").hide();
+                $("#cycletype0").html("No cycle is currently active !!");
+            }
+        });
+    });
+</script>
+<style>
+    .columns a {
+        font-size: 12px;
+        color: gray;
+    }
+
+    h3 {
+        color: gray;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    #lean_overlay {
+        position: fixed;
+        z-index: 100;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        width: 100%;
+        background: #000;
+        display: none;
+    }
+
+    .modal_close {
+        background: rgba(0, 0, 0, 0) url("../img/modal_close.png") repeat scroll 0 0;
+        display: block;
+        height: 14px;
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        width: 14px;
+        z-index: 2;
+    }
+
+    input [type='text'] {
+        background: #f7f7f7 none repeat scroll 0 0;
+        border-color: #ccc #e7e6e6 #e7e6e6 #ccc;
+        border-radius: 4px;
+        border-style: solid;
+        border-width: 1px;
+        color: #222;
+        font-family: "Helvetica Neue";
+        font-size: 1.2em;
+        outline: medium none;
+        padding: 8px;
+        width: 244px;
+    }
+
+    .floatleft label, .floatleft div, .floatleft input {
+        float: left;
+    }
+
+    .floatleft div {
+        width: 150px;
+        padding-right: 20px;
+    }
+
+    .floatleft {
+        clear: both;
+    }
+
+    #teammembers {
+        list-style: none;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+        #teammembers li {
+            float: left;
+            padding: 20px;
+        }
+
+    #dialog-form {
+        left: 50%;
+        /*top:50%;*/
+    }
+
+    .currentcyclestatus .progress {
+        background: #999 none repeat scroll 0 0;
+        height: 9px;
+        margin: 10px 0 16px;
+        border: none;
+        padding: 0px;
+    }
+
+        .currentcyclestatus .progress .progress-bar-success {
+            background: #ffa400 none repeat scroll 0 0;
+        }
+
+    #cyclecontainer {
+        width: 80%;
+        padding-left: 30px;
+    }
+</style>

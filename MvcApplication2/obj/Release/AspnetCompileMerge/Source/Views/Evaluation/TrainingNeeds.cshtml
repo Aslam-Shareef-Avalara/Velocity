@@ -1,0 +1,41 @@
+﻿@model MvcApplication2.ViewModel.EvaluationViewModel
+<div id="trainigncontainer">
+    <h3>
+        Please enter atleast three training suggestions for @Model.EmployeeDetails.FirstName
+    </h3>
+    <div>
+        <span> Training 1 </span>
+        <textarea id="training1" name="training1" class="traininginput"></textarea>
+    </div>
+    <div>
+        <span> Training 2 </span>
+        <textarea id="training2" name="training2" class="traininginput"></textarea>
+    </div>
+    <div>
+        <span> Training 3 </span>
+        <textarea id="training3" name="training3" class="traininginput"></textarea>
+    </div>
+    <div>
+        <span> Training 4 </span>
+        <textarea id="training4" name="training4" class="traininginput"></textarea>
+    </div>
+    <div>
+        <span> Training 5 </span>
+        <textarea id="training5" name="training5" class="traininginput"></textarea>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+            @if (Model.Conclusion != null && !string.IsNullOrEmpty(Model.Conclusion.training))
+            { 
+                string []s  = Model.Conclusion.training.Split(new string[]{"$$$"},StringSplitOptions.None);
+                int counter = 1;
+                foreach (string t in s)
+                { 
+                    <text>
+                    $("#training@(counter++)").val('@t');
+                    </text>
+                }
+            }
+    });
+</script>

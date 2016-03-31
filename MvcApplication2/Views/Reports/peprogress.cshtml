@@ -1,0 +1,129 @@
+﻿@using PagedList.Mvc;
+@model MvcApplication2.ViewModel.PeProgressViewModel
+
+@{
+
+    ViewBag.Title = "PE Progress";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+    if (Model.peprogressList.Count() > 0)
+    {
+        ViewBag.Title = Model.peprogressList[0].Evalcycle.Title;
+    }
+    else
+    {
+        List<DataService.EvaluationCycle> evs = ViewBag.EvalCycles;
+        if (evs != null && evs.Any(x => x.Id == ViewBag.EvalCycleId))
+        {
+            ViewBag.Title = evs.FirstOrDefault(x => x.Id == ViewBag.EvalCycleId).Title;
+        }
+
+    }
+}
+@functions{
+    public string translateStatus(int? statusCode)
+    {
+        return DataService.GoalStatus.Translate(statusCode);
+    }
+    public string translateBoolean(bool val)
+    {
+        string imagename="checkmark.png";
+        if (!val)
+        {
+            imagename = "wrong.png";
+        }
+        return "<img src="+Url.Content("~/images/")+imagename+" />";
+    }
+}
+
+<h2>@ViewBag.Title</h2>
+<span class="formlabel">Select PE cycle : </span>
+<select name="pecycle" id="pecycle" onchange="getForPe($(this))" class="bootstrap-select" style="margin-right:10px;">
+    @foreach (DataService.EvaluationCycle ec in ViewBag.EvalCycles)
+    {
+        <option value="@ec.Id" @(ViewBag.EvalCycleId == ec.Id ? "Selected" : "")>@ec.Title</option>
+    }
+</select>
+<span class="formlabel">Filter by status : </span>
+<select id="status" name="status" onchange="filterbystatus($(this))" class="bootstrap-select">
+    <option value="-1"> -- Show All -- </option>
+    @foreach (DataService.GoalStatu gs in ViewBag.GoalStatuses)
+    {
+        <option value="@gs.Id" @(Request.QueryString["status"] == gs.Id.ToString() ? "Selected" : "")>@gs.Status</option>
+    }
+</select>
+<form action="@(Url.Content("~/"))reports/peprogress" method="post" class="form-inline">
+    <p>
+        <span class="formlabel">Find by name: </span>@Html.TextBox("search", ViewBag.CurrentFilter as string, new { @class = "form-control", style = "margin:0px!important;" })
+        <input type="hidden" value="@ViewBag.EvalCycleId" name="evalcycleid" id="evalcycleid" />
+        <input type="submit" class="btn btn-rounded btn-info" id="btn_searchbyname" value="Search" />
+    </p>
+</form>
+<form action="@(Url.Content("~/"))reports/exportpeprogress" method="post" class="form-inline">
+    <input type="submit" class="btn btn-success" value="Export All" />
+</form>
+<br/>
+<table class="table table-hover" style="letter-spacing:1px;" id="employeelist">
+    <tr class="header">
+        <th class="controls-head">Employee Name</th>
+        <th class="controls-head">Status</th>
+        <th class="controls-head">Pending Action</th>
+        <th class="controls-head">Chat</th>
+        <th class="controls-head">Manager</th>
+        <th class="controls-head">Manager Rating</th>
+        <th class="controls-head">Employee Rating</th>
+        <th class="controls-head">Summary?</th>
+        <th class="controls-head">Training?</th>
+        <th class="controls-head">Feedback?</th>
+    </tr>
+
+    @foreach (var item in Model.peprogressList)
+    {
+        string nextStage = DataService.GoalStatus.NextStage(item.goal.Status);
+        <tr>
+            <td>@item.Employee.FirstName @item.Employee.LastName</td>
+            <td>@translateStatus(item.goal.Status)</td>
+            <td>@nextStage</td>
+            <td><a href="sip:@(nextStage.Contains("Employee")?item.Employee.Email:(nextStage.Contains("Manager")?item.Manager.Email:""))">Click to chat</a></td>
+            <td>@item.Manager.FirstName &nbsp; @item.Manager.LastName </td>
+            <td>@(ViewBag.RemoveForUser == item.Employee.gid.ToString() ? 0.0M : item.EvalRating.ManagerOverllRating)</td>
+            <td>@item.EvalRating.SelfOverallRating</td>
+            <td>@Html.Raw(translateBoolean(item.MeetingSummarySubmitted)) </td>
+            <td>@Html.Raw(translateBoolean(item.TrainingNeedsSubmitted))  </td>
+            <td>@Html.Raw(translateBoolean(item.FeedbackSubmitted))       </td>
+        </tr>
+    }
+
+</table>
+
+
+    Page @(Model.peprogressList.PageCount < Model.peprogressList.PageNumber ? 0 : Model.peprogressList.PageNumber) of @Model.peprogressList.PageCount
+    @Html.PagedListPager(Model.peprogressList, page => Url.Action("peprogress", new { page, sortOrder = ViewBag.CurrentSort, search = ViewBag.CurrentFilter, status = Request.QueryString["status"] == "-1" ? null : Request.QueryString["status"] }))
+    <script>
+        function getForPe() {
+            $("#evalcycleid").val($("#pecycle").val());
+            $("#status").val("-1");
+            $("#btn_searchbyname").click();
+        }
+        function filterbystatus(selectObject) {
+            selectObject = $("#status");
+            if (selectObject.val() != "-1")
+                window.location.href = "@Url.Content("~/reports/peprogress")?status=" + selectObject.val() + "&evalcycleid=@ViewBag.EvalCycleId";
+            else
+                window.location.href = "@Url.Content("~/reports/peprogress")?evalcycleid=@ViewBag.EvalCycleId";
+        }
+    </script>
+    <style>
+        .formlabel {
+            width: 100px;
+            display: inline-block;
+        }
+
+        .header th {
+            color: white !important;
+        }
+
+        .header, .header:hover {
+            background-color: rgb(55,70,89) !important;
+            color: white !important;
+        }
+    </style>

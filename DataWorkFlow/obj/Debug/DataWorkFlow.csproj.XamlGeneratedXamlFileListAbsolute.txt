@@ -1,0 +1,2 @@
+obj\Debug\GoalSettingActivity.g.xaml
+obj\Debug\DataWorkFlow_GoalSettingActivity_BeforeInitializeComponentHelper.txt

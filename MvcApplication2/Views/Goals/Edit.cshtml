@@ -1,0 +1,138 @@
+﻿@using X.Scaffolding.Core
+@model DataService.Goal
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">        
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.gid)
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            ModifiedBy
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.ModifiedBy)                 
+                @Html.ValidationMessageFor(model => model.ModifiedBy)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            ModifiedDate
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapDatePickerFor(model => model.ModifiedDate)                 
+                @Html.ValidationMessageFor(model => model.ModifiedDate)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            Goal1
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Goal1)                 
+                @Html.ValidationMessageFor(model => model.Goal1)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            Fixed
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Fixed)                 
+                @Html.ValidationMessageFor(model => model.Fixed)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            OrgId (OrgId)
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapDropDownList("OrgId", String.Empty)                 
+                @Html.ValidationMessageFor(model => model.OrgId)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            Publshed
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Publshed)                 
+                @Html.ValidationMessageFor(model => model.Publshed)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            Draft
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Draft)                 
+                @Html.ValidationMessageFor(model => model.Draft)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            Saved
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Saved)                 
+                @Html.ValidationMessageFor(model => model.Saved)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            EmployeeId (EmployeeId)
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapDropDownList("EmployeeId", String.Empty)                 
+                @Html.ValidationMessageFor(model => model.EmployeeId)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            Evalcycleid (Evalcycleid)
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapDropDownList("Evalcycleid", String.Empty)                 
+                @Html.ValidationMessageFor(model => model.Evalcycleid)
+            </div>
+        </div>
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            Approved
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Approved)                 
+                @Html.ValidationMessageFor(model => model.Approved)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+

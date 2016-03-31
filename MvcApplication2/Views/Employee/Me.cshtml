@@ -1,0 +1,746 @@
+﻿@model MvcApplication2.ViewModel.AboutMe
+@{
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+    ViewBag.Title = "My Dashboard";
+}
+<script>
+    var selectedmenuid = "me";
+</script>
+<link href="@Url.Content("~/content/jquery.jscrollpane.css")" rel="stylesheet" />
+<link href="@Url.Content("~/content/jquery.jscrollpane.lozenge.css")" rel="stylesheet" />
+<script type="text/javascript" src="@Url.Content("~/scripts/jquery.mousewheel.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/scripts/jquery.jscrollpane.min.js")"></script>
+
+<div id="mycoutercontainer" class="row">
+    <div class="welcomeblock large-6 columns card-plain" style="text-align:center;border-top: 2px solid navy;">
+        @if (Model.Myself.ProfilePix == null || Model.Myself.ProfilePix.Count() == 0)
+        {
+
+            <img alt="@Model.Myself.FirstName @Model.Myself.LastName" style="width:75px" src="@Url.Content("~/images/follower-man-user-login-round-512.png")">
+            <br /><span class="alert-warning" style="padding:3px; padding-right:5px;padding-left:5px; border-radius:2px;"><span class="fi fi-alert" style="color:white;font-weight:600;font-size:20px;padding-right:5px;"></span>Looks like you dont have a photo in outlook!</span>
+        }
+        else
+        {
+            <img style="width:100px;margin-top:15px;" alt="@Model.Myself.FirstName @Model.Myself.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.Myself.ProfilePix))" class="actualphoto">
+        }
+        @*<img src="@Url.Content("~/images/follower-man-user-login-round-512.png")" />*@
+        <h1>Welcome, @Model.Myself.FirstName  </h1>
+        This portal is a place where everything related to your job is stored.<br>
+        <br>
+        Your contact info is all setup.<br>
+        <a href="mailto:@Model.Myself.Email">@Model.Myself.Email</a><br>
+        <span class="designation">@Model.Designation</span><br>
+        @Model.Myself.Phone
+    </div>
+
+
+    @*This is the template*@
+    @*<div class="row">
+            <div class="large-12 columns">
+                <div class=" panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title-box">
+                            <h3 class="panel-title">Your Contact Liaisons:</h3>
+                        </div>
+                    </div>
+                    <div class="panel-body ">
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    <div class="large-6 columns " data-step="2" data-intro="This displays the current evaluation cycle status and how much of it has been completed by you." id="CurrentCycleStatus" style="display:none; height:270px;">
+        <div class=" panel panel-default" style="height: 270px;">
+            <div class="panel-heading">
+                <div class="panel-title-box">
+                    <h3 class="panel-title">Current Cycle Status:</h3>
+                </div>
+            </div>
+            <div class="panel-body " style="height: 225px;">
+                <div id="currentcyclestatus0" class="currentcyclestatus" style="display:none;">
+                    <span id="cycletype0" class="widget-title">Checking PE Cycle Status</span>
+                    <br><span id="percentcomplete0" class="medium-text-center" style="color:#3B455D">0%</span>
+                    <div class="progress">
+                        <div style="width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success"></div>
+                    </div>
+                </div>
+                <div id="currentcyclestatus1" class="currentcyclestatus" style="display:none;">
+                    <span id="cycletype1" class="widget-title">Checking PE Cycle Status</span>
+                    <br><span id="percentcomplete1" style="color:#3B455D" class="medium-text-center">0%</span>
+                    <div class="progress">
+                        <div style="width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="widget widget-default widget-item-icon" style="height: 270px;">
+                <div class="widget-item-left" style="height:250px;">
+                    <span class="fa fi-widget" style="position: relative; top: 50%; display:block; transform: translateY(-50%);"></span>
+                </div>
+                <div class="widget-data" style="padding-right:10px;">
+                    <div class="widget-int num-count num-count-20px" style="margin-bottom: 10px;">Current Cycle Status</div>
+                    <div class="widget-subtitle">
+
+                        <div id="currentcyclestatus0" class="currentcyclestatus" style="display:none;">
+                            <span id="cycletype0" class="widget-title">Checking PE Cycle Status</span>
+                            <br><span id="percentcomplete0" class="medium-text-center">0%</span>
+                            <div class="progress">
+                                <div style="width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success"></div>
+                            </div>
+                        </div>
+                        <div id="currentcyclestatus1" class="currentcyclestatus" style="display:none;">
+                            <span id="cycletype1" class="widget-title">Checking PE Cycle Status</span>
+                            <br><span id="percentcomplete1" class="medium-text-center">0%</span>
+                            <div class="progress">
+                                <div style="width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success"></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>*@
+    </div>
+
+    @*<div class="widget widget-default widget-item-icon" style="height: 270px;">
+            <div class="widget-item-left" style="height:250px;">
+                <span class="fa " style="position: relative; top: 50%; display:block; transform: translateY(-50%);"><img src="~/Images/notes-512.png" width="55" /></span>
+            </div>
+            <div class="widget-data">
+                <div class="widget-int num-count num-count-20px" style="margin-bottom: 10px;">Actionable Items</div>
+                <div class="widget-subtitle">
+                    <div style="display:inline-block;float:left;overflow-y:auto;height:215px;">
+
+                        <ol>
+                            <li>Loading...</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </div>*@
+
+
+
+</div>
+
+
+
+<div class="contactsandcoworkers row">
+   
+   
+        <div class=" whotocontactblock large-6 columns ">
+            <div class=" panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title-box">
+                        <h3 class="panel-title">Your Contact Liaisons:</h3>
+
+                    </div>
+
+
+                </div>
+
+                <div class="panel-body ">
+
+                    <span style="line-height:auto!important;">If you have any questions or need any help at @Model.Org.Name please contact your HR Manager or Manager.</span>
+
+                    @if (Model.Manager != null && !string.IsNullOrEmpty(Model.Manager.FirstName)
+                    && Model.Manager.gid.ToString() != Model.Myself.gid.ToString())
+                    {
+                        <div class="widget widget-default widget-item-icon">
+                            <div class="widget-item-left">
+                                @if (Model.Manager.ProfilePix == null || Model.Manager.ProfilePix.Count() == 0)
+                                {
+                                    <span class="fa fi-torso"></span>
+                                }
+                                else
+                                {
+                                    <img style="width:75px;" alt="@Model.Manager.FirstName @Model.Manager.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.Manager.ProfilePix))" class="actualphoto">
+                                }
+                            </div>
+                            <div class="widget-data">
+                                <div class="widget-int num-count num-count-20px">@Model.Manager.FirstName</div>
+                                <div class="widget-title">Your Manager</div>
+                                <div class="widget-subtitle">
+                                    <a href="mailto:@Model.Manager.Email">@Model.Manager.Email</a> |
+                                    Office : @Model.Manager.Phone | <a href="sip:@Model.Manager.Email">Chat on Lync / Skype</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                    <div class="widget widget-default widget-item-icon">
+                        <div class="widget-item-left">
+                            @if (Model.HrPerson.ProfilePix == null || Model.HrPerson.ProfilePix.Count() == 0)
+                            {
+                                <span class="fa fi-torso"></span>
+                            }
+                            else
+                            {
+                                <img style="width:75px;" alt="@Model.HrPerson.FirstName @Model.HrPerson.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.HrPerson.ProfilePix))" class="actualphoto">
+                            }
+                        </div>
+                        <div class="widget-data">
+                            <div class="widget-int num-count num-count-20px">@Model.HrPerson.FirstName</div>
+                            <div class="widget-title">HR Manager</div>
+                            <div class="widget-subtitle">
+                                <a href="mailto:@Model.HrPerson.Email">@Model.HrPerson.Email</a> |
+                                Office : @Model.HrPerson.Phone | <a href="sip:@Model.HrPerson.Email">Chat on Lync / Skype</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+   
+    <div class="large-6 columns " id="ActionItems" style="display:none;height: 466px;" data-step="3" data-intro="These are your action items. Some of the action items will have a checkbox against them. Click the checkbox once you are done with the task and do not need to be reminded of it.">
+        <div class=" panel panel-default">
+            <div class=" panel-heading">
+                <div class="panel-title-box">
+                    <h3 class="panel-title">Pending Tasks:</h3>
+                </div>
+            </div>
+
+            <div class="panel-body ">
+                <div style="display:inline-block;float:left;height:340px;" class="scroll-pane">
+
+                    <div id="tasks" class="tasks ui-sortable ">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<h3>Your contact liaisons:</h3>
+            If you have any questions or need any help at @Model.Org.Name please contact your HR Manager or Manager.<br><br>
+            <div>
+                <div class="card-grad pull-left" style="text-align:center; width:200px">
+                    <label>Your HR Manager:</label>
+                    <img src="@Url.Content("~/images/follower-man-user-login-round-512.png")" style="width:50px" /><br>
+                    <h5> @Model.HrPerson.FirstName </h5>
+                    <a href="mailto:@Model.HrPerson.Email">@Model.HrPerson.Email</a><br>
+                    Office : @Model.HrPerson.Phone
+                </div>
+                <div class="card-grad pull-left ">
+                    <label>Your Manager:</label>
+                    <img src="@Url.Content("~/images/follower-man-user-login-round-512.png")" style="width:50px" /><br>
+                    <h5> @Model.Manager.FirstName </h5>
+                    <a href="mailto:@Model.Manager.Email">@Model.Manager.Email</a><br>
+                    Office : @Model.Manager.Phone
+                </div>
+            </div>
+        </div>*@
+
+    @** This is the co-workers section *@
+    <div class="columns large-6" style="display:none;" id="coworkers">
+        <div class=" panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title-box">
+                    <h3 class="panel-title">Your Co-Workers:</h3>
+
+                </div>
+
+            </div>
+            <div class="panel-body list-group list-group-contacts scroll-pane">
+                <span style="margin-left:5px;"> People you will be working with.</span>
+                @foreach (DataService.Employee coworker in Model.Coworkers)
+                {
+                    <div class="list-group-item">
+                        <div class="list-group-status status-online"></div>
+                        @if (coworker.ProfilePix == null || coworker.ProfilePix.Count() == 0)
+                        {
+                            <img alt="@coworker.FirstName @coworker.LastName" src="@Url.Content("~/images/follower-man-user-login-round-512.png")">
+                        }
+                        else
+                        {
+                            <img class="actualphoto" alt="@coworker.FirstName @coworker.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(coworker.ProfilePix))">
+                        }
+                        <span class=" contacts-title">@coworker.FirstName</span>
+                        <p style="width:100%;">
+                            @coworker.Phone &nbsp;| &nbsp;<a href="mailto:@coworker.Email">@coworker.Email</a>
+                            <div class="list-group-controls">
+                                <a title="Click to chat" alt="Click to chat" href="sip:@coworker.Email"><img title="Click to chat" alt="Click to chat" height="40" src="@Url.Content("~/images/Chat-2-128.png")" /></a>
+                            </div>
+                        </p>
+
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="row">
+        <div class="coworkers large-6 columns card-plain " style="text-align:center;">
+            <h3>People you will be working with:</h3>
+            This is your team and co-workers.<br><br>
+            @foreach (DataService.Employee coworker in Model.Coworkers)
+            {
+                <div class="card-grad pull-left" style="text-align:center; width:200px">
+
+                    <img src="@Url.Content("~/images/follower-man-user-login-round-512.png")" style="width:50px" /><br>
+                    <h5> @coworker.FirstName </h5>
+                    <a href="mailto:@coworker.Email">@coworker.Email</a><br>
+                    Office : @coworker.Phone
+                </div>
+            }
+        </div>
+    </div>*@
+<div class="row">
+    <div class="toolsandpeopleblock large-12 columns" style="text-align:center;" data-step="4" data-intro="These are some suseful link that you can use.">
+        <div class=" panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title-box">
+                    <h3 class="panel-title">Tools To Get Famililar With:</h3>
+
+                </div>
+
+            </div>
+            <div class="panel-body list-group list-group-contacts">
+                <span style="margin-left:5px;"> Below are a few tools and resources you'll be using at @Model.Org.Name</span>
+
+                <div class="tools">
+                    <div class="card tool">
+                        <h5>ASCENT</h5>
+                        <div class="toolimage">
+                            <img src="http://avpn-ascent/avalaraess/Pages/images/Login/logonESS.jpg">
+                        </div>
+                        <br>
+                        <div class="tooldesc">
+                            We use Ascent as a self service portal for employees. You will use this for leave permission, OD etc.
+                        </div>
+                        <br />
+                        <a href="http://avpn-ascent/avalaraess/">Go</a>
+                    </div>
+                    <div class="card tool">
+                        <h5>JIRA</h5>
+                        <div class="toolimage">
+                            <img src="https://www.atlassian.com/wac/software/jira/sectionWrap/0/column/0/imageBinary/jirasoftware_rgb_blue.png">
+                        </div>
+                        <br>
+                        <div class="tooldesc">
+                            We use Jira for tracking our project progress.
+                        </div>
+                        <br />
+                        <a href="https://avalara.atlassian.net/secure/Dashboard.jspa">Go</a>
+                    </div>
+                    <div class="card tool">
+                        <h5>Outlook Web Access</h5>
+                        <div class="toolimage">
+                            <img src="~/Images/Microsoft_Outlook_2013_logo.svg.png" />
+                        </div>
+                        <br>
+                        <div class="tooldesc">
+                            You can access your email using the web version of outlook. Click the GO link below to work with your emails.
+                        </div>
+                        <br />
+                        <a href="https://outlook.office365.com/owa/avalara.com/">Go</a>
+                    </div>
+                    <div class="card tool">
+                        <h5>Sharepoint</h5>
+                        <div class="toolimage">
+                            <img src="~/Images/SharepointLogo.png" />
+                        </div>
+                        <br>
+                        <div class="tooldesc">
+                            Sharepoint is our document and information repository.
+                        </div>
+                        <br />
+
+                        <a href="https://avalara1.sharepoint.com/SitePages/Home.aspx">Go</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="tourpref_popup" class="modal fade" role="dialog">
+    <div class="modal-dialog  large-8 small-5">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Website Tour Preference : </h4>
+            </div>
+            <div class="modal-body">
+                If you would like to have an assisted tour of each page as you navigate, click "New User". Otherwise you can click "Expert".
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn  btn-default" data-dismiss="modal" onclick="markasexpert()">Expert</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="starttour('homeme')">New User</button>
+                @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+
+
+    var waitforbadgeEffect = 0;
+    function deletebadge(idofbadge) {
+        waitforbadgeEffect = 1;
+        $.get("@Url.Content("~/employee/MarkBadgeAsRead?id=")" + idofbadge, function (status) {
+            if (status.deleted == 1) {
+                $("#_" + idofbadge).next().addClass("strike");
+                waitforbadgeEffect = 2;
+
+            }
+        });
+    }
+    function GetBadges() {
+        $.get('@Url.Content("~/employee/getallbadges?full=1")', function (badges) {
+            if (waitforbadgeEffect == 0) {
+                $("#ActionItems #tasks").html("");
+                $.each(badges, function (i, o) {
+                    if (o.FromBadge != null)
+                        $("#ActionItems #tasks").append("<div class='task-item task-success'><div class='task-text'><input class='deletebadge btn btn-sm btn-info' title='Click to mark it as read' type='button' id=_" + o.Id + " onclick='deletebadge(" + o.Id + ")' value='Remove'/><span>" + o.Description.replace("~/", "@Url.Content("~/")") + "</span></div></div>").fadeIn("slow");
+                    else
+                        $("#ActionItems #tasks").append("<div class='task-item task-warning'><div class='task-text'><span class='nomargin'>" + o.Description.replace("~/", "@Url.Content("~/")").trim() + "</span></div></div>").fadeIn("slow");
+                });
+                try {
+                    if (badges.length == 0) {
+                        $("#ActionItems #tasks").html("<div class='task-item task-info'><div class='task-text'>There are no actionable items for you.</div></div>");
+                        //$("#ActionItems #tasks").css("list-style-type", "none");
+                    }
+                    else {
+
+                        $("#ActionItems").fadeIn();
+                        $("#coworkers").hide();
+                    }
+                } catch (x) { }
+            }
+            $('.scroll-pane').jScrollPane({
+                showArrows: true,
+                horizontalGutter: 10
+            });
+
+            waitforbadgeEffect = 0;
+            setPrimaryInfoWidth();
+            setTimeout(GetBadges, 3000);
+        });
+    }
+    @*function GetBadges() {
+        $.get('@Url.Content("~/employee/getallbadges?full=1")', function (badges) {
+            if (waitforbadgeEffect == 0) {
+                $("#ActionItems ol").html("");
+                $.each(badges, function (i, o) {
+                    if (o.FromBadge != null)
+                        $("#ActionItems ol").append("<li><input class='deletebadge' title='Click to mark it as read' type='checkbox' id=_" + o.Id + " onclick='deletebadge(" + o.Id + ")'/><span>" + o.Description.replace("~/", "@Url.Content("~/")") + "</span></li>").fadeIn("slow");
+                    else
+                        $("#ActionItems ol").append("<li><span class='nomargin'>" + o.Description.replace("~/", "@Url.Content("~/")").trim() + "</span></li>").fadeIn("slow");
+                });
+                try {
+                    $("#ActionItems ol").css("list-style-type", "decimal");
+                    if (badges.length == 0) {
+                        $("#ActionItems ol").html("<li>There are no actionable items for you.</li>");
+                        $("#ActionItems ol").css("list-style-type", "none");
+                    }
+                    else {
+
+                        $("#ActionItems").fadeIn();
+                    }
+                } catch (x) { }
+            }
+            var timeoutval = 10000;
+            if (waitforbadgeEffect > 0)
+                timeoutval = 3000;
+            waitforbadgeEffect = 0;
+             setPrimaryInfoWidth()
+          //  setTimeout(GetBadges, timeoutval);
+        });
+    }*@
+    function setPrimaryInfoWidth() {
+        var widthIncrement = 6;
+        try {
+            if (!$("#ActionItems").is(":visible")) {
+                $("#coworkers").show();
+            }
+            else {
+                $("#coworkers").hide();
+            }
+        }
+        catch (x) { }
+        if (!$("#CurrentCycleStatus").is(":visible")) {
+            widthIncrement += 6;
+        }
+        $(".welcomeblock").removeClass("large-6").removeClass("large-12").addClass("large-" + widthIncrement);
+    }
+    function GetCurrentCycleStatus() {
+
+        $.get("@Url.Content("~/employee/GetCurrentCycleStatuses")", function (resp) {
+            if (resp != null && resp.length > 0) {
+                $("#CurrentCycleStatus").show();
+            }
+            else {
+                $("#CurrentCycleStatus").hide();
+            }
+            for (i = 0; i < resp.length; i++) {
+                //debugger;
+                var perc_complete = 0;
+                var temp = 0;
+                var phase = "";
+                if (resp[i].GoalSettingStatus == 1000)// This is the Eval cycle
+                {
+                    perc_complete = ((temp = resp[i].EvaluationStatus));
+                    phase = "Evaluation Phase";
+                }
+                else if (resp[i].EvaluationStatus == 1000) {
+                    perc_complete = ((temp = resp[i].GoalSettingStatus));
+                    phase = "Goal Setting Phase";
+                }
+                else {
+
+                }
+                $("#currentcyclestatus" + i + " .progress .progress-bar").css("width", perc_complete + "%");
+                $("#percentcomplete" + i).html(MapStatus(temp, perc_complete, resp[i].GoalSettingStatus, resp[i].EvaluationStatus));
+                $("#cycletype" + i).html(resp[i].Title + " - <b>" + phase + "</b>");
+                $("#currentcyclestatus" + i).show();
+            }
+            setPrimaryInfoWidth();
+        });
+    }
+
+    function MapStatus(inp, perc, goalsettingstatus, evalsettingstatus) {
+        return (goalsettingstatus < 1000 ? MapGoalCycleStatus(inp) : MapEvalCycleStatus(inp)) + " (overall " + perc + "% complete)";
+    }
+
+    function MapGoalCycleStatus(inp) {
+        switch (inp) {
+            case 0: return "Not started";
+            case 25: return "Goals saved";
+            case 50: return "Submitted to manager"
+            case 75: return "Manager reviewing"
+            case 100: return "Goals set"
+        }
+
+    }
+
+    function MapEvalCycleStatus(inp) {
+        switch (inp) {
+            case 0: return "Self-evaluation not started";
+            case 20: return "Self-evaluation started";
+            case 40: return "Self-evaluation submitted";
+            case 60: return "Manager evaluating";
+            case 80: return "Manager evaluation complete";
+            case 90: return "HR approved";
+            case 100: return "Complete";
+        }
+
+    }
+
+
+    $(document).ready(function () {
+        GetBadges();
+        GetCurrentCycleStatus(); @if ((Model.Myself.FirstTime.HasValue && Model.Myself.FirstTime.Value) || !Model.Myself.FirstTime.HasValue)
+        {
+            <text>
+        $.get("@Url.Content("~/home/getSessionValue?key=homeme")", function (r) {
+            if (r == "")
+                $("#tourpref_popup").modal("show");
+        });
+        </text>
+         }
+   
+
+
+
+    });
+</script>
+
+
+
+<style>
+    .strike {
+        text-decoration: line-through !important;
+        color: lightgray !important;
+    }
+
+    .deletebadge {
+        margin-right: 10px!important;
+    }
+
+    html, body {
+        background: #f5f5f5 url("@Url.Content("~/images/bg.png")") repeat scroll left top;
+        color: #656d78;
+        font-family: "Open Sans",sans-serif;
+        /*font-size: 12px;*/
+        margin: 0;
+        min-height: 100%;
+        overflow-x: hidden;
+        padding: 0;
+        position: relative;
+    }
+
+    .list-group-contacts img {
+        max-height: 50px;
+    }
+
+    .tooldesc {
+        height: 72px;
+        text-align: left;
+    }
+
+    .toolimage {
+        background-color: white;
+        height: 85px;
+        text-align: center;
+        vertical-align: middle;
+        width: 100%;
+        padding: 5px;
+        border: thin solid lightgray;
+        border-radius: 3px 4px;
+    }
+
+    html, body {
+        /*font-size: 100% !important;*/
+    }
+
+    .panel .panel-title {
+        float: none;
+    }
+
+    .toolimage img {
+        max-height: 75px;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .tools {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+        /*transform: translateX(-50%);*/
+    }
+
+    .tool {
+        width: 200px;
+        float: left;
+        padding: 10px;
+        background-color: #eee;
+    }
+
+    .widget-item-left .fa {
+        color: #434a54;
+    }
+
+    #mycoutercontainer {
+        font-size: 12px;
+        color: #656d78;
+        /*letter-spacing:1px;*/
+    }
+
+    .whotocontactblock, .toolsandpeopleblock {
+        /*padding-left: 50px;
+            padding-right: 50px;*/
+        /*line-height: 30px;*/
+    }
+
+    .widget .widget-title {
+        font-size: 11px;
+    }
+
+    .widget .widget-int {
+        line-height: 25px;
+    }
+
+    .panel {
+        margin-right: 5px;
+        color: gray;
+    }
+
+    .panel-default .panel-heading {
+        background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #545f79 0%, #3b455d 100%) repeat scroll 0 0;
+    }
+
+    .widget.widget-default {
+        color: gray;
+    }
+
+    .panel .panel-heading .panel-title-box h3 {
+        color: #FFF;
+    }
+
+    .contactsandcoworkers .panel {
+        height: 446px;
+        line-height: 30px;
+    }
+    .contactsandcoworkers .panel-body.list-group.list-group-contacts
+    {
+        height: 380px;
+        overflow:auto;
+    }
+
+    .whotocontactblock > div {
+        display: block;
+        position: relative;
+        /*width: 50%;*/
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    h5 {
+        color: gray;
+    }
+
+    #ActionItems ol li {
+        list-style-type: decimal;
+    }
+
+        #ActionItems ol li span {
+            margin-left: 10px;
+        }
+            #ActionItems ol li span.nomargin {
+            margin-left:0px;
+            }
+    .task-text {
+        background-color:#f9f9f9;
+    }
+     #CurrentCycleStatus .panel {
+    padding:0px;
+    padding-left:5px;
+    padding-right:5px;
+    }
+     /* Styles specific to this particular page */
+.scroll-pane,
+.scroll-pane-arrows
+{
+	width: 100%;
+	height: 200px;
+	overflow: auto;
+}
+.horizontal-only
+{
+	height: auto;
+	max-height: 200px;
+}
+    .jspDrag {
+    background:#ddd none repeat scroll 0 0 ;
+    }
+    .jspArrowUp {
+    background-position: 85px -4px !important;
+}
+    .jspArrowDown {
+    background-position: 0px 0px !important;
+}
+    .jspArrow {
+    background-image: none!important;
+    border-radius: 10px;
+}
+    .jspVerticalBar .jspTrack {
+    width:10px!important;
+    }
+    .jspVerticalBar {
+        width:11px!important;
+         border-radius: 5px;
+    }
+</style>

@@ -1,0 +1,307 @@
+﻿@using X.Scaffolding.Core
+@model DataService.EmployeeExtended
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+@functions{
+
+    public string formatDate(DateTime? datetime)
+    {
+        if (datetime.HasValue)
+        {
+            return datetime.Value.ToString("dd-MMM-yyyy");
+        }
+        else
+            return "";
+    }
+}
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+@*<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+<link href="~/Content/bootstrap-datepicker3.css" rel="stylesheet" />
+<h2>@ViewBag.Title</h2>
+
+@if (!string.IsNullOrEmpty((string)TempData["msg"]))
+{
+    <div class="success">@TempData["msg"]</div>
+}
+<div class="col-md-3 col-sm-4 col-xs-5">
+
+    <form class="form-horizontal">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3><span class="glyphicon glyphicon-user"></span> @Model.FirstName @Model.LastName</h3>
+                <p>@Model.Designation</p>
+                <div id="user_image" class="text-center">
+                    @if (Model.ProfilePix == null || Model.ProfilePix.Count() == 0)
+                    {
+                        <img alt="@Model.FirstName @Model.LastName" style="width:75px" src="@Url.Content("~/images/follower-man-user-login-round-512.png")">
+                        <br/><span style="color:red;">Please upload a photo in outlook using this : <a target="_blank" href="https://outlook.office365.com/owa/avalara.com/">Outlook Link</a></span>
+                    }
+                    else
+                    {
+                        <img style="width:100px;margin-top:15px;" alt="@Model.FirstName @Model.LastName"  src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.ProfilePix))" class="actualphoto">
+                        
+                        
+                    }
+                </div>
+            </div>
+            <div class="panel-body form-group-separated" style="height: 335px;">
+
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-5 control-label">#ID</label>
+                    <div class="col-md-9 col-xs-7">
+                        <input type="text" disabled="" class="form-control" value="@Model.OrgEmpId" style="color:darkgray">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-5 control-label">Login</label>
+                    <div class="col-md-9 col-xs-7">
+                        <input type="text" disabled class="form-control" value="@Model.Email.Split(new string[]{"@"}, StringSplitOptions.RemoveEmptyEntries)[0]">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-5 control-label">E-mail</label>
+                    <div class="col-md-9 col-xs-7">
+                        <input type="text" class="form-control" disabled value="@Model.Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-5 control-label">Org.</label>
+                    <div class="col-md-9 col-xs-7">
+                        <input type="text" class="form-control" disabled value="@Model.Organization">
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="col-md-5 col-sm-8 col-xs-7">
+
+    <form class="form-horizontal" method="post" action="@Url.Content("~/employee/EditForEmployee")">
+        <input type="hidden" name="gid" value="@Model.gid" />
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3><span class="glyphicon glyphicon-pencil"></span> Profile</h3>
+                <p>You may edit this information.</p>
+            </div>
+            <div class="panel-body form-group-separated" style="height: 435px;">
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-5 control-label">First Name</label>
+                    <div class="col-md-9 col-xs-7">
+                        <input type="text" class="form-control" value="@Model.FirstName" name="FirstName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-5 control-label">Last Name</label>
+                    <div class="col-md-9 col-xs-7">
+                        <input type="text" class="form-control" value="@Model.LastName" name="LastName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-5 control-label">Phone</label>
+                    <div class="col-md-9 col-xs-7">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-earphone"></span>
+                            </span>
+                            <input type="tel" value="@Model.Phone " name="Phone" id="Phone" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-5 control-label">Mobile</label>
+                    <div class="col-md-9 col-xs-7">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-phone"></span>
+                            </span>
+                            <input type="tel" value="@Model.Mobile " name="Mobile" id="Mobile" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12 col-xs-5">
+                        <input type="submit" class="btn btn-primary btn-rounded pull-right" value="Save" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+<div class="col-md-4">
+    <form class="form-horizontal" method="post" action="@Url.Content("~/employee/EditForHr")">
+        <input type="hidden" name="gid" value="@Model.gid" />
+        <div class="panel panel-default form-horizontal">
+            <div class="panel-body">
+                <h3><span class="glyphicon glyphicon-info-sign"></span> Quick Info</h3>
+                <p>Some quick info </p>
+            </div>
+            <div class="panel-body form-group-separated" style="height: 435px;">
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-5 control-label">Last visit</label>
+                    <div class="col-md-8 col-xs-7 line-height-30">@Model.LastVisit</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-5 control-label">Active</label>
+                    <div class="col-md-8 col-xs-7 line-height-30">
+                        @if (ViewBag.HrEdit == true)
+                        {
+                        <input type="checkbox" id="FauxActive" name="FauxActive" @(Model.Active ? "checked" : "" ) onchange="$('#Active').val($(this).is(':checked').toString().toLowerCase())" />
+                        <input type="hidden" name="Active" id="Active" value="@Model.Active.ToString().ToLower()" />
+                        }
+                        else
+                        {
+                            @(Model.Active ? "Yes" : "No")
+
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-5 control-label">Manager</label>
+                    <div class="col-md-8 col-xs-7">
+                        @if (ViewBag.HrEdit == true)
+                        {
+                            @Html.DropDownList("Manager", ((SelectList)ViewBag.ManagerList), new { id = "Manager" })
+                        }
+                        else
+                        {
+                            @Model.ManagerObj.FirstName @Model.ManagerObj.LastName
+
+                        }
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-5 control-label">Reviewer</label>
+                    <div class="col-md-8 col-xs-7">
+                        @if (ViewBag.HrEdit == true)
+                        {
+                            @Html.DropDownList("Reviewer", ((SelectList)ViewBag.ManagerList), new { id = "Reviewer" })
+                        }
+                        else
+                        {
+                            @Model.ReviewerObj.FirstName @Model.ReviewerObj.LastName
+
+                        }
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-5 control-label">Department</label>
+                    <div class="col-md-8 col-xs-7">
+                        @if (ViewBag.HrEdit == true || string.IsNullOrEmpty(Model.Department))
+                        {
+                            <input type="text" name="Department" value="@Model.Department" style="margin:0px!important;" />
+                        }
+                        else
+                        {
+                            @Model.Department
+
+                        }
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-5 control-label">Birthday</label>
+                    <div class="col-md-8 col-xs-7 line-height-30">
+                        @if (ViewBag.HrEdit == true || !Model.DoB.HasValue)
+                        {
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </span>
+                                <input type="text" name="DoB" id="DoB" class="pull-right form-control datepicker" value="@formatDate(Model.DoB)">
+                            </div>
+                            
+                            
+                        }
+                        else
+                        {
+                            @formatDate(Model.DoB)
+
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-5 ">Joining Date</label>
+                    <div class="col-md-8 col-xs-7 line-height-30">
+                        @if (ViewBag.HrEdit == true)
+                        {
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </span>
+                                <input type="text" name="DoJ" id="DoJ" class="pull-right form-control datepicker" value="@formatDate(Model.DoJ)">
+                            </div>
+                            
+                        }
+                        else
+                        {
+                            @formatDate(Model.DoJ)
+
+                        }
+                    </div>
+                </div>
+                <div class="form-group" id="hrsave">
+                    <div class="col-md-12 col-xs-5">
+                        <input type="submit" class="btn btn-primary btn-rounded pull-right" value="Save" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<style>
+    #Manager option {
+        padding-bottom: 5px;
+        letter-spacing: 1px;
+    }
+
+    .rightcontent label {
+        letter-spacing: 1px !important;
+    }
+
+    input {
+        height: auto !important;
+    }
+
+        input:disabled {
+            color: darkgray !important;
+            background-color: white !important;
+        }
+
+        input:read-only {
+            color: darkgray !important;
+            background-color: white !important;
+        }
+
+    .form-group > div {
+        line-height: 30px !important;
+    }
+</style>
+<script>
+    var selectedmenuid = "profile";
+    $(document).ready(function () {
+        $(".datepicker").datepicker({
+            startView: 2,
+            format:"dd-M-yyyy",
+            immediateUpdates:true
+        });
+
+        if(!$("#hrsave").closest("form").find("input:text").is(":visible"))
+            $("#hrsave").hide();
+    });
+    </script>

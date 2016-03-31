@@ -1,0 +1,2 @@
+obj\Release\GoalSettingActivity.g.xaml
+obj\Release\DataWorkFlow_GoalSettingActivity_BeforeInitializeComponentHelper.txt

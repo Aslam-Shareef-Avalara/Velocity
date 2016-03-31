@@ -1,0 +1,236 @@
+﻿@model List<DataService.Attachment>
+<link href="~/Content/jquery.fileupload-ui.css" rel="stylesheet" />
+<link href="~/Content/jquery.fileupload.css" rel="stylesheet" />
+@functions {
+
+    public string FormatSize(string filesize)
+    {
+        decimal s = decimal.Parse(filesize);
+        if (s > 1000)
+        {
+            s = s / 1000;
+           return  s.ToString() + " M";
+        }
+        else return s.ToString() + " KB";
+    }
+}
+<form id="fileupload" action="//jquery-file-upload.appspot.com/" method="POST" enctype="multipart/form-data">
+    <!-- Redirect browsers with JavaScript disabled to the origin page -->
+    <noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
+    <input type="hidden" name="goalid" value="@ViewBag.goalid" />
+    <input type="hidden" name="evaltype" value="@ViewBag.evaltype" />
+    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+    <p> You can add upto a maximum of 5 attachments.</p>
+    <div class="row fileupload-buttonbar">
+        <div class="col-lg-7">
+            <!-- The fileinput-button span is used to style the file input field as button -->
+            <span class="btn btn-success fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>Add files...</span>
+                <input type="file" name="files" multiple>
+            </span>
+            <button type="submit" class="btn btn-primary start">
+                <i class="glyphicon glyphicon-upload"></i>
+                <span>Start upload</span>
+            </button>
+            @*<button type="reset" class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>*@
+            @*<button type="button" class="btn btn-danger delete">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" class="toggle">*@
+            <!-- The global file processing state -->
+            <span class="fileupload-process"></span>
+        </div>
+        <!-- The global progress state -->
+        <div class="col-lg-5 fileupload-progress fade">
+            <!-- The global progress bar -->
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+            </div>
+            <!-- The extended global progress state -->
+            <div class="progress-extended">&nbsp;</div>
+        </div>
+    </div>
+    <!-- The table listing the files available for upload/download -->
+    <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+
+    <table style="width:100%">
+        <tbody >
+            @foreach (DataService.Attachment attachment in Model)
+            {
+                <tr class="fade in _@attachment.AttachmentId">
+                    <td>
+                        <span class="preview">
+
+                            <a data-gallery="" download="@attachment.FileName" title="@attachment.FileName" href="@Url.Content("~/")evaluation/Download/?fileid=@attachment.AttachmentId"><img src="data:image/png;base64,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"></a>
+
+                        </span>
+                    </td>
+                    <td>
+                        <p class="name">
+
+                            <a data-gallery="" download="@attachment.FileName" title="@attachment.FileName" href="@Url.Content("~/")evaluation/Download/?fileid=@attachment.AttachmentId">@attachment.FileName</a>
+
+                        </p>
+
+                        <div></div>
+
+                    </td>
+                    <td>
+                        <span class="size">@FormatSize(attachment.FileSize)</span>
+                    </td>
+                    <td style="text-align:right;">
+
+                        <button data-url="@Url.Content("~/")evaluation/Delete/?fileid=@attachment.AttachmentId" onclick="return checkifdeleted('@Url.Content("~/")evaluation/delete/?fileid=@attachment.AttachmentId')" data-type="GET" class="btn btn-danger delete customdelete">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            <span>Delete</span>
+                        </button>
+                        <input type="checkbox" class="toggle" value="1" name="delete">
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+<script>
+    var selectedmenuid = "me";
+
+    function checkifdeleted(deleteUrl) {
+        var obj = $(this);
+        $.get(deleteUrl, function (resp) {
+            eval("var deletedObj = "+resp);
+            console.log($("tr._" + deletedObj.files).length + " -- "+deletedObj.files);
+            $("tr._" + deletedObj.files).fadeOut("slow").remove();
+        });
+        return false;
+    }
+
+
+    $(document).ready(function () {
+        if (typeof setGoalID === "function") {
+            setGoalID('@ViewBag.goalid');
+        }
+     
+    });
+</script>
+<script id="template-upload" type="text/x-tmpl">
+
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+            <button class="btn btn-primary start" disabled>
+                <i class="glyphicon glyphicon-upload"></i>
+                <span>Start</span>
+            </button>
+            {% } %}
+            {% if (!i) { %}
+            <button class="btn btn-warning cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>Cancel</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+            <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+            <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deletewithcredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                <i class="glyphicon glyphicon-trash"></i>
+                <span>Delete</span>
+            </button>
+            <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+            <button class="btn btn-warning cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>Cancel</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>
+@*<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>*@
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="~/scripts/jquery.ui.widget.js"></script>
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="~/scripts/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="~/scripts/load-image.all.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="~/scripts/canvas-to-blob.min.js"></script>
+<!-- blueimp Gallery script -->
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="~/scripts/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="~/scripts/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="~/scripts/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="~/scripts/jquery.fileupload-image.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="~/scripts/jquery.fileupload-validate.js"></script>
+<!-- The File Upload user interface plugin -->
+<script src="~/scripts/jquery.fileupload-ui.js"></script>
+<!-- The main application script -->
+<script src="~/scripts/main.js"></script>
+<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+<!--[if (gte IE 8)&(lt IE 10)]>
+<script src="js/cors/jquery.xdr-transport.js"></script>
+<![endif]-->
+<script>
+    
+    $(document).ready(function () {
+       
+        $('#fileupload').fileupload(
+    'option',
+    'url',
+    '@Url.Content("~/evaluation/fileupload?empid=")' + '@(ViewBag.AttachmentForUser)&hashvalue=' + new Date().getTime()
+);
+        starttour("sharedattachments");
+    });
+
+</script>

@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApplication2", "MvcApplication2\MvcApplication2.csproj", "{2313514E-69B6-4309-9DA6-72CB5DEE1A21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataService", "DataService\DataService.csproj", "{A92D2AA1-DFFD-4D01-B894-1752606A0113}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataWorkFlow", "DataWorkFlow\DataWorkFlow.csproj", "{98EC024C-6439-44B1-8B1E-29E457B2201F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A9D1A234-C7C4-41F7-B5C5-E3B2772ACE07}"
+	ProjectSection(SolutionItems) = preProject
+		DBBackup.sql = DBBackup.sql
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 4
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DataService\\DataService.csproj
+		SccLocalPath1 = .
+		SccProjectFilePathRelativizedFromConnection1 = DataService\\
+		SccProjectUniqueName2 = DataWorkFlow\\DataWorkFlow.csproj
+		SccLocalPath2 = .
+		SccProjectFilePathRelativizedFromConnection2 = DataWorkFlow\\
+		SccProjectUniqueName3 = MvcApplication2\\MvcApplication2.csproj
+		SccLocalPath3 = .
+		SccProjectFilePathRelativizedFromConnection3 = MvcApplication2\\
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2313514E-69B6-4309-9DA6-72CB5DEE1A21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2313514E-69B6-4309-9DA6-72CB5DEE1A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2313514E-69B6-4309-9DA6-72CB5DEE1A21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2313514E-69B6-4309-9DA6-72CB5DEE1A21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A92D2AA1-DFFD-4D01-B894-1752606A0113}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A92D2AA1-DFFD-4D01-B894-1752606A0113}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A92D2AA1-DFFD-4D01-B894-1752606A0113}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A92D2AA1-DFFD-4D01-B894-1752606A0113}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EC024C-6439-44B1-8B1E-29E457B2201F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EC024C-6439-44B1-8B1E-29E457B2201F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EC024C-6439-44B1-8B1E-29E457B2201F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EC024C-6439-44B1-8B1E-29E457B2201F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

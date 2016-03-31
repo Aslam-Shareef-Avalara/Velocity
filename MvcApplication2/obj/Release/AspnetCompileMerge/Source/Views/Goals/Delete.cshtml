@@ -1,0 +1,79 @@
+﻿@using X.Scaffolding.Core
+@model DataService.Goal
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <dl class="dl-horizontal">
+        <dt>ModifiedBy</dt>
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedBy)
+        </dd>
+
+        <dt>ModifiedDate</dt>
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedDate)
+        </dd>
+
+        <dt>Goal1</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Goal1)
+        </dd>
+
+        <dt>Fixed</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fixed)
+        </dd>
+
+        <dt>Publshed</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Publshed)
+        </dd>
+
+        <dt>Draft</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Draft)
+        </dd>
+
+        <dt>Saved</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Saved)
+        </dd>
+
+        <dt>Approved</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Approved)
+        </dd>
+
+        <dt>Employee</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Employee.FirstName)
+        </dd>
+
+        <dt>EvaluationCycle</dt>
+        <dd>
+            @Html.DisplayFor(model => model.EvaluationCycle.Title)
+        </dd>
+
+        <dt>Organization</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Organization.Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">            
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
+    }
+</div>

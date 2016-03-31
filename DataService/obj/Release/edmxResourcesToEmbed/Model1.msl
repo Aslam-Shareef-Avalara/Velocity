@@ -1,0 +1,809 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PBlankModelStoreContainer" CdmEntityContainer="PBlankEntities">
+    <EntitySetMapping Name="aspnet_Applications">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_Applications">
+        <MappingFragment StoreEntitySet="aspnet_Applications">
+          <ScalarProperty Name="ApplicationName" ColumnName="ApplicationName" />
+          <ScalarProperty Name="LoweredApplicationName" ColumnName="LoweredApplicationName" />
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_Membership">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_Membership">
+        <MappingFragment StoreEntitySet="aspnet_Membership">
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="PasswordFormat" ColumnName="PasswordFormat" />
+          <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+          <ScalarProperty Name="MobilePIN" ColumnName="MobilePIN" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="LoweredEmail" ColumnName="LoweredEmail" />
+          <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+          <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
+          <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+          <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+          <ScalarProperty Name="LastPasswordChangedDate" ColumnName="LastPasswordChangedDate" />
+          <ScalarProperty Name="LastLockoutDate" ColumnName="LastLockoutDate" />
+          <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
+          <ScalarProperty Name="FailedPasswordAttemptWindowStart" ColumnName="FailedPasswordAttemptWindowStart" />
+          <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
+          <ScalarProperty Name="FailedPasswordAnswerAttemptWindowStart" ColumnName="FailedPasswordAnswerAttemptWindowStart" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_Paths">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_Paths">
+        <MappingFragment StoreEntitySet="aspnet_Paths">
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="PathId" ColumnName="PathId" />
+          <ScalarProperty Name="Path" ColumnName="Path" />
+          <ScalarProperty Name="LoweredPath" ColumnName="LoweredPath" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_PersonalizationAllUsers">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_PersonalizationAllUsers">
+        <MappingFragment StoreEntitySet="aspnet_PersonalizationAllUsers">
+          <ScalarProperty Name="PathId" ColumnName="PathId" />
+          <ScalarProperty Name="PageSettings" ColumnName="PageSettings" />
+          <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_PersonalizationPerUser">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_PersonalizationPerUser">
+        <MappingFragment StoreEntitySet="aspnet_PersonalizationPerUser">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PathId" ColumnName="PathId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="PageSettings" ColumnName="PageSettings" />
+          <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_Profile">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_Profile">
+        <MappingFragment StoreEntitySet="aspnet_Profile">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="PropertyNames" ColumnName="PropertyNames" />
+          <ScalarProperty Name="PropertyValuesString" ColumnName="PropertyValuesString" />
+          <ScalarProperty Name="PropertyValuesBinary" ColumnName="PropertyValuesBinary" />
+          <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_Roles">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_Roles">
+        <MappingFragment StoreEntitySet="aspnet_Roles">
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+          <ScalarProperty Name="LoweredRoleName" ColumnName="LoweredRoleName" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_SchemaVersions">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_SchemaVersions">
+        <MappingFragment StoreEntitySet="aspnet_SchemaVersions">
+          <ScalarProperty Name="Feature" ColumnName="Feature" />
+          <ScalarProperty Name="CompatibleSchemaVersion" ColumnName="CompatibleSchemaVersion" />
+          <ScalarProperty Name="IsCurrentVersion" ColumnName="IsCurrentVersion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_Users">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_Users">
+        <MappingFragment StoreEntitySet="aspnet_Users">
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="LoweredUserName" ColumnName="LoweredUserName" />
+          <ScalarProperty Name="MobileAlias" ColumnName="MobileAlias" />
+          <ScalarProperty Name="IsAnonymous" ColumnName="IsAnonymous" />
+          <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="aspnet_WebEvent_Events">
+      <EntityTypeMapping TypeName="PBlankModel.aspnet_WebEvent_Events">
+        <MappingFragment StoreEntitySet="aspnet_WebEvent_Events">
+          <ScalarProperty Name="EventId" ColumnName="EventId" />
+          <ScalarProperty Name="EventTimeUtc" ColumnName="EventTimeUtc" />
+          <ScalarProperty Name="EventTime" ColumnName="EventTime" />
+          <ScalarProperty Name="EventType" ColumnName="EventType" />
+          <ScalarProperty Name="EventSequence" ColumnName="EventSequence" />
+          <ScalarProperty Name="EventOccurrence" ColumnName="EventOccurrence" />
+          <ScalarProperty Name="EventCode" ColumnName="EventCode" />
+          <ScalarProperty Name="EventDetailCode" ColumnName="EventDetailCode" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+          <ScalarProperty Name="ApplicationPath" ColumnName="ApplicationPath" />
+          <ScalarProperty Name="ApplicationVirtualPath" ColumnName="ApplicationVirtualPath" />
+          <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+          <ScalarProperty Name="RequestUrl" ColumnName="RequestUrl" />
+          <ScalarProperty Name="ExceptionType" ColumnName="ExceptionType" />
+          <ScalarProperty Name="Details" ColumnName="Details" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Attachments">
+      <EntityTypeMapping TypeName="PBlankModel.Attachment">
+        <MappingFragment StoreEntitySet="Attachments">
+          <ScalarProperty Name="AttachmentId" ColumnName="AttachmentId" />
+          <ScalarProperty Name="FileContents" ColumnName="FileContents" />
+          <ScalarProperty Name="EvaluationGoalId" ColumnName="EvaluationGoalId" />
+          <ScalarProperty Name="FileType" ColumnName="FileType" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="EvaluationType" ColumnName="EvaluationType" />
+          <ScalarProperty Name="FileSize" ColumnName="FileSize" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Badges">
+      <EntityTypeMapping TypeName="PBlankModel.Badge">
+        <MappingFragment StoreEntitySet="Badges">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ToBadge" ColumnName="ToBadge" />
+          <ScalarProperty Name="FromBadge" ColumnName="FromBadge" />
+          <ScalarProperty Name="BadgeType" ColumnName="BadgeType" />
+          <ScalarProperty Name="Viewed" ColumnName="Viewed" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeEducations">
+      <EntityTypeMapping TypeName="PBlankModel.EmployeeEducation">
+        <MappingFragment StoreEntitySet="EmployeeEducation">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="CourseName" ColumnName="CourseName" />
+          <ScalarProperty Name="YearOfPassing" ColumnName="YearOfPassing" />
+          <ScalarProperty Name="InstitutionName" ColumnName="InstitutionName" />
+          <ScalarProperty Name="LevelDegree" ColumnName="LevelDegree" />
+          <ScalarProperty Name="Marks" ColumnName="Marks" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeEvaluations">
+      <EntityTypeMapping TypeName="PBlankModel.EmployeeEvaluation">
+        <MappingFragment StoreEntitySet="EmployeeEvaluation">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="GoalId" ColumnName="GoalId" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="GoalRating" ColumnName="GoalRating" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Attachment1" ColumnName="Attachment1" />
+          <ScalarProperty Name="Attachment2" ColumnName="Attachment2" />
+          <ScalarProperty Name="Attachment3" ColumnName="Attachment3" />
+          <ScalarProperty Name="Attachment4" ColumnName="Attachment4" />
+          <ScalarProperty Name="Attachment" ColumnName="Attachment" />
+          <ScalarProperty Name="EvalCycleId" ColumnName="EvalCycleId" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Employees">
+      <EntityTypeMapping TypeName="PBlankModel.Employee">
+        <MappingFragment StoreEntitySet="Employees">
+          <ScalarProperty Name="gid" ColumnName="gid" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Department" ColumnName="Department" />
+          <ScalarProperty Name="Manager" ColumnName="Manager" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Designation" ColumnName="Designation" />
+          <ScalarProperty Name="DoJ" ColumnName="DoJ" />
+          <ScalarProperty Name="ProfilePix" ColumnName="ProfilePix" />
+          <ScalarProperty Name="OrgEmpId" ColumnName="OrgEmpId" />
+          <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="FirstTime" ColumnName="FirstTime" />
+          <ScalarProperty Name="DoB" ColumnName="DoB" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="EmpType" ColumnName="EmpType" />
+          <ScalarProperty Name="LastVisit" ColumnName="LastVisit" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeSkills">
+      <EntityTypeMapping TypeName="PBlankModel.EmployeeSkill">
+        <MappingFragment StoreEntitySet="EmployeeSkills">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="SkillName" ColumnName="SkillName" />
+          <ScalarProperty Name="SkillLevel" ColumnName="SkillLevel" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmploymentHistories">
+      <EntityTypeMapping TypeName="PBlankModel.EmploymentHistory">
+        <MappingFragment StoreEntitySet="EmploymentHistory">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="Company" ColumnName="Company" />
+          <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+          <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+          <ScalarProperty Name="LastPositionHeld" ColumnName="LastPositionHeld" />
+          <ScalarProperty Name="ReasonForLeaving" ColumnName="ReasonForLeaving" />
+          <ScalarProperty Name="JobDescription" ColumnName="JobDescription" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EvaluationConclusions">
+      <EntityTypeMapping TypeName="PBlankModel.EvaluationConclusion">
+        <MappingFragment StoreEntitySet="EvaluationConclusion">
+          <ScalarProperty Name="gid" ColumnName="gid" />
+          <ScalarProperty Name="employeeid" ColumnName="employeeid" />
+          <ScalarProperty Name="evalcycleid" ColumnName="evalcycleid" />
+          <ScalarProperty Name="training" ColumnName="training" />
+          <ScalarProperty Name="meetingsummary" ColumnName="meetingsummary" />
+          <ScalarProperty Name="modifiedon" ColumnName="modifiedon" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EvaluationCycles">
+      <EntityTypeMapping TypeName="PBlankModel.EvaluationCycle">
+        <MappingFragment StoreEntitySet="EvaluationCycles">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+          <ScalarProperty Name="GoalStartDate" ColumnName="GoalStartDate" />
+          <ScalarProperty Name="GoalEndDate" ColumnName="GoalEndDate" />
+          <ScalarProperty Name="EvaluationStart" ColumnName="EvaluationStart" />
+          <ScalarProperty Name="EvaluationEnd" ColumnName="EvaluationEnd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EvaluationRatings">
+      <EntityTypeMapping TypeName="PBlankModel.EvaluationRating">
+        <MappingFragment StoreEntitySet="EvaluationRatings">
+          <ScalarProperty Name="EvalCycleId" ColumnName="EvalCycleId" />
+          <ScalarProperty Name="EmpId" ColumnName="EmpId" />
+          <ScalarProperty Name="ManagerId" ColumnName="ManagerId" />
+          <ScalarProperty Name="SelfOverallRating" ColumnName="SelfOverallRating" />
+          <ScalarProperty Name="ManagerOverllRating" ColumnName="ManagerOverllRating" />
+          <ScalarProperty Name="HrApprovalStage1" ColumnName="HrApprovalStage1" />
+          <ScalarProperty Name="HrApprovalStage2" ColumnName="HrApprovalStage2" />
+          <ScalarProperty Name="OverAllReviewComment" ColumnName="OverAllReviewComment" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FeedbackAnswers">
+      <EntityTypeMapping TypeName="PBlankModel.FeedbackAnswer">
+        <MappingFragment StoreEntitySet="FeedbackAnswers">
+          <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
+          <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+          <ScalarProperty Name="Answer" ColumnName="Answer" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="EvalCycleId" ColumnName="EvalCycleId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FeedbackQuestions">
+      <EntityTypeMapping TypeName="PBlankModel.FeedbackQuestion">
+        <MappingFragment StoreEntitySet="FeedbackQuestions">
+          <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+          <ScalarProperty Name="Question" ColumnName="Question" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Goals">
+      <EntityTypeMapping TypeName="PBlankModel.Goal">
+        <MappingFragment StoreEntitySet="Goals">
+          <ScalarProperty Name="gid" ColumnName="gid" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="Goal1" ColumnName="Goal" />
+          <ScalarProperty Name="Fixed" ColumnName="Fixed" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="Evalcycleid" ColumnName="Evalcycleid" />
+          <ScalarProperty Name="Weightage" ColumnName="Weightage" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Rejected" ColumnName="Rejected" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GoalStatus">
+      <EntityTypeMapping TypeName="PBlankModel.GoalStatu">
+        <MappingFragment StoreEntitySet="GoalStatus">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ManagerEvaluations">
+      <EntityTypeMapping TypeName="PBlankModel.ManagerEvaluation">
+        <MappingFragment StoreEntitySet="ManagerEvaluation">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="GoalId" ColumnName="GoalId" />
+          <ScalarProperty Name="ManagerId" ColumnName="ManagerId" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="GoalRating" ColumnName="GoalRating" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="EvalCycleId" ColumnName="EvalCycleId" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Organizations">
+      <EntityTypeMapping TypeName="PBlankModel.Organization">
+        <MappingFragment StoreEntitySet="Organizations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OrgLocations">
+      <EntityTypeMapping TypeName="PBlankModel.OrgLocation">
+        <MappingFragment StoreEntitySet="OrgLocations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Zip" ColumnName="Zip" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RatingMasters">
+      <EntityTypeMapping TypeName="PBlankModel.RatingMaster">
+        <MappingFragment StoreEntitySet="RatingMaster">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RejectedMessages">
+      <EntityTypeMapping TypeName="PBlankModel.RejectedMessage">
+        <MappingFragment StoreEntitySet="RejectedMessages">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="EvalCycleId" ColumnName="EvalCycleId" />
+          <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="RejectionReason" ColumnName="RejectionReason" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="EvaluationPhase" ColumnName="EvaluationPhase" />
+          <ScalarProperty Name="GoalId" ColumnName="GoalId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="PBlankModel.Role">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Role1" ColumnName="Role" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FeedbackAnswerOptions">
+      <EntityTypeMapping TypeName="PBlankModel.FeedbackAnswerOption">
+        <MappingFragment StoreEntitySet="FeedbackAnswerOptions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+          <ScalarProperty Name="AnswerOption" ColumnName="AnswerOption" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Logs">
+      <EntityTypeMapping TypeName="PBlankModel.Log">
+        <MappingFragment StoreEntitySet="Log">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Thread" ColumnName="Thread" />
+          <ScalarProperty Name="Level" ColumnName="Level" />
+          <ScalarProperty Name="Logger" ColumnName="Logger" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+          <ScalarProperty Name="Exception" ColumnName="Exception" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MessageResources">
+      <EntityTypeMapping TypeName="PBlankModel.MessageResource">
+        <MappingFragment StoreEntitySet="MessageResources">
+          <ScalarProperty Name="MessageKey" ColumnName="MessageKey" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+          <ScalarProperty Name="MessageType" ColumnName="MessageType" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+          <ScalarProperty Name="Custom" ColumnName="Custom" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WFQueues">
+      <EntityTypeMapping TypeName="PBlankModel.WFQueue">
+        <MappingFragment StoreEntitySet="WFQueue">
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Wfid" ColumnName="Wfid" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="StartWf" ColumnName="StartWf" />
+          <ScalarProperty Name="WFParam1" ColumnName="WFParam1" />
+          <ScalarProperty Name="WFParam2" ColumnName="WFParam2" />
+          <ScalarProperty Name="WFParam3" ColumnName="WFParam3" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DefinitionIdentityTables">
+      <EntityTypeMapping TypeName="PBlankModel.DefinitionIdentityTable">
+        <MappingFragment StoreEntitySet="DefinitionIdentityTable">
+          <ScalarProperty Name="SurrogateIdentityId" ColumnName="SurrogateIdentityId" />
+          <ScalarProperty Name="DefinitionIdentityHash" ColumnName="DefinitionIdentityHash" />
+          <ScalarProperty Name="DefinitionIdentityAnyRevisionHash" ColumnName="DefinitionIdentityAnyRevisionHash" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Package" ColumnName="Package" />
+          <ScalarProperty Name="Build" ColumnName="Build" />
+          <ScalarProperty Name="Major" ColumnName="Major" />
+          <ScalarProperty Name="Minor" ColumnName="Minor" />
+          <ScalarProperty Name="Revision" ColumnName="Revision" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IdentityOwnerTables">
+      <EntityTypeMapping TypeName="PBlankModel.IdentityOwnerTable">
+        <MappingFragment StoreEntitySet="IdentityOwnerTable">
+          <ScalarProperty Name="SurrogateIdentityId" ColumnName="SurrogateIdentityId" />
+          <ScalarProperty Name="SurrogateLockOwnerId" ColumnName="SurrogateLockOwnerId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InstanceMetadataChangesTables">
+      <EntityTypeMapping TypeName="PBlankModel.InstanceMetadataChangesTable">
+        <MappingFragment StoreEntitySet="InstanceMetadataChangesTable">
+          <ScalarProperty Name="SurrogateInstanceId" ColumnName="SurrogateInstanceId" />
+          <ScalarProperty Name="ChangeTime" ColumnName="ChangeTime" />
+          <ScalarProperty Name="EncodingOption" ColumnName="EncodingOption" />
+          <ScalarProperty Name="Change" ColumnName="Change" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InstancePromotedPropertiesTables">
+      <EntityTypeMapping TypeName="PBlankModel.InstancePromotedPropertiesTable">
+        <MappingFragment StoreEntitySet="InstancePromotedPropertiesTable">
+          <ScalarProperty Name="SurrogateInstanceId" ColumnName="SurrogateInstanceId" />
+          <ScalarProperty Name="PromotionName" ColumnName="PromotionName" />
+          <ScalarProperty Name="Value33" ColumnName="Value33" />
+          <ScalarProperty Name="Value34" ColumnName="Value34" />
+          <ScalarProperty Name="Value35" ColumnName="Value35" />
+          <ScalarProperty Name="Value36" ColumnName="Value36" />
+          <ScalarProperty Name="Value37" ColumnName="Value37" />
+          <ScalarProperty Name="Value38" ColumnName="Value38" />
+          <ScalarProperty Name="Value39" ColumnName="Value39" />
+          <ScalarProperty Name="Value40" ColumnName="Value40" />
+          <ScalarProperty Name="Value41" ColumnName="Value41" />
+          <ScalarProperty Name="Value42" ColumnName="Value42" />
+          <ScalarProperty Name="Value43" ColumnName="Value43" />
+          <ScalarProperty Name="Value44" ColumnName="Value44" />
+          <ScalarProperty Name="Value45" ColumnName="Value45" />
+          <ScalarProperty Name="Value46" ColumnName="Value46" />
+          <ScalarProperty Name="Value47" ColumnName="Value47" />
+          <ScalarProperty Name="Value48" ColumnName="Value48" />
+          <ScalarProperty Name="Value49" ColumnName="Value49" />
+          <ScalarProperty Name="Value50" ColumnName="Value50" />
+          <ScalarProperty Name="Value51" ColumnName="Value51" />
+          <ScalarProperty Name="Value52" ColumnName="Value52" />
+          <ScalarProperty Name="Value53" ColumnName="Value53" />
+          <ScalarProperty Name="Value54" ColumnName="Value54" />
+          <ScalarProperty Name="Value55" ColumnName="Value55" />
+          <ScalarProperty Name="Value56" ColumnName="Value56" />
+          <ScalarProperty Name="Value57" ColumnName="Value57" />
+          <ScalarProperty Name="Value58" ColumnName="Value58" />
+          <ScalarProperty Name="Value59" ColumnName="Value59" />
+          <ScalarProperty Name="Value60" ColumnName="Value60" />
+          <ScalarProperty Name="Value61" ColumnName="Value61" />
+          <ScalarProperty Name="Value62" ColumnName="Value62" />
+          <ScalarProperty Name="Value63" ColumnName="Value63" />
+          <ScalarProperty Name="Value64" ColumnName="Value64" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InstancesTables">
+      <EntityTypeMapping TypeName="PBlankModel.InstancesTable">
+        <MappingFragment StoreEntitySet="InstancesTable">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SurrogateInstanceId" ColumnName="SurrogateInstanceId" />
+          <ScalarProperty Name="SurrogateLockOwnerId" ColumnName="SurrogateLockOwnerId" />
+          <ScalarProperty Name="PrimitiveDataProperties" ColumnName="PrimitiveDataProperties" />
+          <ScalarProperty Name="ComplexDataProperties" ColumnName="ComplexDataProperties" />
+          <ScalarProperty Name="WriteOnlyPrimitiveDataProperties" ColumnName="WriteOnlyPrimitiveDataProperties" />
+          <ScalarProperty Name="WriteOnlyComplexDataProperties" ColumnName="WriteOnlyComplexDataProperties" />
+          <ScalarProperty Name="MetadataProperties" ColumnName="MetadataProperties" />
+          <ScalarProperty Name="DataEncodingOption" ColumnName="DataEncodingOption" />
+          <ScalarProperty Name="MetadataEncodingOption" ColumnName="MetadataEncodingOption" />
+          <ScalarProperty Name="Version" ColumnName="Version" />
+          <ScalarProperty Name="PendingTimer" ColumnName="PendingTimer" />
+          <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+          <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
+          <ScalarProperty Name="WorkflowHostType" ColumnName="WorkflowHostType" />
+          <ScalarProperty Name="ServiceDeploymentId" ColumnName="ServiceDeploymentId" />
+          <ScalarProperty Name="SuspensionExceptionName" ColumnName="SuspensionExceptionName" />
+          <ScalarProperty Name="SuspensionReason" ColumnName="SuspensionReason" />
+          <ScalarProperty Name="BlockingBookmarks" ColumnName="BlockingBookmarks" />
+          <ScalarProperty Name="LastMachineRunOn" ColumnName="LastMachineRunOn" />
+          <ScalarProperty Name="ExecutionStatus" ColumnName="ExecutionStatus" />
+          <ScalarProperty Name="IsInitialized" ColumnName="IsInitialized" />
+          <ScalarProperty Name="IsSuspended" ColumnName="IsSuspended" />
+          <ScalarProperty Name="IsReadyToRun" ColumnName="IsReadyToRun" />
+          <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+          <ScalarProperty Name="SurrogateIdentityId" ColumnName="SurrogateIdentityId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="KeysTables">
+      <EntityTypeMapping TypeName="PBlankModel.KeysTable">
+        <MappingFragment StoreEntitySet="KeysTable">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SurrogateKeyId" ColumnName="SurrogateKeyId" />
+          <ScalarProperty Name="SurrogateInstanceId" ColumnName="SurrogateInstanceId" />
+          <ScalarProperty Name="EncodingOption" ColumnName="EncodingOption" />
+          <ScalarProperty Name="Properties" ColumnName="Properties" />
+          <ScalarProperty Name="IsAssociated" ColumnName="IsAssociated" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LockOwnersTables">
+      <EntityTypeMapping TypeName="PBlankModel.LockOwnersTable">
+        <MappingFragment StoreEntitySet="LockOwnersTable">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SurrogateLockOwnerId" ColumnName="SurrogateLockOwnerId" />
+          <ScalarProperty Name="LockExpiration" ColumnName="LockExpiration" />
+          <ScalarProperty Name="WorkflowHostType" ColumnName="WorkflowHostType" />
+          <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+          <ScalarProperty Name="EnqueueCommand" ColumnName="EnqueueCommand" />
+          <ScalarProperty Name="DeletesInstanceOnCompletion" ColumnName="DeletesInstanceOnCompletion" />
+          <ScalarProperty Name="PrimitiveLockOwnerData" ColumnName="PrimitiveLockOwnerData" />
+          <ScalarProperty Name="ComplexLockOwnerData" ColumnName="ComplexLockOwnerData" />
+          <ScalarProperty Name="WriteOnlyPrimitiveLockOwnerData" ColumnName="WriteOnlyPrimitiveLockOwnerData" />
+          <ScalarProperty Name="WriteOnlyComplexLockOwnerData" ColumnName="WriteOnlyComplexLockOwnerData" />
+          <ScalarProperty Name="EncodingOption" ColumnName="EncodingOption" />
+          <ScalarProperty Name="WorkflowIdentityFilter" ColumnName="WorkflowIdentityFilter" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RunnableInstancesTables">
+      <EntityTypeMapping TypeName="PBlankModel.RunnableInstancesTable">
+        <MappingFragment StoreEntitySet="RunnableInstancesTable">
+          <ScalarProperty Name="SurrogateInstanceId" ColumnName="SurrogateInstanceId" />
+          <ScalarProperty Name="WorkflowHostType" ColumnName="WorkflowHostType" />
+          <ScalarProperty Name="ServiceDeploymentId" ColumnName="ServiceDeploymentId" />
+          <ScalarProperty Name="RunnableTime" ColumnName="RunnableTime" />
+          <ScalarProperty Name="SurrogateIdentityId" ColumnName="SurrogateIdentityId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ServiceDeploymentsTables">
+      <EntityTypeMapping TypeName="PBlankModel.ServiceDeploymentsTable">
+        <MappingFragment StoreEntitySet="ServiceDeploymentsTable">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ServiceDeploymentHash" ColumnName="ServiceDeploymentHash" />
+          <ScalarProperty Name="SiteName" ColumnName="SiteName" />
+          <ScalarProperty Name="RelativeServicePath" ColumnName="RelativeServicePath" />
+          <ScalarProperty Name="RelativeApplicationPath" ColumnName="RelativeApplicationPath" />
+          <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+          <ScalarProperty Name="ServiceNamespace" ColumnName="ServiceNamespace" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_Applications">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_Applications">
+        <MappingFragment StoreEntitySet="vw_aspnet_Applications">
+          <ScalarProperty Name="ApplicationName" ColumnName="ApplicationName" />
+          <ScalarProperty Name="LoweredApplicationName" ColumnName="LoweredApplicationName" />
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_MembershipUsers">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_MembershipUsers">
+        <MappingFragment StoreEntitySet="vw_aspnet_MembershipUsers">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="PasswordFormat" ColumnName="PasswordFormat" />
+          <ScalarProperty Name="MobilePIN" ColumnName="MobilePIN" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="LoweredEmail" ColumnName="LoweredEmail" />
+          <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+          <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
+          <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+          <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+          <ScalarProperty Name="LastPasswordChangedDate" ColumnName="LastPasswordChangedDate" />
+          <ScalarProperty Name="LastLockoutDate" ColumnName="LastLockoutDate" />
+          <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
+          <ScalarProperty Name="FailedPasswordAttemptWindowStart" ColumnName="FailedPasswordAttemptWindowStart" />
+          <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
+          <ScalarProperty Name="FailedPasswordAnswerAttemptWindowStart" ColumnName="FailedPasswordAnswerAttemptWindowStart" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="MobileAlias" ColumnName="MobileAlias" />
+          <ScalarProperty Name="IsAnonymous" ColumnName="IsAnonymous" />
+          <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_Profiles">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_Profiles">
+        <MappingFragment StoreEntitySet="vw_aspnet_Profiles">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+          <ScalarProperty Name="DataSize" ColumnName="DataSize" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_Roles">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_Roles">
+        <MappingFragment StoreEntitySet="vw_aspnet_Roles">
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+          <ScalarProperty Name="LoweredRoleName" ColumnName="LoweredRoleName" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_Users">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_Users">
+        <MappingFragment StoreEntitySet="vw_aspnet_Users">
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="LoweredUserName" ColumnName="LoweredUserName" />
+          <ScalarProperty Name="MobileAlias" ColumnName="MobileAlias" />
+          <ScalarProperty Name="IsAnonymous" ColumnName="IsAnonymous" />
+          <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_UsersInRoles">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_UsersInRoles">
+        <MappingFragment StoreEntitySet="vw_aspnet_UsersInRoles">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_WebPartState_Paths">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_WebPartState_Paths">
+        <MappingFragment StoreEntitySet="vw_aspnet_WebPartState_Paths">
+          <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+          <ScalarProperty Name="PathId" ColumnName="PathId" />
+          <ScalarProperty Name="Path" ColumnName="Path" />
+          <ScalarProperty Name="LoweredPath" ColumnName="LoweredPath" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_WebPartState_Shared">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_WebPartState_Shared">
+        <MappingFragment StoreEntitySet="vw_aspnet_WebPartState_Shared">
+          <ScalarProperty Name="PathId" ColumnName="PathId" />
+          <ScalarProperty Name="DataSize" ColumnName="DataSize" />
+          <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_aspnet_WebPartState_User">
+      <EntityTypeMapping TypeName="PBlankModel.vw_aspnet_WebPartState_User">
+        <MappingFragment StoreEntitySet="vw_aspnet_WebPartState_User">
+          <ScalarProperty Name="PathId" ColumnName="PathId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DataSize" ColumnName="DataSize" />
+          <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InstancePromotedProperties">
+      <EntityTypeMapping TypeName="PBlankModel.InstancePromotedProperty">
+        <MappingFragment StoreEntitySet="InstancePromotedProperties">
+          <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
+          <ScalarProperty Name="EncodingOption" ColumnName="EncodingOption" />
+          <ScalarProperty Name="PromotionName" ColumnName="PromotionName" />
+          <ScalarProperty Name="Value33" ColumnName="Value33" />
+          <ScalarProperty Name="Value34" ColumnName="Value34" />
+          <ScalarProperty Name="Value35" ColumnName="Value35" />
+          <ScalarProperty Name="Value36" ColumnName="Value36" />
+          <ScalarProperty Name="Value37" ColumnName="Value37" />
+          <ScalarProperty Name="Value38" ColumnName="Value38" />
+          <ScalarProperty Name="Value39" ColumnName="Value39" />
+          <ScalarProperty Name="Value40" ColumnName="Value40" />
+          <ScalarProperty Name="Value41" ColumnName="Value41" />
+          <ScalarProperty Name="Value42" ColumnName="Value42" />
+          <ScalarProperty Name="Value43" ColumnName="Value43" />
+          <ScalarProperty Name="Value44" ColumnName="Value44" />
+          <ScalarProperty Name="Value45" ColumnName="Value45" />
+          <ScalarProperty Name="Value46" ColumnName="Value46" />
+          <ScalarProperty Name="Value47" ColumnName="Value47" />
+          <ScalarProperty Name="Value48" ColumnName="Value48" />
+          <ScalarProperty Name="Value49" ColumnName="Value49" />
+          <ScalarProperty Name="Value50" ColumnName="Value50" />
+          <ScalarProperty Name="Value51" ColumnName="Value51" />
+          <ScalarProperty Name="Value52" ColumnName="Value52" />
+          <ScalarProperty Name="Value53" ColumnName="Value53" />
+          <ScalarProperty Name="Value54" ColumnName="Value54" />
+          <ScalarProperty Name="Value55" ColumnName="Value55" />
+          <ScalarProperty Name="Value56" ColumnName="Value56" />
+          <ScalarProperty Name="Value57" ColumnName="Value57" />
+          <ScalarProperty Name="Value58" ColumnName="Value58" />
+          <ScalarProperty Name="Value59" ColumnName="Value59" />
+          <ScalarProperty Name="Value60" ColumnName="Value60" />
+          <ScalarProperty Name="Value61" ColumnName="Value61" />
+          <ScalarProperty Name="Value62" ColumnName="Value62" />
+          <ScalarProperty Name="Value63" ColumnName="Value63" />
+          <ScalarProperty Name="Value64" ColumnName="Value64" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Instances">
+      <EntityTypeMapping TypeName="PBlankModel.Instance">
+        <MappingFragment StoreEntitySet="Instances">
+          <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
+          <ScalarProperty Name="PendingTimer" ColumnName="PendingTimer" />
+          <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+          <ScalarProperty Name="LastUpdatedTime" ColumnName="LastUpdatedTime" />
+          <ScalarProperty Name="ServiceDeploymentId" ColumnName="ServiceDeploymentId" />
+          <ScalarProperty Name="SuspensionExceptionName" ColumnName="SuspensionExceptionName" />
+          <ScalarProperty Name="SuspensionReason" ColumnName="SuspensionReason" />
+          <ScalarProperty Name="ActiveBookmarks" ColumnName="ActiveBookmarks" />
+          <ScalarProperty Name="CurrentMachine" ColumnName="CurrentMachine" />
+          <ScalarProperty Name="LastMachine" ColumnName="LastMachine" />
+          <ScalarProperty Name="ExecutionStatus" ColumnName="ExecutionStatus" />
+          <ScalarProperty Name="IsInitialized" ColumnName="IsInitialized" />
+          <ScalarProperty Name="IsSuspended" ColumnName="IsSuspended" />
+          <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+          <ScalarProperty Name="EncodingOption" ColumnName="EncodingOption" />
+          <ScalarProperty Name="ReadWritePrimitiveDataProperties" ColumnName="ReadWritePrimitiveDataProperties" />
+          <ScalarProperty Name="WriteOnlyPrimitiveDataProperties" ColumnName="WriteOnlyPrimitiveDataProperties" />
+          <ScalarProperty Name="ReadWriteComplexDataProperties" ColumnName="ReadWriteComplexDataProperties" />
+          <ScalarProperty Name="WriteOnlyComplexDataProperties" ColumnName="WriteOnlyComplexDataProperties" />
+          <ScalarProperty Name="IdentityName" ColumnName="IdentityName" />
+          <ScalarProperty Name="IdentityPackage" ColumnName="IdentityPackage" />
+          <ScalarProperty Name="Build" ColumnName="Build" />
+          <ScalarProperty Name="Major" ColumnName="Major" />
+          <ScalarProperty Name="Minor" ColumnName="Minor" />
+          <ScalarProperty Name="Revision" ColumnName="Revision" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ServiceDeployments">
+      <EntityTypeMapping TypeName="PBlankModel.ServiceDeployment">
+        <MappingFragment StoreEntitySet="ServiceDeployments">
+          <ScalarProperty Name="ServiceDeploymentId" ColumnName="ServiceDeploymentId" />
+          <ScalarProperty Name="SiteName" ColumnName="SiteName" />
+          <ScalarProperty Name="RelativeServicePath" ColumnName="RelativeServicePath" />
+          <ScalarProperty Name="RelativeApplicationPath" ColumnName="RelativeApplicationPath" />
+          <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+          <ScalarProperty Name="ServiceNamespace" ColumnName="ServiceNamespace" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="aspnet_UsersInRoles" TypeName="PBlankModel.aspnet_UsersInRoles" StoreEntitySet="aspnet_UsersInRoles">
+      <EndProperty Name="aspnet_Roles">
+        <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+      </EndProperty>
+      <EndProperty Name="aspnet_Users">
+        <ScalarProperty Name="UserId" ColumnName="UserId" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

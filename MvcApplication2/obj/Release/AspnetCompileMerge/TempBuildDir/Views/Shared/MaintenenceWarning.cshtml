@@ -1,0 +1,30 @@
+﻿@if (ViewBag.ShutDownStart == null)
+{
+    return;
+}
+
+@{
+
+    DateTime date = ViewBag.ShutDownStart;
+    string Message = ViewBag.ShutdownMessage;
+}
+<div class="modal fade" id="maintenancepopup">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-body ">
+                <div style="text-align:center;">
+                    <h1>@date.ToString("MMM dd") at @date.ToString("hh:mm tt")</h1>
+                    <div style="float:left;font-size: 15px;">@Html.Raw(Message)</div><img src="~/images/maintenence.png" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#maintenancepopup").modal('show');
+    });
+</script>
