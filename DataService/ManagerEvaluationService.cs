@@ -33,6 +33,7 @@ namespace DataService
                     me.GoalId = goalId;
                     me.Id = Guid.NewGuid();
                     isNew = true;
+                   
 
                 }
                 else
@@ -103,7 +104,7 @@ namespace DataService
                 
                 var HrAdminNames = dbx.aspnet_UsersInRoles_GetUsersInRoles(AppName, "HrAdmin").Select(x => x.ToLower()).ToList();
                 var HrAdminIds = dbx.aspnet_Users.Where(x => HrAdminNames.Contains(x.LoweredUserName)).Select(n => n.UserId).ToList();
-                List<Employee> hradmins = dbx.Employees.Where(x => x.UserId.HasValue && HrAdminIds.Contains(x.UserId.Value)).ToList();
+                List<Employee> hradmins = dbx.Employees.Where(x => x.UserId.HasValue && x.Active && HrAdminIds.Contains(x.UserId.Value)).ToList();
                 Employee emp = dbx.Employees.SingleOrDefault(x => x.gid == employeeId);
                 Employee manager = dbx.Employees.SingleOrDefault(x => x.gid == emp.Manager.Value);
                 try
@@ -121,7 +122,7 @@ namespace DataService
                     Badge badge = new Badge();
                     badge.BadgeType = BadgeType.EMPLOYEE_EVALUATED;
                     badge.Description = "You have pending review approval from " + manager.FirstName + " for " + emp.FirstName;
-                    badge.FromBadge = manager.gid;
+                    badge.FromBadge = emp.gid;
                     badge.ToBadge = hr.gid;
                     badge.Viewed = false;
                     dbx.Badges.Add(badge);
@@ -173,8 +174,9 @@ namespace DataService
 
         public EvaluationRating CalculateAvgRating(Guid? employeeId = null, long evalCycleId = 0, Guid? goalid = null)
         {
-            decimal avgSelfRating = 0.0M, avgMgrRating = 0.0M, avgSelfTraitRating = 0.0M, avgMgrTraitRating = 0.0M;
             
+            //decimal avgSelfRating = 0.0M, avgMgrRating = 0.0M, avgSelfTraitRating = 0.0M, avgMgrTraitRating = 0.0M;
+
             if (GetEvalCycle() == null)
             {
                 if (evalCycleId == 0) throw new Exception("Evaluation phase not active nor evalcycleid passed.");
@@ -183,68 +185,72 @@ namespace DataService
                     return dbx.EvaluationRatings.SingleOrDefault(x => x.EmpId == employeeId && x.EvalCycleId == evalCycleId);
                 }
             }
-            else {
-                if (evalCycleId != 0 && evalCycleId!=GetEvalCycle().Id)
+            else
+            {
+                if (evalCycleId != 0 && evalCycleId != GetEvalCycle().Id)
                 {
                     using (PEntities dbx = new PEntities())
                     {
                         return dbx.EvaluationRatings.SingleOrDefault(x => x.EmpId == employeeId && x.EvalCycleId == evalCycleId);
                     }
                 }
-                
+
                 evalCycleId = GetEvalCycle().Id;
-                
+
             }
             using (PEntities dbx = new PEntities())
             {
                 EvaluationRating evalRating = dbx.EvaluationRatings.SingleOrDefault(x => x.EmpId == employeeId && x.EvalCycleId == evalCycleId);
 
-                var goals = new List<Goal>();
+                //var goals = new List<Goal>();
 
-                if (!employeeId.HasValue && !goalid.HasValue)
-                    throw new ArgumentException("Neither the goalid nor the employee id was specified for computing AvgRating.");
+                //if (!employeeId.HasValue && !goalid.HasValue)
+                //    throw new ArgumentException("Neither the goalid nor the employee id was specified for computing AvgRating.");
 
-                if (!employeeId.HasValue && goalid.HasValue)
-                {
-                    goals = dbx.Goals.Where(x => x.gid == goalid).ToList();
-                    employeeId = goals.First().EmployeeId;
-                    goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed && x.OrgId == OrgId)).ToList();
-                }
+                //if (!employeeId.HasValue && goalid.HasValue)
+                //{
+                //    goals = dbx.Goals.Where(x => x.gid == goalid).ToList();
+                //    employeeId = goals.First().EmployeeId;
+                //    goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed && x.OrgId == OrgId)).ToList();
+                //}
 
-                goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed && x.OrgId == OrgId)).ToList();
+                //goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed && x.OrgId == OrgId)).ToList();
 
-                List<Guid> goalsList = goals.Select(x => x.gid).ToList();
-                var empEvals = dbx.EmployeeEvaluations.Where(y => y.EvalCycleId==evalCycleId && y.EmployeeId==employeeId &&  goalsList.Contains(y.GoalId)).ToList();
-                var mgrEvals = dbx.ManagerEvaluations.Where(y => goalsList.Contains(y.GoalId) && y.EvalCycleId == evalCycleId && y.EmployeeId == employeeId).ToList();
-                foreach (Goal goal in goals)
-                {
-                    var employeeEval = empEvals.Where(y => y.GoalId == goal.gid && y.EvalCycleId == evalCycleId && y.EmployeeId == employeeId).FirstOrDefault();
-                    var mgrEval = mgrEvals.Where(y => y.GoalId == goal.gid && y.EvalCycleId == evalCycleId && y.EmployeeId == employeeId).FirstOrDefault();
-                    if (goal.Fixed)
-                    {
-                        if (employeeEval != null)
-                            avgSelfTraitRating += ((decimal)goal.Weightage.Value / 100.0M) * (employeeEval.GoalRating.HasValue ? (decimal)employeeEval.GoalRating.Value : 0.0M);
-                        if (mgrEval != null)
-                            avgMgrTraitRating += ((decimal)goal.Weightage.Value / 100.0M) * (mgrEval.GoalRating.HasValue ? (decimal)mgrEval.GoalRating.Value : 0.0M);
-                    }
-                    else
-                    {
-                        if (employeeEval != null)
-                            avgSelfRating += ((decimal)goal.Weightage.Value / 100.0M) * (employeeEval.GoalRating.HasValue ? (decimal)employeeEval.GoalRating.Value : 0.0M);
-                        if (mgrEval != null)
-                            avgMgrRating += ((decimal)goal.Weightage.Value / 100.0M) * (mgrEval.GoalRating.HasValue ? (decimal)mgrEval.GoalRating.Value : 0.0M);
-                    }
-                }
-                avgSelfRating = Math.Round((avgSelfRating * 0.75M) + (avgSelfTraitRating * 0.25M), 2);
-                avgMgrRating = Math.Round((avgMgrRating * 0.75M) + (avgMgrTraitRating * 0.25M), 2);
+                //List<Guid> goalsList = goals.Select(x => x.gid).ToList();
+                //var empEvals = dbx.EmployeeEvaluations.Where(y => y.EvalCycleId == evalCycleId && y.EmployeeId == employeeId && goalsList.Contains(y.GoalId)).ToList();
+                //var mgrEvals = dbx.ManagerEvaluations.Where(y => goalsList.Contains(y.GoalId) && y.EvalCycleId == evalCycleId && y.EmployeeId == employeeId).ToList();
+                //int fixedGoalsCount = 0, goalsCount = 0;
+                //foreach (Goal goal in goals)
+                //{
+                //    var employeeEval = empEvals.Where(y => y.GoalId == goal.gid && y.EvalCycleId == evalCycleId && y.EmployeeId == employeeId).FirstOrDefault();
+                //    var mgrEval = mgrEvals.Where(y => y.GoalId == goal.gid && y.EvalCycleId == evalCycleId && y.EmployeeId == employeeId).FirstOrDefault();
+                //    if (goal.Fixed)
+                //    {
+                //        fixedGoalsCount++;
+                //        if (employeeEval != null)
+                //            avgSelfTraitRating += ((employeeEval.GoalRating.HasValue ? (decimal)employeeEval.GoalRating.Value : 0.0M));//(decimal)goal.Weightage.Value / 100.0M) * 
+                //        if (mgrEval != null)
+                //            avgMgrTraitRating += ((mgrEval.GoalRating.HasValue ? (decimal)mgrEval.GoalRating.Value : 0.0M));//(decimal)goal.Weightage.Value / 100.0M) * 
+                //    }
+                //    else
+                //    {
+                //        goalsCount++;
+                //        if (employeeEval != null)
+                //            avgSelfRating += ((employeeEval.GoalRating.HasValue ? (decimal)employeeEval.GoalRating.Value : 0.0M)); //(decimal)goal.Weightage.Value / 100.0M) *
+                //        if (mgrEval != null)
+                //            avgMgrRating += ((mgrEval.GoalRating.HasValue ? (decimal)mgrEval.GoalRating.Value : 0.0M)); //(decimal)goal.Weightage.Value / 100.0M) *
+                //    }
+                //}
+                //avgSelfRating = Math.Round(((avgSelfRating / goalsCount) * 0.75M) + ((avgSelfTraitRating / fixedGoalsCount) * 0.25M), 2);
+                //avgMgrRating = Math.Round((avgMgrRating / goalsCount * 0.75M) + (avgMgrTraitRating / fixedGoalsCount * 0.25M), 2);
 
-               
+
 
                 if (evalRating != null)
                 {
-                    evalRating.SelfOverallRating = avgSelfRating;
-                    evalRating.ManagerOverllRating = avgMgrRating;
-                    dbx.SaveChanges();
+                    //evalRating.SelfOverallRating = avgSelfRating;
+                    //evalRating.ManagerOverllRating = avgMgrRating;
+                    //dbx.SaveChanges();
                 }
                 else
                 {
@@ -252,8 +258,8 @@ namespace DataService
                     evalRating.EvalCycleId = evalCycleId;
                     evalRating.EmpId = employeeId.Value;
                     evalRating.ManagerId = dbx.Employees.SingleOrDefault(x => x.gid == employeeId).Manager;
-                    evalRating.SelfOverallRating = avgSelfRating;
-                    evalRating.ManagerOverllRating = avgMgrRating;
+                    //evalRating.SelfOverallRating = avgSelfRating;
+                    //evalRating.ManagerOverllRating = avgMgrRating;
                     dbx.EvaluationRatings.Add(evalRating);
                     dbx.SaveChanges();
                 }
@@ -322,8 +328,10 @@ namespace DataService
 
         public bool Publish(Guid employeeId, long evalcycleid)
         {
+
             using (PEntities dbx = new PEntities())
             {
+                 Employee emp = dbx.Employees.SingleOrDefault(x => x.gid == employeeId);
                 var goals = dbx.Goals.Where(x => x.EmployeeId == employeeId && x.Evalcycleid == evalcycleid).ToList();
                 try
                 {
@@ -344,6 +352,46 @@ namespace DataService
                     empeval.Status = GoalStatus.PUBLISHED;
                     dbx.SaveChanges();
                 }
+                try
+                {
+                   
+                    var badge = dbx.Badges.Where(x => x.BadgeType == BadgeType.EVALUATION_SUBMITTED && x.FromBadge == employeeId && x.ToBadge == emp.Manager).FirstOrDefault();
+                    if (badge != null)
+                    {
+                        Badges badgesService = new Badges(OrgId, AppName);
+                        badgesService.Delete(badge.Id);
+                    }
+                }
+                catch 
+                { 
+                   
+                }
+                try
+                {
+                   
+                    var badge = dbx.Badges.Where(x => x.BadgeType == BadgeType.EVALUATION_REJECTED && x.FromBadge == null && x.ToBadge == emp.Manager).FirstOrDefault();
+                    if (badge != null)
+                    {
+                        Badges badgesService = new Badges(OrgId, AppName);
+                        badgesService.Delete(badge.Id);
+                    }
+                }
+                catch
+                {
+
+                }
+                try
+                {
+
+                    var rejectMsg = dbx.RejectedMessages.Where(x => x.EmployeeId == employeeId && x.ManagerID == emp.Manager.Value && x.EvalCycleId == evalcycleid && x.EvaluationPhase == PECycle.EVALUATION.ToString()).FirstOrDefault();
+                    if (rejectMsg != null)
+                    {
+                        dbx.RejectedMessages.Remove(rejectMsg);
+                        dbx.SaveChanges();
+                    }
+                }
+                catch { }
+                
 
                 //var HrAdminNames = dbx.aspnet_UsersInRoles_GetUsersInRoles(AppName, "HrAdmin").Select(x => x.ToLower()).ToList();
                 //var HrAdminIds = dbx.aspnet_Users.Where(x => HrAdminNames.Contains(x.LoweredUserName)).Select(n => n.UserId).ToList();

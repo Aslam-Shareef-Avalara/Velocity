@@ -23,6 +23,29 @@
 </head>
 
 <body>*@
+
+@functions{
+    public string translateRating(int rating)
+    {
+        string translatedRating = "";
+        switch (rating)
+        {
+            case 1: translatedRating = "Not a fit";
+                break;
+            case 2: translatedRating = "Underachieving";
+                break;
+            case 3: translatedRating = "Orange";
+                break;
+            case 4: translatedRating = "G'in the JD";
+                break;
+            case 5: translatedRating = "Crushed It!";
+                break;
+            default: translatedRating = "Unrated";
+                break;
+        }
+        return translatedRating;
+    }
+}
     <style type="text/css">
         
 body {
@@ -146,7 +169,7 @@ a > img {
         </tr>
         <tr >
             <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE; border-left: 1px solid #000000" height="40" align="left" valign="middle"><b><font style="font-size:14pt;color:#FFF" color="#FFFFFF">Goals</font></b></td>
-            <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">Weightage</font></b></td>
+            <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">@*Weightage*@</font></b></td>
             <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">Reviewer</font></b></td>
             <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">Review Rating</font></b></td>
             <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE; border-right: 1px solid #000000" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">Review Comment</font></b></td>
@@ -172,7 +195,7 @@ a > img {
                     
             <tr class="goal @g.gid">
                 <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=3 height="252" align="left" valign="middle"k bgcolor="#e2efda "><font color="#000000">@g.Title -  @g.Goal1</font></td>
-                <td style="vertical-align:middle; text-align:center; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=3 align="center" valign="middle" bgcolor="#e2efda "><font color="#000000">@(g.Weightage)%</font></td>
+                <td style="vertical-align:middle; text-align:center; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=3 align="center" valign="middle" bgcolor="#e2efda "><font color="#000000">@*@(g.Weightage)%*@</font></td>
                 <td style="vertical-align:middle;  border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=2 align="left" valign="middle" bgcolor="#e2efda "><font color="#000000">Reviewer(Self)</font></td>
                 <td style="vertical-align:middle;  border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=2 align="left" valign="middle" bgcolor="#e2efda "><font color="#000000">Self-Rating (@(eval.GoalRating)/5)</font></td>
                 <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=2 align="left" valign="middle" bgcolor="#e2efda " style="vertical-align:middle;"><font color="#000000">@Html.Raw(eval.Comment)<p><br/>&nbsp;</p><pre><br></pre></font></td>
@@ -198,7 +221,7 @@ a > img {
         }
         <tr>
             <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE; border-left: 1px solid #000000" height="40" align="left" valign="middle"><b><font style="font-size:14pt;color:#FFF"  color="#FFFFFF">Success Traits</font></b></td>
-            <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">Weightage</font></b></td>
+            <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">@*Weightage*@</font></b></td>
             <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">Reviewer</font></b></td>
             <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">Review Rating</font></b></td>
             <td style="vertical-align:middle; border-top: 1px solid #000000; border-bottom: 1px solid #000000;background-color:#04B4AE; border-right: 1px solid #000000" align="left" valign="middle"><b><font color="#FFFFFF" style="font-size:14pt;color:#FFF">Review Comment</font></b></td>
@@ -208,7 +231,7 @@ a > img {
             DataService.Goal g = Model.Goals.FirstOrDefault(x => x.gid == eval.GoalId);
             <tr>
                 <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=3 height="252" align="left" valign=top bgcolor="#e2efda "><font color="#000000">@g.Title - @g.Goal1</font></td>
-                <td style="vertical-align:middle; text-align:center; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=3 align="center" valign="middle" bgcolor="#e2efda "><font color="#000000">@(g.Weightage)%</font></td>
+                <td style="vertical-align:middle; text-align:center; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=3 align="center" valign="middle" bgcolor="#e2efda "><font color="#000000">@*@(g.Weightage)%*@</font></td>
                 <td style="vertical-align:middle;  border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=2 align="left" valign=bottom bgcolor="#e2efda "><font color="#000000">Reviewer(Self)</font></td>
                 <td style="vertical-align:middle;  border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=2 align="left" valign=bottom bgcolor="#e2efda "><font color="#000000">Self-Rating (@(eval.GoalRating)/5)</font></td>
                 <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" rowspan=2 align="left" valign="middle" bgcolor="#e2efda " style="vertical-align:middle;"><font color="#000000">@Html.Raw(eval.Comment)<p><br/>&nbsp;</p><pre><br></pre></font></td>

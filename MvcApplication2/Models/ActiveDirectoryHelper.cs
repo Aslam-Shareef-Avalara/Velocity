@@ -19,15 +19,21 @@ namespace MvcApplication2.Models
         const string DomainPath = "LDAP://DC=SanJuan,DC=Avalara,DC=com";//OU=Users,OU=Pune Office,DC=SanJuan,DC=Avalara,DC=com
         public ActiveDirectoryHelper()
         {
-            if (ctx!=null && ctx.Session["adobj"]!=null)
-            _de = (DirectoryEntry)ctx.Session["adobj"];
+            if (ctx != null && ctx.Session["adobj"] != null)
+                _de = (DirectoryEntry)ctx.Session["adobj"];
         }
         private dynamic getPropertyValue(PropertyValueCollection property)
         {
-
-            if (property != null && property.Value != null)
+            try
             {
-                return property.Value;
+                if (property != null && property.Value != null)
+                {
+                    return property.Value;
+                }
+            }
+            catch
+            {
+
             }
             return new object();
         }
@@ -36,7 +42,7 @@ namespace MvcApplication2.Models
         {
             List<Employee> coworkers = new List<Employee>();
             Employee currentuser = System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER] as Employee;
-            
+
             _de.Path = DomainPath;
             if (_de == null)
                 return null;
@@ -64,8 +70,8 @@ namespace MvcApplication2.Models
                         string strguid = new Guid(uguid).ToString().ToLower();
                         HRManager = dbx.Employees.FirstOrDefault(x => x.gid.ToString().ToLower() == strguid);
                     }
-                        reportee.Path = result.Path;
-                        return HRManager;
+                    reportee.Path = result.Path;
+                    return HRManager;
                 }
                 catch { }
 
@@ -116,8 +122,8 @@ namespace MvcApplication2.Models
                     search.Filter = "(&(objectClass=user) (Name=" + username + "))";
                     result = search.FindOne();
                     DirectoryEntry reportee = _de;
-                        reportee.Path = result.Path;
-                        return new Employee() { Email = getPropertyValue(reportee.Properties["mail"]), FirstName = getPropertyValue(reportee.Properties["cn"]), LastName = getPropertyValue(reportee.Properties["sn"]), Phone = getPropertyValue(reportee.Properties["telephoneNumber"].Count > 0 ? reportee.Properties["telephoneNumber"] : reportee.Properties["mobile"]) };
+                    reportee.Path = result.Path;
+                    return new Employee() { Email = getPropertyValue(reportee.Properties["mail"]), FirstName = getPropertyValue(reportee.Properties["cn"]), LastName = getPropertyValue(reportee.Properties["sn"]), Phone = getPropertyValue(reportee.Properties["telephoneNumber"].Count > 0 ? reportee.Properties["telephoneNumber"] : reportee.Properties["mobile"]) };
                 }
                 catch { }
 
@@ -153,8 +159,8 @@ namespace MvcApplication2.Models
                         try
                         {
                             DirectoryEntry reportee = _de;
-                                reportee.Path = result.Path;
-                                coworkers.Add(new Employee() { Email = getPropertyValue(reportee.Properties["mail"]), FirstName = getPropertyValue(reportee.Properties["cn"]), LastName = getPropertyValue(reportee.Properties["sn"]), Phone = getPropertyValue(reportee.Properties["mobile"]) });
+                            reportee.Path = result.Path;
+                            coworkers.Add(new Employee() { Email = getPropertyValue(reportee.Properties["mail"]), FirstName = getPropertyValue(reportee.Properties["cn"]), LastName = getPropertyValue(reportee.Properties["sn"]), Phone = getPropertyValue(reportee.Properties["mobile"]) });
                         }
                         catch (Exception x1)
                         {
@@ -212,17 +218,18 @@ namespace MvcApplication2.Models
             //using (DirectorySearcher dsSearcher = new DirectorySearcher())
             //{
             search.Filter = "(&(objectClass=user) (name=" + name + "))"; //employeeId is the custom column name
-            SearchResult result = search.FindOne();
             try
             {
+                SearchResult result = search.FindOne();
+
                 DirectoryEntry user = _de;
-                    user.Path = result.Path;
-                    if (!string.IsNullOrEmpty(Convert.ToString(user.Properties["objectGUID"].Value)))
-                    {
-                        byte[] uguid = getPropertyValue(user.Properties["objectGUID"]);
-                        string strguid = new Guid(uguid).ToString().ToLower();
-                        return new Employee { gid = new Guid(getPropertyValue(user.Properties["objectGUID"])) };
-                    }
+                user.Path = result.Path;
+                if (!string.IsNullOrEmpty(Convert.ToString(user.Properties["objectGUID"].Value)))
+                {
+                    byte[] uguid = getPropertyValue(user.Properties["objectGUID"]);
+                    string strguid = new Guid(uguid).ToString().ToLower();
+                    return new Employee { gid = new Guid(getPropertyValue(user.Properties["objectGUID"])) };
+                }
             }
             catch (Exception x)
             {
@@ -234,16 +241,21 @@ namespace MvcApplication2.Models
 
         private string getValuePart(string advalue, string advaluepart)
         {
-            string[] temp = advalue.Split(new string[] { "," }, StringSplitOptions.None);
-            string value = temp.Where(x => x.StartsWith(advaluepart)).FirstOrDefault();
-            if (!string.IsNullOrEmpty(value))
+            try
             {
-                value = value.Replace(advaluepart + "=", "");
+                string[] temp = advalue.Split(new string[] { "," }, StringSplitOptions.None);
+                string value = temp.Where(x => x.StartsWith(advaluepart)).FirstOrDefault();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    value = value.Replace(advaluepart + "=", "");
+                }
+                return value;
             }
-            return value;
+            catch { }
+            return string.Empty;
         }
 
-        public Employee GetUserDetails()
+        public Employee GetUserDetails(string username = "")
         {
             DirectoryEntry searchRoot = null;
             if (_de == null)
@@ -252,52 +264,55 @@ namespace MvcApplication2.Models
                 searchRoot = _de;
             searchRoot.Path = DomainPath;
             DirectorySearcher search = new DirectorySearcher(searchRoot);
-
+            if (string.IsNullOrEmpty(username))
+            {
+                username = System.Web.HttpContext.Current.User.Identity.Name.Replace("SANJUAN\\", "").Replace("sanjuan\\", "");
+            }
             Employee _self = new Employee();
             try
             {
                 //using (DirectorySearcher dsSearcher = new DirectorySearcher())
                 //{
-                search.Filter = "(&(objectClass=user) (sAMAccountName=" + System.Web.HttpContext.Current.User.Identity.Name.Replace("SANJUAN\\", "").Replace("sanjuan\\", "") + "))"; //employeeId is the custom column name
+                search.Filter = "(&(objectClass=user) (sAMAccountName=" + username + "))"; //employeeId is the custom column name
                 SearchResult result = search.FindOne();
                 DirectoryEntry user = _de;
-                
-                
-                    user.Path = result.Path;
-                    if (!string.IsNullOrEmpty(Convert.ToString(user.Properties["objectGUID"].Value)))
+
+
+                user.Path = result.Path;
+                if (!string.IsNullOrEmpty(Convert.ToString(user.Properties["objectGUID"].Value)))
+                {
+                    _self.gid = new Guid(getPropertyValue(user.Properties["objectGUID"]));
+                    _self.Active = true;
+                    _self.Department = Convert.ToString(getPropertyValue(user.Properties["department"]));
+                    _self.Email = Convert.ToString(getPropertyValue(user.Properties["mail"]));
+                    _self.FirstName = Convert.ToString(getPropertyValue(user.Properties["givenName"]));
+                    _self.Mobile = Convert.ToString(getPropertyValue(user.Properties["mobile"]));
+                    _self.Designation = Convert.ToString(getPropertyValue(user.Properties["title"]));
+                    _self.LastName = Convert.ToString(getPropertyValue(user.Properties["sn"]));
+                    string OrganizationName = Convert.ToString(getPropertyValue(user.Properties["company"]));
+                    string managername = getValuePart(Convert.ToString(getPropertyValue(user.Properties["manager"])), "CN");
+                    var manager = GetEmployeeFromName(managername);
+                    if (manager != null)
                     {
-                        _self.gid = new Guid(getPropertyValue(user.Properties["objectGUID"]));
-                        _self.Active = true;
-                        _self.Department = Convert.ToString(getPropertyValue(user.Properties["department"]));
-                        _self.Email = Convert.ToString(getPropertyValue(user.Properties["mail"]));
-                        _self.FirstName = Convert.ToString(getPropertyValue(user.Properties["givenName"]));
-                        _self.Mobile = Convert.ToString(getPropertyValue(user.Properties["mobile"]));
-                        _self.Designation = Convert.ToString(getPropertyValue(user.Properties["title"]));
-                        _self.LastName = Convert.ToString(getPropertyValue(user.Properties["sn"]));
-                        string OrganizationName = Convert.ToString(getPropertyValue(user.Properties["company"]));
-                        string managername = getValuePart(Convert.ToString(getPropertyValue(user.Properties["manager"])), "CN");
-                        var manager = GetEmployeeFromName(managername);
-                        if (manager != null)
-                        {
-                            _self.Manager = manager.gid;
-                        }
-                        if (ctx.Session[CONSTANTS.SESSION_ORG_ID] == null)
-                        {
-                            var org = dbx.Organizations.Where(x => x.Name.Replace(".", "").Replace(",", "") == OrganizationName.Replace(".", "").Replace(",", "")).FirstOrDefault();
-                            if (org != null)
-                            {
-                                _self.OrgId = org.Id;
-                            }
-                            ctx.Session[CONSTANTS.SESSION_ORG_ID] = org.Id;
-                        }
-                        else
-                            _self.OrgId = (int)ctx.Session[CONSTANTS.SESSION_ORG_ID];
-
-                        _self.Phone = getPropertyValue(user.Properties["mobile"]).ToString();
-
+                        _self.Manager = manager.gid;
                     }
+                    if (ctx.Session[CONSTANTS.SESSION_ORG_ID] == null)
+                    {
+                        var org = dbx.Organizations.Where(x => x.Name.Replace(".", "").Replace(",", "") == OrganizationName.Replace(".", "").Replace(",", "")).FirstOrDefault();
+                        if (org != null)
+                        {
+                            _self.OrgId = org.Id;
+                        }
+                        ctx.Session[CONSTANTS.SESSION_ORG_ID] = org.Id;
+                    }
+                    else
+                        _self.OrgId = (int)ctx.Session[CONSTANTS.SESSION_ORG_ID];
 
-                
+                    _self.Phone = getPropertyValue(user.Properties["mobile"]).ToString();
+
+                }
+
+
 
             }
             catch (Exception x)
@@ -311,9 +326,9 @@ namespace MvcApplication2.Models
             //}
         }
 
-        
 
-        public Hashtable GetUserReportees(string employeename=null)
+
+        public Hashtable GetUserReportees(string employeename = null)
         {
             try
             {
@@ -334,42 +349,42 @@ namespace MvcApplication2.Models
                 SearchResult result = search.FindOne();
                 Hashtable reporteeNames = new Hashtable();
                 DirectoryEntry user = _de;
-                
-                    user.Path = result.Path;
-                    if (!string.IsNullOrEmpty(Convert.ToString(user.Properties["directReports"].Value)))
+
+                user.Path = result.Path;
+                if (!string.IsNullOrEmpty(Convert.ToString(user.Properties["directReports"].Value)))
+                {
+
+                    object[] ar = (object[])user.Properties["directReports"].Value;
+
+                    foreach (string a in ar)
                     {
-                        
-                        object[] ar = (object[])user.Properties["directReports"].Value;
-                        
-                        foreach (string a in ar)
+                        string[] directreport = a.Split(new string[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
+                        List<string> reportees = directreport.Where(x => x.StartsWith("CN")).ToList();
+
+                        reportees.ForEach(x =>
                         {
-                            string[] directreport = a.Split(new string[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
-                            List<string> reportees = directreport.Where(x => x.StartsWith("CN")).ToList();
-
-                            reportees.ForEach(x =>
+                            search.SearchRoot.Path = DomainPath;
+                            search.Filter = "(&(objectClass=user) (Name=" + x.Replace("CN=", "") + ")(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))";
+                            result = search.FindOne();
+                            try
                             {
-                                search.SearchRoot.Path = DomainPath;
-                                search.Filter = "(&(objectClass=user) (Name=" + x.Replace("CN=", "") + ")(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))";
-                                result = search.FindOne();
-                                try
-                                {
-                                    DirectoryEntry reportee = _de;
-                                        reportee.Path = result.Path;
-                                        reporteeNames[new Guid(getPropertyValue(reportee.Properties["objectGUID"]))] = x.Replace("CN=", "");
-                                }
-                                catch (Exception x1)
-                                {
-                                    log.Error("Error in GetUserReportees (" + System.Web.HttpContext.Current.User.Identity.Name +
-                                        ", REPORTEE:" + x + " ): ", x1);
-                                }
-                            });
-                        }
-
+                                DirectoryEntry reportee = _de;
+                                reportee.Path = result.Path;
+                                reporteeNames[new Guid(getPropertyValue(reportee.Properties["objectGUID"]))] = x.Replace("CN=", "");
+                            }
+                            catch (Exception x1)
+                            {
+                                log.Error("Error in GetUserReportees (" + System.Web.HttpContext.Current.User.Identity.Name +
+                                    ", REPORTEE:" + x + " ): ", x1);
+                            }
+                        });
                     }
 
-                    System.Web.HttpContext.Current.Session["reportees"] = reporteeNames;
-                    return reporteeNames;
-                
+                }
+
+                System.Web.HttpContext.Current.Session["reportees"] = reporteeNames;
+                return reporteeNames;
+
                 //}
             }
             catch (Exception Y)

@@ -7,3 +7,14 @@ C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2\Dat
 C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2\DataService\bin\Release\EntityFramework.SqlServer.xml
 C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2\DataService\obj\Release\DataService.dll
 C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2\DataService\obj\Release\DataService.pdb
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\obj\Release\DataService.csprojResolveAssemblyReference.cache
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\obj\Release\DataService.dll
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\obj\Release\DataService.pdb
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\bin\Release\DataService.dll.config
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\bin\Release\DataService.dll
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\bin\Release\DataService.pdb
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\bin\Release\EntityFramework.dll
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\bin\Release\EntityFramework.xml
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2_2\DataService\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2\DataService\obj\Release\DataService.csprojResolveAssemblyReference.cache

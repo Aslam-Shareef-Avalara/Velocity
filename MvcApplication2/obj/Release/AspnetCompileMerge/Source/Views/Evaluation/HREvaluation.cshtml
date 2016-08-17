@@ -1,6 +1,26 @@
 ﻿@model MvcApplication2.ViewModel.EvaluationViewModel
 
 @functions{
+    public string translateRating(int rating)
+    {
+        string translatedRating = "";
+        switch (rating)
+        {
+            case 1: translatedRating = "Not a fit";
+                break;
+            case 2: translatedRating = "Underachieving";
+                break;
+            case 3: translatedRating = "Orange";
+                break;
+            case 4: translatedRating = "G'in the JD";
+                break;
+            case 5: translatedRating = "Crushed It!";
+                break;
+            default: translatedRating = "Unrated";
+                break;
+        }
+        return translatedRating;
+    }
     public DataService.EmployeeEvaluation GetValidEmployeeEvalObj(Guid gid)
     {
         var g = Model.SelfEvaluations.Where(x => x.GoalId == gid).FirstOrDefault();
@@ -56,18 +76,17 @@
         { 
         <div class="pull-right" id="selfevalrating" style="margin-left:10px;margin-right: 25px;">
             <span style="padding-left:2px;">Self Overall Rating:</span>
-            <div data-initval="@Model.Rating.SelfOverallRating" class="selfoverallrating goalrating">
-            </div>
+            <span id="selfoverallrating_value" class="btn-info">@translateRating((int)Math.Round(Model.Rating.SelfOverallRating.HasValue ? Model.Rating.SelfOverallRating.Value : 0))</span>
 
-            <div class="counter" id="selfoverallrating">@Model.Rating.SelfOverallRating</div>
+            
         </div>
         }
         <div class="pull-right" id="evalrating" style="margin-left:0px;margin-right: 0px;">
             <span style="padding-left:2px;">Overall rating:</span>
-            <div data-initval="@Model.Rating.ManagerOverllRating" class="mgroverallrating goalrating">
+            <span id="manageroverallrating_value" class="btn-info">@translateRating((int)Math.Round(Model.Rating.ManagerOverllRating.HasValue ? Model.Rating.ManagerOverllRating.Value : 0))</span>
             </div>
 
-            <div class="counter" id="overallrating">@Model.Rating.ManagerOverllRating</div>
+            
         </div>
     </div>
 </div>
@@ -96,7 +115,7 @@
                             DataService.ManagerEvaluation mgrE = GetManagerEvalObj(g.gid);
                     <!--Individual Goals Template Start -->
                             <div class="va-slice va-slice-color-1" id="_@g.gid">
-                                <h3 class="va-title @(g.Fixed ? "CompetencyHeader" : "GoalHeader")">@(g.Fixed ? "Success Trait" : "Goal") : @g.Title <span class="pull-right bold">Weightage : @g.Weightage %</span></h3>
+                                <h3 class="va-title @(g.Fixed ? "CompetencyHeader" : "GoalHeader")">@(g.Fixed ? "Success Trait" : "Goal") : @g.Title @*<span class="pull-right bold">Weightage : @g.Weightage %</span>*@</h3>
 
                                 <div class="va-content">
                                     <ul class="nav nav-tabs">
@@ -109,7 +128,7 @@
                                             <div class="scroll-pane" style="float:left;display:inline-block;width:100%;height:283px;overflow-y:auto;">
 
                                                 <p>
-                                                    @g.Goal1
+                                                    @Html.Raw(g.Goal1)
 
                                                 </p>
 
@@ -121,7 +140,7 @@
                                                  var attachments = Model.Attachments.Where(x => x.EvaluationGoalId == se.Id && x.EvaluationType == DataService.EvaluationType.SELF_EVALUATION).ToList();
                                                 }
                                                 <div class="ratingcontainer pull-left">
-                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Self Rating : </p><div id="ratingfor_self_@g.gid" data-initval="@GetValidEmployeeEvalObj(g.gid).GoalRating" class="goalrating emplrating"></div><div class="counter">@GetValidEmployeeEvalObj(g.gid).GoalRating</div>
+                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Self-rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value : 0) </div>
                                                 </div>
                                                 @if (attachments != null && attachments.Count > 0)
                                                 {
@@ -160,10 +179,10 @@
                                         </div>
                                         <div id="mgrevaluation_@g.gid" class="mgreval tab-pane fade">
                                             <div class="scroll-pane" style="float:left;display:inline-block;width:100%;height:283px;overflow-y:auto;">
-
                                                 <div class="ratingcontainer pull-left">
-                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Manager Rating : </p><div id="ratingfor_emp_@g.gid" data-initval="@mgrE.GoalRating" class="goalrating emplrating"></div><div class="counter">@mgrE.GoalRating</div>
+                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Manager Rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(@mgrE.GoalRating.HasValue?@mgrE.GoalRating.Value:0) </div>
                                                 </div>
+                                               
                                                 <br />
                                                 <div class="q pull-left">
                                                     <span class="quote">“</span>@Html.Raw(mgrE.Comment)
@@ -705,7 +724,7 @@
         }
 
         .jspDrag {
-            background: #ddd none repeat scroll 0 0;
+            background: #8b8b9f none repeat scroll 0 0;
         }
 
         .jspArrowUp {
@@ -787,4 +806,23 @@
         html, .off-canvas-wrap {
         overflow-x:auto!important;
         }
+      #selfoverallrating_value, #manageroverallrating_value.btn-info {
+    /*background-color: #374659;*/
+    border-radius: 5px;
+    color: white;
+    margin-bottom: 3px;
+    padding: 5px;
+    font-weight:bold;
+    display:block;
+    }
+     .readonlyrating {
+    
+      background-color:orange;
+        font-weight:600;
+        text-align:center;
+        color:black;
+        font-size:15pt;
+        padding:5px;
+        border-radius:5px;
+    }
 </style>

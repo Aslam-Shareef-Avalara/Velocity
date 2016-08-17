@@ -60,13 +60,13 @@ namespace DataService
             this.LastVisit = e.LastVisit;
             using (PEntities dbx = new PEntities())
             {
-                if (dbx.Employees.Any(x => x.gid == e.Manager))
+                if (dbx.Employees.Any(x => x.gid == e.Manager && x.Active))
                 {
-                    ManagerObj = dbx.Employees.FirstOrDefault(x => x.gid == e.Manager);
+                    ManagerObj = dbx.Employees.FirstOrDefault(x => x.gid == e.Manager && x.Active);
                 }
-                if (e.Reviewer!=null && dbx.Employees.Any(x => x.gid == e.Reviewer))
+                if (e.Reviewer != null && dbx.Employees.Any(x => x.gid == e.Reviewer && x.Active))
                 {
-                    ReviewerObj = dbx.Employees.FirstOrDefault(x => x.gid == e.Reviewer);
+                    ReviewerObj = dbx.Employees.FirstOrDefault(x => x.gid == e.Reviewer && x.Active);
                 }
                 Organization = dbx.Organizations.FirstOrDefault(x => x.Id == e.OrgId).Name;
             }
@@ -126,7 +126,7 @@ namespace DataService
                 {
                     try
                     {
-                        co_workers = dbx.Employees.Where(x => x.Manager == self.Manager && x.OrgEmpId!=self.OrgEmpId).ToList();
+                        co_workers = dbx.Employees.Where(x => x.Manager == self.Manager && x.Active && x.OrgEmpId != self.OrgEmpId).ToList();
                     }
                     catch { }
                 }
@@ -137,13 +137,13 @@ namespace DataService
         {
             using (var dbx = new PEntities())
             {
-                var emps = dbx.Employees.Where(x => x.Manager == managerId).ToList();
+                var emps = dbx.Employees.Where(x => x.Manager == managerId && x.Active).ToList();
                 List<EmployeeExtended>  empsX = new List<EmployeeExtended>();
                 if (emps != null)
                 {
                     foreach (Employee e in emps)
                     {
-                        empsX.Add(new EmployeeExtended(e) { HasReportees = dbx.Employees.Any(z => z.Manager == e.gid) });
+                        empsX.Add(new EmployeeExtended(e) { HasReportees = dbx.Employees.Any(z => z.Manager == e.gid && z.Active) });
                     }
                     return empsX.ToList();
                 }
@@ -253,7 +253,7 @@ namespace DataService
         {
             using (var dbx = new PEntities())
             {
-                var emps = dbx.Employees.Where(x => x.Manager == empid);
+                var emps = dbx.Employees.Where(x => x.Manager == empid && x.Active);
                 if (emps == null)
                 {
                     return null;
@@ -318,14 +318,14 @@ namespace DataService
             {
 
                 List<EmployeeExtended> empsX = new List<EmployeeExtended>();
-                if (dbx.Employees.Any(x => x.Reviewer == reviewerId))
+                if (dbx.Employees.Any(x => x.Reviewer == reviewerId && x.Active))
                 {
-                    var emps = dbx.Employees.Where(x => x.Reviewer == reviewerId).ToList();
+                    var emps = dbx.Employees.Where(x => x.Reviewer == reviewerId && x.Active).ToList();
                     if (emps != null)
                     {
                         foreach (Employee e in emps)
                         {
-                            empsX.Add(new EmployeeExtended(e) { HasReportees = dbx.Employees.Any(z => z.Manager == e.gid) });
+                            empsX.Add(new EmployeeExtended(e) { HasReportees = dbx.Employees.Any(z => z.Manager == e.gid && z.Active) });
                         }
                         return empsX.ToList();
                     }

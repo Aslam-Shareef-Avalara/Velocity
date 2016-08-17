@@ -1,0 +1,469 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="InvMgmtModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Asset">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemMasterId" Type="Int64" Nullable="false" />
+    <Property Name="GRNId" Type="Guid" />
+    <Property Name="IsAssetized" Type="Boolean" Nullable="false" />
+    <Property Name="AssetTag" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="AssetizedBy" Type="Guid" Nullable="false" />
+    <Property Name="AssetizedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="IsIssued" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="ItemMaster" Relationship="Self.FK_Asset_ItemMaster" FromRole="Asset" ToRole="ItemMaster" />
+    <NavigationProperty Name="AssetIssues" Relationship="Self.FK_AssetIssue_Asset" FromRole="Asset" ToRole="AssetIssue" />
+  </EntityType>
+  <EntityType Name="AssetIssue">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AssetId" Type="Int64" Nullable="false" />
+    <Property Name="DateIssued" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IssuedTo" Type="Guid" />
+    <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="IssuedBy" Type="Guid" />
+    <NavigationProperty Name="Asset" Relationship="Self.FK_AssetIssue_Asset" FromRole="AssetIssue" ToRole="Asset" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="States" Relationship="Self.FK_State_Country" FromRole="Country" ToRole="State" />
+    <NavigationProperty Name="VendorAddresses" Relationship="Self.FK_VendorAddresses_Country" FromRole="Country" ToRole="VendorAddresses" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="OrgId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="InventoryClassDepartmentMaps" Relationship="Self.FK_InventoryClassDepartmentMap_Department" FromRole="Department" ToRole="InventoryClassDepartmentMap" />
+  </EntityType>
+  <EntityType Name="InventoryClass">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="OrgId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="InventoryClassDepartmentMaps" Relationship="Self.FK_InventoryClassDepartmentMap_InventoryClass" FromRole="InventoryClass" ToRole="InventoryClassDepartmentMap" />
+    <NavigationProperty Name="ItemTypes" Relationship="Self.FK_ItemType_InventoryClass" FromRole="InventoryClass" ToRole="ItemType" />
+  </EntityType>
+  <EntityType Name="InventoryClassDepartmentMap">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="InventoryClassId" Type="Int64" Nullable="false" />
+    <Property Name="DepartmentId" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="Department" Relationship="Self.FK_InventoryClassDepartmentMap_Department" FromRole="InventoryClassDepartmentMap" ToRole="Department" />
+    <NavigationProperty Name="InventoryClass" Relationship="Self.FK_InventoryClassDepartmentMap_InventoryClass" FromRole="InventoryClassDepartmentMap" ToRole="InventoryClass" />
+  </EntityType>
+  <EntityType Name="IssuedItem">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="ItemMasterId" Type="Int64" Nullable="false" />
+    <Property Name="IssuedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="IssuedBy" Type="Guid" />
+    <Property Name="IssuedTo" Type="Guid" />
+    <Property Name="OrgId" Type="Int32" />
+    <NavigationProperty Name="ItemMaster" Relationship="Self.FK_IssuedItems_ItemMaster" FromRole="IssuedItems" ToRole="ItemMaster" />
+  </EntityType>
+  <EntityType Name="ItemMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ItemTypeId" Type="Int64" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="Perishable" Type="Boolean" />
+    <Property Name="OrgId" Type="Int32" />
+    <NavigationProperty Name="Assets" Relationship="Self.FK_Asset_ItemMaster" FromRole="ItemMaster" ToRole="Asset" />
+    <NavigationProperty Name="IssuedItems" Relationship="Self.FK_IssuedItems_ItemMaster" FromRole="ItemMaster" ToRole="IssuedItems" />
+    <NavigationProperty Name="ItemType" Relationship="Self.FK_ItemMaster_ItemMaster" FromRole="ItemMaster" ToRole="ItemType" />
+  </EntityType>
+  <EntityType Name="ItemType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="OrgId" Type="Int32" Nullable="false" />
+    <Property Name="InventoryClassId" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="InventoryClass" Relationship="Self.FK_ItemType_InventoryClass" FromRole="ItemType" ToRole="InventoryClass" />
+    <NavigationProperty Name="ItemMasters" Relationship="Self.FK_ItemMaster_ItemMaster" FromRole="ItemType" ToRole="ItemMaster" />
+  </EntityType>
+  <EntityType Name="LegalEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Vendors" Relationship="Self.FK_Vendors_LegalEntity" FromRole="LegalEntity" ToRole="Vendor" />
+  </EntityType>
+  <EntityType Name="State">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CountryId" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="Country" Relationship="Self.FK_State_Country" FromRole="State" ToRole="Country" />
+    <NavigationProperty Name="VendorAddresses" Relationship="Self.FK_VendorAddresses_State" FromRole="State" ToRole="VendorAddresses" />
+  </EntityType>
+  <EntityType Name="Vendor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LegalEntityId" Type="Int64" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OrgId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="LegalEntity" Relationship="Self.FK_Vendors_LegalEntity" FromRole="Vendor" ToRole="LegalEntity" />
+    <NavigationProperty Name="VendorAddresses" Relationship="Self.FK_VendorAddresses_Vendors" FromRole="Vendor" ToRole="VendorAddresses" />
+    <NavigationProperty Name="VendorBankDetails" Relationship="Self.FK_VendorBankDetail_Vendor" FromRole="Vendor" ToRole="VendorBankDetail" />
+    <NavigationProperty Name="VendorContacts" Relationship="Self.FK_VendorContact_Vendor" FromRole="Vendor" ToRole="VendorContact" />
+    <NavigationProperty Name="VendorTaxDetails" Relationship="Self.FK_VendorTaxDetails_Vendor" FromRole="Vendor" ToRole="VendorTaxDetails" />
+  </EntityType>
+  <EntityType Name="VendorAddress">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VendorId" Type="Int64" Nullable="false" />
+    <Property Name="Line1" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Line2" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="City" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="StateId" Type="Int64" />
+    <Property Name="County" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="CountryId" Type="Int64" Nullable="false" />
+    <Property Name="Zip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Phone1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Phone2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Landmark" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Country" Relationship="Self.FK_VendorAddresses_Country" FromRole="VendorAddresses" ToRole="Country" />
+    <NavigationProperty Name="State" Relationship="Self.FK_VendorAddresses_State" FromRole="VendorAddresses" ToRole="State" />
+    <NavigationProperty Name="Vendor" Relationship="Self.FK_VendorAddresses_Vendors" FromRole="VendorAddresses" ToRole="Vendor" />
+  </EntityType>
+  <EntityType Name="VendorBankDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VendorId" Type="Int64" Nullable="false" />
+    <Property Name="BeneficiaryName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="AccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BankName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Branch" Type="String" Unicode="false" />
+    <Property Name="MICR" Type="String" Unicode="false" />
+    <Property Name="IFSC" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Vendor" Relationship="Self.FK_VendorBankDetail_Vendor" FromRole="VendorBankDetail" ToRole="Vendor" />
+  </EntityType>
+  <EntityType Name="VendorContact">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VendorId" Type="Int64" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Vendor" Relationship="Self.FK_VendorContact_Vendor" FromRole="VendorContact" ToRole="Vendor" />
+  </EntityType>
+  <EntityType Name="VendorTaxDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VendorId" Type="Int64" Nullable="false" />
+    <Property Name="VATNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TINNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ServiceTaxNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PanNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Vendor" Relationship="Self.FK_VendorTaxDetails_Vendor" FromRole="VendorTaxDetails" ToRole="Vendor" />
+  </EntityType>
+  <Association Name="FK_Asset_ItemMaster">
+    <End Role="ItemMaster" Type="Self.ItemMaster" Multiplicity="1" />
+    <End Role="Asset" Type="Self.Asset" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Asset">
+        <PropertyRef Name="ItemMasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AssetIssue_Asset">
+    <End Role="Asset" Type="Self.Asset" Multiplicity="1" />
+    <End Role="AssetIssue" Type="Self.AssetIssue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Asset">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AssetIssue">
+        <PropertyRef Name="AssetId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_State_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="State" Type="Self.State" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="State">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorAddresses_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1" />
+    <End Role="VendorAddresses" Type="Self.VendorAddress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorAddresses">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InventoryClassDepartmentMap_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="1" />
+    <End Role="InventoryClassDepartmentMap" Type="Self.InventoryClassDepartmentMap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InventoryClassDepartmentMap">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InventoryClassDepartmentMap_InventoryClass">
+    <End Role="InventoryClass" Type="Self.InventoryClass" Multiplicity="1" />
+    <End Role="InventoryClassDepartmentMap" Type="Self.InventoryClassDepartmentMap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InventoryClass">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InventoryClassDepartmentMap">
+        <PropertyRef Name="InventoryClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemType_InventoryClass">
+    <End Role="InventoryClass" Type="Self.InventoryClass" Multiplicity="1" />
+    <End Role="ItemType" Type="Self.ItemType" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InventoryClass">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ItemType">
+        <PropertyRef Name="InventoryClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IssuedItems_ItemMaster">
+    <End Role="ItemMaster" Type="Self.ItemMaster" Multiplicity="1" />
+    <End Role="IssuedItems" Type="Self.IssuedItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="IssuedItems">
+        <PropertyRef Name="ItemMasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemMaster_ItemMaster">
+    <End Role="ItemType" Type="Self.ItemType" Multiplicity="1" />
+    <End Role="ItemMaster" Type="Self.ItemMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ItemMaster">
+        <PropertyRef Name="ItemTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Vendors_LegalEntity">
+    <End Role="LegalEntity" Type="Self.LegalEntity" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LegalEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Vendor">
+        <PropertyRef Name="LegalEntityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorAddresses_State">
+    <End Role="State" Type="Self.State" Multiplicity="0..1" />
+    <End Role="VendorAddresses" Type="Self.VendorAddress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="State">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorAddresses">
+        <PropertyRef Name="StateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorAddresses_Vendors">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="VendorAddresses" Type="Self.VendorAddress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorAddresses">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorBankDetail_Vendor">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="VendorBankDetail" Type="Self.VendorBankDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorBankDetail">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorContact_Vendor">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1" />
+    <End Role="VendorContact" Type="Self.VendorContact" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorContact">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorTaxDetails_Vendor">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="VendorTaxDetails" Type="Self.VendorTaxDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorTaxDetails">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="InvMgmtEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Assets" EntityType="Self.Asset" />
+    <EntitySet Name="AssetIssues" EntityType="Self.AssetIssue" />
+    <EntitySet Name="Countries" EntityType="Self.Country" />
+    <EntitySet Name="Departments" EntityType="Self.Department" />
+    <EntitySet Name="InventoryClasses" EntityType="Self.InventoryClass" />
+    <EntitySet Name="InventoryClassDepartmentMaps" EntityType="Self.InventoryClassDepartmentMap" />
+    <EntitySet Name="IssuedItems" EntityType="Self.IssuedItem" />
+    <EntitySet Name="ItemMasters" EntityType="Self.ItemMaster" />
+    <EntitySet Name="ItemTypes" EntityType="Self.ItemType" />
+    <EntitySet Name="LegalEntities" EntityType="Self.LegalEntity" />
+    <EntitySet Name="States" EntityType="Self.State" />
+    <EntitySet Name="Vendors" EntityType="Self.Vendor" />
+    <EntitySet Name="VendorAddresses" EntityType="Self.VendorAddress" />
+    <EntitySet Name="VendorBankDetails" EntityType="Self.VendorBankDetail" />
+    <EntitySet Name="VendorContacts" EntityType="Self.VendorContact" />
+    <EntitySet Name="VendorTaxDetails" EntityType="Self.VendorTaxDetail" />
+    <AssociationSet Name="FK_Asset_ItemMaster" Association="Self.FK_Asset_ItemMaster">
+      <End Role="ItemMaster" EntitySet="ItemMasters" />
+      <End Role="Asset" EntitySet="Assets" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AssetIssue_Asset" Association="Self.FK_AssetIssue_Asset">
+      <End Role="Asset" EntitySet="Assets" />
+      <End Role="AssetIssue" EntitySet="AssetIssues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_State_Country" Association="Self.FK_State_Country">
+      <End Role="Country" EntitySet="Countries" />
+      <End Role="State" EntitySet="States" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorAddresses_Country" Association="Self.FK_VendorAddresses_Country">
+      <End Role="Country" EntitySet="Countries" />
+      <End Role="VendorAddresses" EntitySet="VendorAddresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InventoryClassDepartmentMap_Department" Association="Self.FK_InventoryClassDepartmentMap_Department">
+      <End Role="Department" EntitySet="Departments" />
+      <End Role="InventoryClassDepartmentMap" EntitySet="InventoryClassDepartmentMaps" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InventoryClassDepartmentMap_InventoryClass" Association="Self.FK_InventoryClassDepartmentMap_InventoryClass">
+      <End Role="InventoryClass" EntitySet="InventoryClasses" />
+      <End Role="InventoryClassDepartmentMap" EntitySet="InventoryClassDepartmentMaps" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemType_InventoryClass" Association="Self.FK_ItemType_InventoryClass">
+      <End Role="InventoryClass" EntitySet="InventoryClasses" />
+      <End Role="ItemType" EntitySet="ItemTypes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IssuedItems_ItemMaster" Association="Self.FK_IssuedItems_ItemMaster">
+      <End Role="ItemMaster" EntitySet="ItemMasters" />
+      <End Role="IssuedItems" EntitySet="IssuedItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemMaster_ItemMaster" Association="Self.FK_ItemMaster_ItemMaster">
+      <End Role="ItemType" EntitySet="ItemTypes" />
+      <End Role="ItemMaster" EntitySet="ItemMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Vendors_LegalEntity" Association="Self.FK_Vendors_LegalEntity">
+      <End Role="LegalEntity" EntitySet="LegalEntities" />
+      <End Role="Vendor" EntitySet="Vendors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorAddresses_State" Association="Self.FK_VendorAddresses_State">
+      <End Role="State" EntitySet="States" />
+      <End Role="VendorAddresses" EntitySet="VendorAddresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorAddresses_Vendors" Association="Self.FK_VendorAddresses_Vendors">
+      <End Role="Vendor" EntitySet="Vendors" />
+      <End Role="VendorAddresses" EntitySet="VendorAddresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorBankDetail_Vendor" Association="Self.FK_VendorBankDetail_Vendor">
+      <End Role="Vendor" EntitySet="Vendors" />
+      <End Role="VendorBankDetail" EntitySet="VendorBankDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorContact_Vendor" Association="Self.FK_VendorContact_Vendor">
+      <End Role="Vendor" EntitySet="Vendors" />
+      <End Role="VendorContact" EntitySet="VendorContacts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorTaxDetails_Vendor" Association="Self.FK_VendorTaxDetails_Vendor">
+      <End Role="Vendor" EntitySet="Vendors" />
+      <End Role="VendorTaxDetails" EntitySet="VendorTaxDetails" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

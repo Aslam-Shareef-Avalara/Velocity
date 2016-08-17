@@ -1,0 +1,439 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="InvMgmtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Asset">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemMasterId" Type="bigint" Nullable="false" />
+    <Property Name="GRNId" Type="uniqueidentifier" />
+    <Property Name="IsAssetized" Type="bit" Nullable="false" />
+    <Property Name="AssetTag" Type="varchar" MaxLength="50" />
+    <Property Name="AssetizedBy" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="AssetizedDate" Type="datetime" Nullable="false" />
+    <Property Name="Comment" Type="varchar" MaxLength="500" />
+    <Property Name="IsIssued" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AssetIssue">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AssetId" Type="bigint" Nullable="false" />
+    <Property Name="DateIssued" Type="datetime" Nullable="false" />
+    <Property Name="IssuedTo" Type="uniqueidentifier" />
+    <Property Name="Comment" Type="varchar" MaxLength="500" />
+    <Property Name="IssuedBy" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="OrgId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InventoryClass">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="OrgId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InventoryClassDepartmentMap">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="InventoryClassId" Type="bigint" Nullable="false" />
+    <Property Name="DepartmentId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IssuedItems">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ItemMasterId" Type="bigint" Nullable="false" />
+    <Property Name="IssuedOn" Type="datetime" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="IssuedBy" Type="uniqueidentifier" />
+    <Property Name="IssuedTo" Type="uniqueidentifier" />
+    <Property Name="OrgId" Type="int" />
+  </EntityType>
+  <EntityType Name="ItemMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+    <Property Name="ItemTypeId" Type="bigint" Nullable="false" />
+    <Property Name="Quantity" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="Perishable" Type="bit" />
+    <Property Name="OrgId" Type="int" />
+  </EntityType>
+  <EntityType Name="ItemType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="OrgId" Type="int" Nullable="false" />
+    <Property Name="InventoryClassId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LegalEntity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="State">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+    <Property Name="CountryId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Vendor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+    <Property Name="LegalEntityId" Type="bigint" Nullable="false" />
+    <Property Name="email" Type="varchar" MaxLength="100" />
+    <Property Name="Description" Type="varchar" MaxLength="200" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="OrgId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VendorAddresses">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VendorId" Type="bigint" Nullable="false" />
+    <Property Name="Line1" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="Line2" Type="varchar" MaxLength="250" />
+    <Property Name="City" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="StateId" Type="bigint" />
+    <Property Name="County" Type="varchar" MaxLength="100" />
+    <Property Name="CountryId" Type="bigint" Nullable="false" />
+    <Property Name="Zip" Type="varchar" MaxLength="50" />
+    <Property Name="Phone1" Type="varchar" MaxLength="50" />
+    <Property Name="Phone2" Type="varchar" MaxLength="50" />
+    <Property Name="Landmark" Type="varchar" MaxLength="150" />
+  </EntityType>
+  <EntityType Name="VendorBankDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VendorId" Type="bigint" Nullable="false" />
+    <Property Name="BeneficiaryName" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="AccountNumber" Type="varchar" MaxLength="50" />
+    <Property Name="BankName" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Branch" Type="varchar" MaxLength="50" />
+    <Property Name="MICR" Type="varchar" MaxLength="50" />
+    <Property Name="IFSC" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="VendorContact">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VendorId" Type="bigint" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="LastName" Type="varchar" MaxLength="50" />
+    <Property Name="Phone" Type="varchar" MaxLength="20" />
+    <Property Name="Mobile" Type="varchar" MaxLength="50" />
+    <Property Name="email" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="VendorTaxDetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VendorId" Type="bigint" Nullable="false" />
+    <Property Name="VATNumber" Type="varchar" MaxLength="50" />
+    <Property Name="TINNumber" Type="varchar" MaxLength="50" />
+    <Property Name="ServiceTaxNumber" Type="varchar" MaxLength="50" />
+    <Property Name="PanNumber" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_Asset_ItemMaster">
+    <End Role="ItemMaster" Type="Self.ItemMaster" Multiplicity="1" />
+    <End Role="Asset" Type="Self.Asset" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Asset">
+        <PropertyRef Name="ItemMasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AssetIssue_Asset">
+    <End Role="Asset" Type="Self.Asset" Multiplicity="1" />
+    <End Role="AssetIssue" Type="Self.AssetIssue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Asset">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AssetIssue">
+        <PropertyRef Name="AssetId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InventoryClassDepartmentMap_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="1" />
+    <End Role="InventoryClassDepartmentMap" Type="Self.InventoryClassDepartmentMap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InventoryClassDepartmentMap">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InventoryClassDepartmentMap_InventoryClass">
+    <End Role="InventoryClass" Type="Self.InventoryClass" Multiplicity="1" />
+    <End Role="InventoryClassDepartmentMap" Type="Self.InventoryClassDepartmentMap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InventoryClass">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InventoryClassDepartmentMap">
+        <PropertyRef Name="InventoryClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IssuedItems_ItemMaster">
+    <End Role="ItemMaster" Type="Self.ItemMaster" Multiplicity="1" />
+    <End Role="IssuedItems" Type="Self.IssuedItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="IssuedItems">
+        <PropertyRef Name="ItemMasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemMaster_ItemMaster">
+    <End Role="ItemType" Type="Self.ItemType" Multiplicity="1" />
+    <End Role="ItemMaster" Type="Self.ItemMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ItemMaster">
+        <PropertyRef Name="ItemTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemType_InventoryClass">
+    <End Role="InventoryClass" Type="Self.InventoryClass" Multiplicity="1" />
+    <End Role="ItemType" Type="Self.ItemType" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InventoryClass">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ItemType">
+        <PropertyRef Name="InventoryClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_State_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="State" Type="Self.State" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="State">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorAddresses_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1" />
+    <End Role="VendorAddresses" Type="Self.VendorAddresses" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorAddresses">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorAddresses_State">
+    <End Role="State" Type="Self.State" Multiplicity="0..1" />
+    <End Role="VendorAddresses" Type="Self.VendorAddresses" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="State">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorAddresses">
+        <PropertyRef Name="StateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorAddresses_Vendors">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="VendorAddresses" Type="Self.VendorAddresses" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorAddresses">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorBankDetail_Vendor">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="VendorBankDetail" Type="Self.VendorBankDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorBankDetail">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorContact_Vendor">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1" />
+    <End Role="VendorContact" Type="Self.VendorContact" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorContact">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Vendors_LegalEntity">
+    <End Role="LegalEntity" Type="Self.LegalEntity" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LegalEntity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Vendor">
+        <PropertyRef Name="LegalEntityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VendorTaxDetails_Vendor">
+    <End Role="Vendor" Type="Self.Vendor" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="VendorTaxDetails" Type="Self.VendorTaxDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VendorTaxDetails">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="InvMgmtModelStoreContainer">
+    <EntitySet Name="Asset" EntityType="Self.Asset" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AssetIssue" EntityType="Self.AssetIssue" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="InventoryClass" EntityType="Self.InventoryClass" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="InventoryClassDepartmentMap" EntityType="Self.InventoryClassDepartmentMap" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IssuedItems" EntityType="Self.IssuedItems" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItemMaster" EntityType="Self.ItemMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LegalEntity" EntityType="Self.LegalEntity" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Vendor" EntityType="Self.Vendor" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VendorAddresses" EntityType="Self.VendorAddresses" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VendorBankDetail" EntityType="Self.VendorBankDetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VendorContact" EntityType="Self.VendorContact" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VendorTaxDetails" EntityType="Self.VendorTaxDetails" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Asset_ItemMaster" Association="Self.FK_Asset_ItemMaster">
+      <End Role="ItemMaster" EntitySet="ItemMaster" />
+      <End Role="Asset" EntitySet="Asset" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AssetIssue_Asset" Association="Self.FK_AssetIssue_Asset">
+      <End Role="Asset" EntitySet="Asset" />
+      <End Role="AssetIssue" EntitySet="AssetIssue" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InventoryClassDepartmentMap_Department" Association="Self.FK_InventoryClassDepartmentMap_Department">
+      <End Role="Department" EntitySet="Department" />
+      <End Role="InventoryClassDepartmentMap" EntitySet="InventoryClassDepartmentMap" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InventoryClassDepartmentMap_InventoryClass" Association="Self.FK_InventoryClassDepartmentMap_InventoryClass">
+      <End Role="InventoryClass" EntitySet="InventoryClass" />
+      <End Role="InventoryClassDepartmentMap" EntitySet="InventoryClassDepartmentMap" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IssuedItems_ItemMaster" Association="Self.FK_IssuedItems_ItemMaster">
+      <End Role="ItemMaster" EntitySet="ItemMaster" />
+      <End Role="IssuedItems" EntitySet="IssuedItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemMaster_ItemMaster" Association="Self.FK_ItemMaster_ItemMaster">
+      <End Role="ItemType" EntitySet="ItemType" />
+      <End Role="ItemMaster" EntitySet="ItemMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemType_InventoryClass" Association="Self.FK_ItemType_InventoryClass">
+      <End Role="InventoryClass" EntitySet="InventoryClass" />
+      <End Role="ItemType" EntitySet="ItemType" />
+    </AssociationSet>
+    <AssociationSet Name="FK_State_Country" Association="Self.FK_State_Country">
+      <End Role="Country" EntitySet="Country" />
+      <End Role="State" EntitySet="State" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorAddresses_Country" Association="Self.FK_VendorAddresses_Country">
+      <End Role="Country" EntitySet="Country" />
+      <End Role="VendorAddresses" EntitySet="VendorAddresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorAddresses_State" Association="Self.FK_VendorAddresses_State">
+      <End Role="State" EntitySet="State" />
+      <End Role="VendorAddresses" EntitySet="VendorAddresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorAddresses_Vendors" Association="Self.FK_VendorAddresses_Vendors">
+      <End Role="Vendor" EntitySet="Vendor" />
+      <End Role="VendorAddresses" EntitySet="VendorAddresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorBankDetail_Vendor" Association="Self.FK_VendorBankDetail_Vendor">
+      <End Role="Vendor" EntitySet="Vendor" />
+      <End Role="VendorBankDetail" EntitySet="VendorBankDetail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorContact_Vendor" Association="Self.FK_VendorContact_Vendor">
+      <End Role="Vendor" EntitySet="Vendor" />
+      <End Role="VendorContact" EntitySet="VendorContact" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Vendors_LegalEntity" Association="Self.FK_Vendors_LegalEntity">
+      <End Role="LegalEntity" EntitySet="LegalEntity" />
+      <End Role="Vendor" EntitySet="Vendor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VendorTaxDetails_Vendor" Association="Self.FK_VendorTaxDetails_Vendor">
+      <End Role="Vendor" EntitySet="Vendor" />
+      <End Role="VendorTaxDetails" EntitySet="VendorTaxDetails" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

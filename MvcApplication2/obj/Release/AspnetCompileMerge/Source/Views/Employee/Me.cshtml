@@ -260,7 +260,7 @@
                             <img class="actualphoto" alt="@coworker.FirstName @coworker.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(coworker.ProfilePix))">
                         }
                         <span class=" contacts-title">@coworker.FirstName</span>
-                        <p style="width:100%;">
+                        <p style="width:auto;margin-left:75px;">
                             @coworker.Phone &nbsp;| &nbsp;<a href="mailto:@coworker.Email">@coworker.Email</a>
                             <div class="list-group-controls">
                                 <a title="Click to chat" alt="Click to chat" href="sip:@coworker.Email"><img title="Click to chat" alt="Click to chat" height="40" src="@Url.Content("~/images/Chat-2-128.png")" /></a>
@@ -724,7 +724,7 @@
 	max-height: 200px;
 }
     .jspDrag {
-    background:#ddd none repeat scroll 0 0 ;
+    background:#8b8b9f none repeat scroll 0 0 ;
     }
     .jspArrowUp {
     background-position: 85px -4px !important;

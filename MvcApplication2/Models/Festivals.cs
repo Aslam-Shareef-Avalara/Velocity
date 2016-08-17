@@ -59,7 +59,7 @@ namespace MvcApplication2.Models
             festivals.Add(new Festival(Bakrid.AddDays(-1), Bakrid.AddDays(1), FestivalType.Eid, "eidlogin"));
             festivals.Add(new Festival(new DateTime(DateTime.Today.Year, 12, 30), new DateTime(DateTime.Today.Month == 12 ? DateTime.Today.Year + 1 : DateTime.Today.Year, 1, 4), FestivalType.NewYear));
             festivals.Add(new Festival(Rakhi.AddDays(-1), Rakhi.AddDays(1), FestivalType.Rakhi, "Rakhilogin"));
-            festivals.Add(new Festival(IndependanceDay.AddDays(-1), IndependanceDay.AddDays(1), FestivalType.Independanceday, "independancelogin"));
+            festivals.Add(new Festival(IndependanceDay.AddDays(-1), IndependanceDay.AddDays(1), FestivalType.Independanceday, "independencedaylogin"));
             festivals.Add(new Festival(RepublicDay.AddDays(-1), RepublicDay, FestivalType.Republicday, "republicdaylogin"));
             festivals.Add(new Festival(HoliDate.AddDays(-2), HoliDate.AddDays(2), FestivalType.Holi, "holilogin"));
 

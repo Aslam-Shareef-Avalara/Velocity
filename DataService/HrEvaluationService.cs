@@ -25,7 +25,7 @@ namespace DataService
 
 
                 var t = dbx.EmployeeEvaluations.Join(dbx.Goals, e => e.GoalId, g => g.gid, (e, g) => new { e, g }).Where(z => !(z.g.Status < GoalStatus.EMPLOYEE_EVAL_SAVED) && z.g.Evalcycleid == evalCycleId).Select(x => x.g.EmployeeId);
-                var employees = dbx.Employees.Where(x => t.Contains(x.gid));
+                var employees = dbx.Employees.Where(x => t.Contains(x.gid) && x.Active);
                 if (employees != null)
                     return employees.ToList();
 
@@ -41,7 +41,7 @@ namespace DataService
             using (PEntities dbx = new PEntities())
             {
                 var t = dbx.EmployeeEvaluations.Join(dbx.Goals, e => e.GoalId, g => g.gid, (e, g) => new { e, g }).Where(z => z.g.Status != GoalStatus.EMPLOYEE_EVAL_PUBLISHED && z.g.Evalcycleid == evalCycleId).Select(x => x.g.EmployeeId);
-                var employees = dbx.Employees.Where(x => t.Contains(x.gid));
+                var employees = dbx.Employees.Where(x => t.Contains(x.gid) && x.Active);
                 if (employees != null)
                     return employees.ToList();
 
@@ -70,7 +70,7 @@ namespace DataService
             using (PEntities dbx = new PEntities())
             {
                 var t = dbx.ManagerEvaluations.Join(dbx.Goals, e => e.GoalId, g => g.gid, (e, g) => new { e, g }).Where(z => z.g.Status != GoalStatus.MANAGER_GOAL_PUBLISHED && z.g.Evalcycleid == evalCycleId).Select(x => x.e.ManagerId);
-                var employees = dbx.Employees.Where(x => t.Contains(x.gid));
+                var employees = dbx.Employees.Where(x => t.Contains(x.gid) && x.Active);
                 if (employees != null)
                     return employees.ToList();
             }
@@ -134,15 +134,15 @@ namespace DataService
                     }
                     try
                     {
-                        dbx.Badges.Add(new Badge()
-                        {
-                            BadgeType = BadgeType.EVALUATION_APPROVED,
-                            Description = "Your evaluation of " + emp.FirstName + " performance has been approved by HR. To view the evaluations <a href='~/evaluation/ReporteeEvaluation?reporteeId=" + emp.gid + "'>Click Here</a>",
-                            FromBadge = null,
-                            ToBadge = emp.Manager.Value,
-                            Viewed = false
-                        });
-                        dbx.SaveChanges();
+                        //dbx.Badges.Add(new Badge()
+                        //{
+                        //    BadgeType = BadgeType.EVALUATION_APPROVED,
+                        //    Description = "Your evaluation of " + emp.FirstName + " performance has been approved by HR. To view the evaluations <a href='~/evaluation/ReporteeEvaluation?reporteeId=" + emp.gid + "'>Click Here</a>",
+                        //    FromBadge = null,
+                        //    ToBadge = emp.Manager.Value,
+                        //    Viewed = false
+                        //});
+                        //dbx.SaveChanges();
                     }
                     catch { }
                 }
@@ -193,6 +193,17 @@ namespace DataService
                                 Viewed = false
                             });
                             dbx.SaveChanges();
+                        }
+                        catch { }
+
+                        try
+                        {
+                            var b = dbx.Badges.Where(x => x.FromBadge ==emp.gid && x.BadgeType == BadgeType.EMPLOYEE_EVALUATED).ToList();
+                            if (b != null  && b.Count()>0)
+                            {
+                                b.ForEach(x => { dbx.Badges.Remove(x); }); 
+                                dbx.SaveChanges();
+                            }
                         }
                         catch { }
                     }

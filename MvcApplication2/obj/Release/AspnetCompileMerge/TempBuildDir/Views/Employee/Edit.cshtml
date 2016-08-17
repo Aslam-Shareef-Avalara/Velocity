@@ -28,22 +28,34 @@
 }
 <div class="col-md-3 col-sm-4 col-xs-5">
 
-    <form class="form-horizontal">
+    <form class="form-horizontal" method="post" action="@Url.Content("~/employee/EditForHr")">
+        <input type="hidden" name="gid" value="@Model.gid" />
         <div class="panel panel-default">
             <div class="panel-body">
                 <h3><span class="glyphicon glyphicon-user"></span> @Model.FirstName @Model.LastName</h3>
-                <p>@Model.Designation</p>
+                <p>
+                    @if (ViewBag.HrEdit == true)
+                    {
+                        <input type="text" name="Designation" value="@Model.Designation" style="margin:0px!important;" />
+                    }
+                    else
+                    {
+                        @Model.Designation
+
+                    }
+
+                </p>
                 <div id="user_image" class="text-center">
                     @if (Model.ProfilePix == null || Model.ProfilePix.Count() == 0)
                     {
                         <img alt="@Model.FirstName @Model.LastName" style="width:75px" src="@Url.Content("~/images/follower-man-user-login-round-512.png")">
-                        <br/><span style="color:red;">Please upload a photo in outlook using this : <a target="_blank" href="https://outlook.office365.com/owa/avalara.com/">Outlook Link</a></span>
+                        <br /><span style="color:red;">Please upload a photo in outlook using this : <a target="_blank" href="https://outlook.office365.com/owa/avalara.com/">Outlook Link</a></span>
                     }
                     else
                     {
-                        <img style="width:100px;margin-top:15px;" alt="@Model.FirstName @Model.LastName"  src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.ProfilePix))" class="actualphoto">
-                        
-                        
+                        <img style="width:100px;margin-top:15px;" alt="@Model.FirstName @Model.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.ProfilePix))" class="actualphoto">
+
+
                     }
                 </div>
             </div>
@@ -76,7 +88,14 @@
                     </div>
                 </div>
 
-
+                <div class="form-group">
+                    <div class="col-md-12 col-xs-5">
+                        @if (ViewBag.HrEdit == true)
+                        {
+                            <input type="submit" class="btn btn-primary btn-rounded pull-right" value="Save" />
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -128,7 +147,9 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-12 col-xs-5">
+
                         <input type="submit" class="btn btn-primary btn-rounded pull-right" value="Save" />
+
                     </div>
                 </div>
             </div>
@@ -155,8 +176,8 @@
                     <div class="col-md-8 col-xs-7 line-height-30">
                         @if (ViewBag.HrEdit == true)
                         {
-                        <input type="checkbox" id="FauxActive" name="FauxActive" @(Model.Active ? "checked" : "" ) onchange="$('#Active').val($(this).is(':checked').toString().toLowerCase())" />
-                        <input type="hidden" name="Active" id="Active" value="@Model.Active.ToString().ToLower()" />
+                            <input type="checkbox" id="FauxActive" name="FauxActive" @(Model.Active ? "checked" : "") onchange="$('#Active').val($(this).is(':checked').toString().toLowerCase())" />
+                            <input type="hidden" name="Active" id="Active" value="@Model.Active.ToString().ToLower()" />
                         }
                         else
                         {
@@ -221,8 +242,8 @@
                                 </span>
                                 <input type="text" name="DoB" id="DoB" class="pull-right form-control datepicker" value="@formatDate(Model.DoB)">
                             </div>
-                            
-                            
+
+
                         }
                         else
                         {
@@ -242,7 +263,7 @@
                                 </span>
                                 <input type="text" name="DoJ" id="DoJ" class="pull-right form-control datepicker" value="@formatDate(Model.DoJ)">
                             </div>
-                            
+
                         }
                         else
                         {
@@ -297,11 +318,11 @@
     $(document).ready(function () {
         $(".datepicker").datepicker({
             startView: 2,
-            format:"dd-M-yyyy",
-            immediateUpdates:true
+            format: "dd-M-yyyy",
+            immediateUpdates: true
         });
 
-        if(!$("#hrsave").closest("form").find("input:text").is(":visible"))
+        if (!$("#hrsave").closest("form").find("input:text").is(":visible"))
             $("#hrsave").hide();
     });
-    </script>
+</script>

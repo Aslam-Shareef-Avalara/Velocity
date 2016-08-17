@@ -15,6 +15,7 @@ namespace MvcApplication2.ViewModel
         public string OrgName = "";
         public string ManagerName = "";
         public Employee Employee = new Employee();
+        public EvaluationRating GradingObject = new EvaluationRating();
 
     }
 }

@@ -31,7 +31,8 @@ namespace MvcApplication2.Models
             set
             {
                 List<string> users = ActiveUsers;
-                users.Add(value);
+                if(!users.Contains(value))
+                    users.Add(value);
             }
         }
         public bool UserOffline(string username)
@@ -41,7 +42,7 @@ namespace MvcApplication2.Models
                 if (HttpRuntime.Cache[CONSTANTS.ONLINE_USERS] != null)
                 {
                     List<string> users = (List<string>)HttpRuntime.Cache[CONSTANTS.ONLINE_USERS];
-                    if (users.Contains(username))
+                    if (users != null && users.Count()>0 && users.Contains(username))
                     {
                         users.Remove(username);
                         return true;

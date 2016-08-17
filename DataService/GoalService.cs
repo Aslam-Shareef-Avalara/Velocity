@@ -91,7 +91,11 @@ namespace DataService
         {
             using (PEntities dbx = new PEntities())
             {
-                var goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed==true && x.OrgId==OrgId));
+                IQueryable<Goal> goals = null;
+                if (dbx.Employees.Any(x => x.Manager == employeeId && x.Active))
+                    goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed == true && x.OrgId == OrgId ));
+                else
+                    goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed==true && x.OrgId==OrgId && !x.EmployeeId.HasValue));
                 if(goals!=null)
                 return goals.ToList();
             }
@@ -167,7 +171,9 @@ namespace DataService
         {
             using (PEntities dbx = new PEntities())
             {
-                var goalids = dbx.Goals.Where(x => x.Fixed==true && x.OrgId ==OrgId);
+                IQueryable<Goal> goalids = null;
+                
+                goalids = dbx.Goals.Where(x => x.Fixed==true && x.OrgId ==OrgId);
                 if (goalids != null)
                 {
 
@@ -189,7 +195,7 @@ namespace DataService
                 dbx.SaveChanges();
                 Guid? ManagerId = dbx.Employees.Where(x => x.gid == g.EmployeeId).Select(y => y.Manager).FirstOrDefault();
                 if (!ManagerId.HasValue) throw new Exception("No manager has been assigned yet. Your goals cannot be set at this point. Please speak to the HR.");
-                dbx.SetGoal(g.gid, g.ModifiedBy, g.Goal1, g.Fixed, g.OrgId, g.EmployeeId, ManagerId, g.Evalcycleid,g.Weightage);
+                dbx.SetGoal(g.gid, g.ModifiedBy, g.Goal1, g.Fixed, g.OrgId, g.EmployeeId, ManagerId, g.Evalcycleid,0);
 
             }
         }

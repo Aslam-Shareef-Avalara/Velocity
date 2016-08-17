@@ -1,13 +1,13 @@
 ﻿@using X.Scaffolding.Core
 @model DataService.Goal
-
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
 <div class="fs-form-wrap panel-default " id="fs-form-wrap">
     <div class="panel-heading">
         <div class="panel-title-box">
             <h3 class="panel-title">@ViewBag.Action Goal :</h3>
         </div>
     </div>
-    @using (Html.BeginForm(null, null, FormMethod.Post, new { id="creategoalform", enctype = "multipart/form-data", @class = "fs-form fs-form-full" }))
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "creategoalform", enctype = "multipart/form-data", @class = "fs-form fs-form-full" }))
     {
 
 
@@ -18,25 +18,79 @@
             <input type="hidden" name="Evalcycleid" value="@Model.Evalcycleid" />
             <div class="form-group">
                 <label class="control-label col-md-2 fs-field-label fs-anim-upper" for="Title">
+                    Is People Mgmt Goal?
+                </label>
+                <div class="col-md-10">
+                    <input type="checkbox" name="isPeopleGoal" /> 
+
+                    
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2 fs-field-label fs-anim-upper" for="Title">
                     Goal Title
                 </label>
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Title, new { @class = "goaltextarea" })
+
                     @Html.ValidationMessageFor(model => model.Title)
                 </div>
             </div>
-
+            
             <div class="form-group">
                 <label class="control-label col-md-2 fs-field-label fs-anim-upper" for="Goal1">
                     Elaborate your goal
                 </label>
                 <div class="col-md-10">
                     @Html.TextAreaFor(model => model.Goal1, new { @class = "goal", data_goalid = "0" })
+                    <script>
+                        var editor_goal = CKEDITOR.replace( 'Goal1',{
+                            height: 200,  removePlugins: 'elementspath' ,resize_enabled:false,
+                            toolbarGroups  :
+                            [
+                                @if (User.IsInRole("Hr") || User.IsInRole("HrAdmin"))
+                                { 
+                                    <text>
+                                       { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+		                                { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+		                                { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+		                                { name: 'forms', groups: [ 'forms' ] },
+		                                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		                                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+		                                { name: 'links', groups: [ 'links' ] },
+		                                { name: 'insert', groups: [ 'insert' ] },
+		                                '/',
+		                                { name: 'styles', groups: [ 'styles' ] },
+		                                { name: 'colors', groups: [ 'colors' ] },
+		                                { name: 'tools', groups: [ 'tools' ] },
+		                                { name: 'others', groups: [ 'others' ] },
+		                                { name: 'about', groups: [ 'about' ] }
+                                </text>
+                                }
+                                else
+                                {
+                                    <text>
+                                        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                                         { name: 'styles', groups: [ 'styles' ] }
+                                    </text>
+                                }
+
+                            ]
+                        } );
+
+                        editor_goal.on("change",function (evt) {
+                            $('#Goal1').val(evt.editor.getData())
+                        });
+                    </script>
+
                     @Html.ValidationMessageFor(model => model.Goal1)
                 </div>
             </div>
 
-            <div class="form-group">
+            @*<div class="form-group">
                 <label class="control-label col-md-2" for="Weightage">
                     Weightage
                 </label>
@@ -46,7 +100,7 @@
                     <span class="helptext">Click and drag along the gray area to set a value.</span>
                     @Html.ValidationMessageFor(model => model.Weightage)
                 </div>
-            </div>
+            </div>*@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
@@ -58,7 +112,7 @@
     }
 </div>
 <script>
-    
+
     var totalweightage_@Model.gid.ToString().Replace("-","_")=0;
     var hideMsg=true;
     function gotolist() {
@@ -67,24 +121,25 @@
     }
     function handlesubmit(e) {
         var cancelSubmit = false;
-        if( $("#Weightage").val()=="0")
-        {
-            cancelSubmit=true;
-            alert('Please set a value greater than 0%');
-        }
-        else if($.trim($("#Goal1").val())=="")
+        //if( $("#Weightage").val()=="0")
+        //{
+        //    cancelSubmit=true;
+        //    alert('Please set a value greater than 0%');
+        //}
+        //else 
+        if ($.trim($("#Goal1").val()) == "")
         {
             $("#Goal1").focus();
             cancelSubmit=true;
             alert('Please add a description for the goal.');
-            
+
         }
         else if($.trim($("#Title").val())=="")
         {
             $("#Title").focus();
             cancelSubmit=true;
             alert('Please add the goal title');
-            
+
         }
         if(cancelSubmit)
         {
@@ -98,7 +153,7 @@
             e.stopPropagation();
             return false;
         }
-        
+
         $("#createupdategoal").attr("disabled","disabled");
         $.post($("#creategoalform").attr("action"), $("#creategoalform").serialize(), function (re) {
             console.log(typeof (onupdategoal) == "function");
@@ -111,12 +166,12 @@
     $(document).ready(function () {
         $("#creategoalform").submit(handlesubmit);
         setTimeout(function(){$("#goaleditorcontainer #Title").focus()},1000);
-        if (totalweightage_@Model.Evalcycleid != undefined && totalweightage_@Model.Evalcycleid != "undefined" && totalweightage_@Model.Evalcycleid != null) {
+        @*if (totalweightage_@Model.Evalcycleid != undefined && totalweightage_@Model.Evalcycleid != "undefined" && totalweightage_@Model.Evalcycleid != null) {
             // Essentially the formula for max value for current goal is 100 - total weightage till now  + the current goals weightage if in EDIT mode
             // The addition is because we are editing the value same value as has been included in the total weightage.
             totalweightage_@Model.gid.ToString().Replace("-","_") = totalweightage_@Model.Evalcycleid > 100 ? 0 : 100 - totalweightage_@Model.Evalcycleid + @(Model.Weightage.HasValue?Model.Weightage.Value:0);//-
-        }
-        $("#Weightage").knob({
+        }*@
+        @*$("#Weightage").knob({
             min: 0,
             max: 100,
             step: 5,
@@ -157,7 +212,7 @@
             thickness: "0.5",
             //skin: "tron",
             //fgColor:"blue"
-        });
+        });*@
         starttour("sharedcreategoal");
     });
 </script>
@@ -201,10 +256,10 @@
         border: thin solid #9ba2ac;
         padding: 20px 10px 10px;
     }
-     .fs-form-wrap {
+
+    .fs-form-wrap {
         background-color: white;
-         box-shadow: 10px 10px 25px black;
+        box-shadow: 10px 10px 25px black;
         opacity: 1;
     }
-   
 </style>

@@ -51,6 +51,7 @@
 <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
 <div id="goalslist" style="padding:10px;">
     <h3 class="title" id="GoalViewTitle">@ViewBag.EmployeeName Goals</h3>
+    
     @Html.Action("PerformanceData", "Employee", new { reporteeID = Guid.Parse(empId) })
     @if (ViewBag.EmployeeName != null && ViewBag.EmployeeName.ToLower() == "your")
     {
@@ -136,18 +137,18 @@
 
                 </div>
 
-                    foreach (var item in goalviewmodel.Goals)
+                    foreach (var item in goalviewmodel.Goals.OrderBy(x=>x.Fixed).ThenByDescending(y=>y.EmployeeId).ThenBy(f=>f.gid).ToList())
                     {
                         if (item.Fixed && ViewBag.FixedGoals == false) { continue; }
                 <div class="widget singlegoal widget-default widget-item-icon">
                     <div class="widget-data">
                         @*<div class="widget-int num-count num-count-20px">@item.Title</div>*@
-                        <div class="widget-title"><label class="goalsubheadings">@(item.Fixed ? "Success Trait" : "Goal")</label> : @item.Title</div>
+                        <div class="widget-title"><label class="goalsubheadings u">@(item.Fixed ? "Success Trait" : "Goal")</label> : @item.Title</div>
                         <div class="widget-subtitle">
-                            <label class="goalsubheadings">Description</label> : @item.Goal1
+                            <label class="goalsubheadings u" style="float:left;">Description :</label> <div class="goaldesc"> @Html.Raw(item.Goal1)</div>
                         </div>
                         <div class="widget-subtitle">
-                            <label class="goalsubheadings">Weightage</label> :  @item.Weightage %
+                            @*<label class="goalsubheadings u">Weightage</label> :  @item.Weightage %*@
                         </div>
                         @if (goalviewmodel.ManagerEvaluations != null && goalviewmodel.ManagerEvaluations.Count>0)
                                 {
@@ -163,12 +164,14 @@
                                     }
                                 }
                         <br />
-                        @if ((goalviewmodel.Editable && item.EmployeeId != null) || ViewBag.FixedGoals == true)
+                        @if ((goalviewmodel.Editable && (item.EmployeeId.HasValue && item.EmployeeId.Value!=new Guid())) || ViewBag.FixedGoals == true)
                                 {
+                             
                                 <span class="goalactioncontainer">
                                     <a href="javascript:void(0);" class="btn btn-success fa fa-edit" onclick="EditGoal('@item.gid')">
-                                        <label>Edit</label>
+                                        <label>Edit </label>
                                     </a>
+                                    
                                     <a href="javascript:void(0);" class="btn btn-danger fa fa-times-circle" onclick="DeleteGoal('@item.gid')">
                                         <label>Delete</label>
                                     </a>
@@ -230,17 +233,17 @@
 
                     </div>
 
-                    foreach (var item in goalviewmodel.Goals)
+                    foreach (var item in goalviewmodel.Goals.OrderBy(x => x.Fixed).ThenByDescending(y => y.EmployeeId).ThenBy(f => f.gid).ToList())
                     {
-                        <div class="widget singlegoal widget-default widget-item-icon">
+                        <div class="widget singlegoal widget-default widget-item-icon"> 
                             <div class="widget-data">
                                 @*<div class="widget-int num-count num-count-20px">@item.Title</div>*@
-                                <div class="widget-title"><label class="goalsubheadings">@(item.Fixed?"Success Trait":"Goal")</label> : @item.Title</div>
+                                <div class="widget-title"><label class="goalsubheadings">@(item.Fixed ? (item.EmployeeId.HasValue ? "Avalara's People Management Goal" : "Success Trait") : "Goal")</label> : @item.Title</div>
                                 <div class="widget-subtitle">
-                                    <label class="goalsubheadings">Description</label> : @item.Goal1
+                                    <label class="goalsubheadings">Description</label> : @Html.Raw(item.Goal1)
                                 </div>
                                 <div class="widget-subtitle">
-                                    <label class="goalsubheadings">Weightage</label> :  @item.Weightage %
+                                    @*<label class="goalsubheadings">Weightage</label> :  @item.Weightage %*@
                                 </div>
                                 @if (goalviewmodel.ManagerEvaluations != null && goalviewmodel.ManagerEvaluations.Count > 0)
                                 {
@@ -256,7 +259,7 @@
                                     }
                                 }
                                 <br />
-                                @if ((goalviewmodel.Editable && item.EmployeeId != null) || ViewBag.FixedGoals == true)
+                                @if ((goalviewmodel.Editable && (item.EmployeeId.HasValue && item.EmployeeId.Value!=new Guid())) || ViewBag.FixedGoals == true)
                                 {
                                     <span class="goalactioncontainer">
                                         <a href="javascript:void(0);" class="btn btn-success fa fa-edit" onclick="EditGoal('@item.gid')">
@@ -423,11 +426,11 @@
 
     function PublishGoals(totalweightage) {
         getCurrentlySelectedPETab();
-        if(totalweightage<100)
-        {
-            alert("A total of 100% should be allocated to your goals. Your current total goal weightage is "+ totalweightage+ "%");
-            return false;
-        }
+        //if(totalweightage<100)
+        //{
+        //    alert("A total of 100% should be allocated to your goals. Your current total goal weightage is "+ totalweightage+ "%");
+        //    return false;
+        //}
         var urlToPostTo = "@Url.Content("~/goals/publish?reporteeid=")@empId&rejected="+rejected;
         $.post(urlToPostTo, {"evalcycleid":currentlySelectedPEPane}, function (r) {
             $("#goalslist").load('@Url.Content(getgoalsurl)#goalslist', function (re) {
@@ -458,6 +461,9 @@
 
 
 <style>
+    .u {
+    /*text-decoration:underline;*/
+    }
     .rejectionmodal .modal-content {
         border-radius: 0px !important;
         border-width: 0px;
@@ -608,4 +614,8 @@
     .inner-wrap.removemargin {
              margin-left: 0 !important;
          }
+    .goaldesc {
+        width:300px;
+        display:inline-block;
+    }
 </style>

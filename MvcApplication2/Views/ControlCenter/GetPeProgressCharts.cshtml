@@ -1,0 +1,148 @@
+﻿@using System.Collections;
+@using X.Scaffolding.Core;
+@model Hashtable
+    @{
+        Layout = null;
+        List<MvcApplication2.Controllers.PEStatistics> pestatistics = (List<MvcApplication2.Controllers.PEStatistics>)Model["pestatistics"];
+        List<MvcApplication2.Controllers.PEStatistics> goalstats = Model.ContainsKey("goalstats") ? (List<MvcApplication2.Controllers.PEStatistics>)Model["goalstats"] : null;
+    }
+
+                <div class="widget widget-default widget-item-icon" id="fixedgoals" style="height:440px;">
+                    <label style="float:left;">Select PE Cycle</label>
+                    <select id="peselector" style="position:relative;z-index:3; float:left;min-width:100px;width:auto;margin-left:10px;padding:5px;" onchange="loadPeProgress($(this).val());">
+                        @foreach (var p in (List<DataService.EvaluationCycle>)ViewBag.Cycles)
+                        {
+                            if(p.Id == ViewBag.CurrentGoalCycleId)
+                            {
+                                
+                                <option @(p.Id == ViewBag.CycleId && ViewBag.phase == 1 ? "Selected" : "") value="@p.Id-1">@p.Title (Goal Cycle)</option>
+                                
+                            }
+                            <option @(p.Id == ViewBag.CycleId && ViewBag.phase==0 ? "Selected" : "") value="@p.Id-0">@p.Title (Eval Cycle)</option>
+                        }
+                    </select>
+                    <div class="widget-data1" style="height:386px;">
+                        
+                        <div class="owl-carousel" id="chartcarousel" style="z-index:1;">
+                            @if (pestatistics != null)
+                            {
+                                <div class="item">
+
+                                    <div class="widget-int num-count">PE Status - <span style="font-size:12px;vertical-align:middle;">@ViewBag.PEName</span></div>
+                                    <a href="@Url.Content("~/reports/peprogress?evalcycleid=" + ViewBag.EvalCycleId)">
+                                        <canvas id="pestatistics" width="550" height="325"></canvas>
+                                    </a>
+                                </div>
+                            }
+                            @if (goalstats != null)
+                            {
+                                <div class="item">
+                                    <div class="widget-int num-count">PE Status - <span style="font-size:12px;vertical-align:middle;">@ViewBag.GoalCycleName</span></div>
+                                    <a href="@Url.Content("~/reports/peprogress?evalcycleid=" + ViewBag.GoalCycleId)">
+                                        <canvas id="goalstatistics" width="550" height="325"></canvas>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        <label style="letter-spacing:1px; margin-left:10px;">You can click the chart to view details</label>
+                        @*<div class="widget-title"><a href="~/goals/getfixedgoals" style="text-decoration:underline;">View/Edit Fixed Goals</a></div>
+                            <div class="widget-subtitle">Click the above link to view/edit/create fixed goals which will be common for all employees.</div>*@
+                    </div>
+
+                </div>
+<script>
+    $(document).ready(function () {
+        refreshPeProgress();
+        setTimeout(function () {
+            $("#chartcarousel").owlCarousel(
+               {
+                   items: 1,
+                   itemsDesktop: 1,
+                   itemsDesktopSmall: 1,
+                   itemsTablet: 1,
+                   itemsTabletSmall: 1,
+                   itemsMobile: 1,
+                   navigation: false,
+                   autoplay: true,
+                   autoplayHoverPause: false,
+                   loop: true
+               }
+               );
+        }, 100);
+    });
+    function refreshPeProgress() {
+        var statlabel1 = [];
+        var statdata1 = [];
+        var statlabel2 = [];
+        var statdata2 = [];
+       @if(pestatistics!=null)
+       {
+
+
+           foreach (var stat in pestatistics)
+           {
+               <text>
+       statlabel1.push("@stat.GoalStatus.Replace("Manager", "Mgr.").Replace("Employee", "Emp").Replace("Published", "Pub.").Replace("Saved", "Sav.")");
+               statdata1.push(@stat.Count);
+
+               </text>
+           }
+
+           <text>
+       var data1 = {
+           labels: statlabel1, //["Goals Not Set", "Self-Evaluating", "Manager Evaluating", "HR Audit", "Final Publish Pending", "Published"],
+           datasets: [
+               {
+                   label: "PE Statistics",
+                   fillColor: "rgba(255,179,71,1)",
+                   strokeColor: "rgba(255,179,71,1)",
+                   highlightFill: "rgba(255,179,71,0.9)",
+                   highlightStroke: "rgba(100,70,28,0.9)",
+                   data: statdata1
+               }
+           ]
+       };
+           var ctx1 = $("#pestatistics").get(0).getContext("2d");
+           var peStatsChart1 = new Chart(ctx1).Bar(data1, { scaleFontSize: 8 });
+           </text>
+
+       }
+       @if(goalstats!=null)
+       {
+
+
+           foreach (var stat in goalstats)
+           {
+               <text>
+      statlabel2.push("@stat.GoalStatus.Replace("Manager", "Mgr.").Replace("Employee", "Emp").Replace("Published", "Pub.").Replace("Saved", "Sav.")");
+               statdata2.push(@stat.Count);
+
+               </text>
+           }
+
+           <text>
+      var data2 = {
+          labels: statlabel2, //["Goals Not Set", "Self-Evaluating", "Manager Evaluating", "HR Audit", "Final Publish Pending", "Published"],
+          datasets: [
+              {
+                  label: "PE Statistics",
+                  fillColor: "rgba(255,179,71,1)",
+                  strokeColor: "rgba(255,179,71,1)",
+                  highlightFill: "rgba(255,179,71,0.9)",
+                  highlightStroke: "rgba(100,70,28,0.9)",
+                  data: statdata2
+              }
+          ]
+      };
+      var ctx2 = $("#goalstatistics").get(0).getContext("2d");
+        try{
+            var peStatsChart2 = new Chart(ctx2).Bar(data2, { scaleFontSize: 8 });
+        }
+        catch (x) { alert(x);}
+           </text>
+
+       }
+       
+        
+    }
+</script>

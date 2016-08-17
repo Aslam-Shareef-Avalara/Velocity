@@ -130,9 +130,11 @@
                  });
                  </text>
             }
-        $("#rollupbody").slideUp(function () {
-            $("#rolluphead .toggle").toggleClass("flipimage");
-        });
+        setTimeout(function () {
+            $("#rollupbody").slideUp(function () {
+                $("#rolluphead .toggle").toggleClass("flipimage");
+            });
+        }, 1000);
         
         $("#rolluphead").click(function () {
             $("#rolluphead .toggle").toggleClass("flipimage");

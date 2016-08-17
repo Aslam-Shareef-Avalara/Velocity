@@ -3,12 +3,12 @@
 .jspVerticalBar,
 .jspTrack
 {
-	background: #eeeef4;
+	background: #ddd!important;
 }
 
 .jspDrag
 {
-	background:  #bbd;
+	background:  #8B8B9F;
 
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
@@ -25,7 +25,7 @@
 
 .jspArrow
 {
-	background: url(../image/ui-icons_222222_256x240.png) no-repeat;
+	background: url(../images/ui-icons_222222_256x240.png) no-repeat;
 	
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
@@ -35,7 +35,7 @@
 .jspVerticalBar>.jspActive,
 .jspArrow:hover
 {
-	background-image: url('../image/ui-icons_cd0a0a_256x240.png');
+	background-image: url('../images/ui-icons_cd0a0a_256x240.png');
 }
 
 .jspVerticalBar>.jspDisabled,
@@ -44,7 +44,7 @@
 .jspHorizontalBar>.jspDisabled:hover
 {
 	background-color: transparent;
-	background-image: url('../image/ui-icons_888888_256x240.png');
+	background-image: url('../images/ui-icons_888888_256x240.png');
 }
 
 .jspVerticalBar .jspArrow

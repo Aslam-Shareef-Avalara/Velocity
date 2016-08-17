@@ -33,7 +33,7 @@ namespace DataService
                             }
                          ).
                          Join(         // outer collection
-                            dbx.Employees,             // inner collection
+                            dbx.Employees.Where(x=>x.Active && x.OrgId==OrgId),             // inner collection
                             g => g.EmployeeId,             // outer key selector
                             e => e.gid,     // inner key selector
                             (g, e) => new          // result selector 
@@ -75,6 +75,21 @@ namespace DataService
                         g = dbx.Goals.FirstOrDefault(x => x.EmployeeId == emp.gid && !x.Fixed && x.Evalcycleid == evalcycleid);
                     else
                         g = dbx.Goals.FirstOrDefault(x => x.EmployeeId == emp.gid && !x.Fixed && x.Evalcycleid == evalcycleid && x.Status == status);
+                    var mgr = dbx.Employees.FirstOrDefault(x => x.gid == emp.Manager);
+                    if (mgr != null)
+                    {
+                        
+                    }
+                    else
+                    {
+                        mgr = new Employee()
+                        {
+                            Email = "",
+                            FirstName = "N/A",
+                            LastName = "",
+                            gid = new Guid()
+                        };
+                    }
                     if (g != null)
                     {
                         var evalCycleRatings = dbx.EvaluationRatings.FirstOrDefault(x => x.EmpId == emp.gid && x.EvalCycleId == evalcycleid);
@@ -91,28 +106,32 @@ namespace DataService
                         }
 
                         peprogessmodel.Evalcycle = dbx.EvaluationCycles.FirstOrDefault(x => x.Id == evalcycleid);
-                        var mgr = dbx.Employees.FirstOrDefault(x => x.gid == emp.Manager);
-                        if (mgr != null)
-                        {
-                            peprogessmodel.Manager = mgr;
-                        }
-                        else
-                        {
-                            mgr = new Employee()
-                            {
-                                Email = "",
-                                FirstName = "N/A",
-                                LastName = "",
-                                gid = new Guid()
-                            };
-                        }
+                       
+                       
+                       peprogessmodel.Manager = mgr;
+                       
                         peprogessmodel.FeedbackSubmitted = dbx.FeedbackAnswers.Any(x => x.EmployeeId == emp.gid && x.EvalCycleId == evalcycleid);
-                        peprogessmodel.MeetingSummarySubmitted = dbx.EvaluationConclusions.Any(x => x.employeeid == emp.gid && x.evalcycleid == evalcycleid && (x.meetingsummary!=null && x.meetingsummary.Trim()!=""));
-                        peprogessmodel.TrainingNeedsSubmitted= dbx.EvaluationConclusions.Any(x => x.employeeid == emp.gid && x.evalcycleid == evalcycleid && (x.training!=null && x.training.Trim()!=""));
+                        peprogessmodel.MeetingSummarySubmitted = dbx.EvaluationConclusions.Any(x => x.employeeid == emp.gid && x.evalcycleid == evalcycleid && (x.meetingsummary != null && x.meetingsummary.Trim() != ""));
+                        peprogessmodel.TrainingNeedsSubmitted = dbx.EvaluationConclusions.Any(x => x.employeeid == emp.gid && x.evalcycleid == evalcycleid && (x.training != null && x.training.Trim() != ""));
                         peprogessmodel.Feedback = dbx.FeedbackAnswers.Where(x => x.EmployeeId == emp.gid && x.EvalCycleId == evalcycleid).ToList();
                         peprogessmodel.Conclusion = dbx.EvaluationConclusions.FirstOrDefault(x => x.employeeid == emp.gid && x.evalcycleid == evalcycleid);
                         model.Add(peprogessmodel);
                     }
+                    else
+                    {
+                        PeProgressModel peprogessmodel = new PeProgressModel()
+                        {
+                            goal = new Goal() { Status= GoalStatus.NOT_STARTED},
+                            Employee = emp
+                        };
+                        peprogessmodel.Evalcycle = dbx.EvaluationCycles.FirstOrDefault(x => x.Id == evalcycleid);
+                        peprogessmodel.Manager = mgr;
+                        //peprogessmodel.EvalRating = null;
+                        //peprogessmodel.Conclusion = null;
+                        //peprogessmodel.Feedback = null;
+                        model.Add(peprogessmodel);
+                    }
+
                 }
                 return model;
             }

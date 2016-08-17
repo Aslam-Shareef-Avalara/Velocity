@@ -12,16 +12,16 @@
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/content/templatemo_style.css">
     @Styles.Render("~/Content/foundation/css")
-
+    
     @RenderSection("head", required: false)
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/knob/jquery.knob.js"></script>
     <script src="~/Scripts/badger.min.js"></script>
-    
-   
-   
+
+
+
 </head>
 <body>
     <link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
@@ -42,18 +42,18 @@
         {
             if (ViewBag.Me == null)
                 return false;
-            DataService.Employee me = (DataService.Employee )ViewBag.Me;
+            DataService.Employee me = (DataService.Employee)ViewBag.Me;
 
-            return  !(  string.IsNullOrEmpty(me.Department) ||
+            return !(string.IsNullOrEmpty(me.Department) ||
                         string.IsNullOrEmpty(me.FirstName) ||
                         string.IsNullOrEmpty(me.LastName) ||
                         string.IsNullOrEmpty(me.Mobile) ||
                         !me.DoB.HasValue
                         );
-                
-                
+
+
         }
-}
+    }
 
 
 
@@ -74,7 +74,7 @@
                     <a class="left-off-canvas-toggle" href="#"><i class="fi-list"></i></a>
 
 
-                    <nav class="navigation overflow" id="main-nav" >
+                    <nav class="navigation overflow" id="main-nav">
                         <!-- Off Canvas Menu -->
 
                         <aside class="left-off-canvas-menu" data-position='right' data-step="1" data-intro="These links help you to navigate around the site. ">
@@ -82,8 +82,8 @@
 
 
                             <div class="icon-bar vertical four-up">
-                                
-                                <a id="penav_me" class="item" href="~/employee/aboutme" >
+
+                                <a id="penav_me" class="item" href="~/employee/aboutme">
 
                                     <i class="fi-results-demographics"></i>
 
@@ -91,7 +91,7 @@
 
                                 </a>
                                 <br>
-                                <a id="penav_goals" class="item" href="~/goals/" >
+                                <a id="penav_goals" class="item" href="~/goals/">
 
                                     <i class="fi-target"></i>
 
@@ -99,16 +99,16 @@
 
                                 </a>
 
-                                @if (Session[DataService.CONSTANTS.HAS_A_TEAM] != null && (bool)Session[DataService.CONSTANTS.HAS_A_TEAM]== true)
-                                { 
-                                <br>
-                                <a id="penav_team" class="item" href="~/employee/">
+                                @if (Session[DataService.CONSTANTS.HAS_A_TEAM] != null && (bool)Session[DataService.CONSTANTS.HAS_A_TEAM] == true)
+                                {
+                                    <br>
+                                    <a id="penav_team" class="item" href="~/employee/">
 
-                                    <i class="fi-torsos-all"></i>
+                                        <i class="fi-torsos-all"></i>
 
-                                    <label>Team</label>
+                                        <label>Team</label>
 
-                                </a>
+                                    </a>
                                 }
                                 @if (Session[DataService.CONSTANTS.HAS_REVIEWIES] != null && (bool)Session[DataService.CONSTANTS.HAS_REVIEWIES] == true)
                                 {
@@ -141,6 +141,17 @@
 
                                     </a>
                                 }
+                                @if (User.IsInRole("Enabler") || User.IsInRole("Admin"))
+                                {
+                                    <br>
+                                    <a id="penav_invmgmt" class="item" href="~/inventory">
+
+                                        <i class="fi-shopping-cart"></i>
+
+                                        <label>Inventory</label>
+
+                                    </a>
+                                }
                                 <br>
                                 <a id="penav_logout" class="item" href="~/account/logout">
 
@@ -151,19 +162,19 @@
                                 </a>
                                 @*    <a class="item">
 
-                    <i class="fi-home"></i>
+                                        <i class="fi-home"></i>
 
-                    <label>Mail</label>
+                                        <label>Mail</label>
 
-                </a>
+                                    </a>
 
-                <a class="item">
+                                    <a class="item">
 
-                    <i class="fi-home"></i>
+                                        <i class="fi-home"></i>
 
-                    <label>Like</label>
+                                        <label>Like</label>
 
-                </a>*@
+                                    </a>*@
 
                             </div>
 
@@ -180,12 +191,13 @@
         </div>
 
     </div>
-    @if (Session["impersonator"] != null && ((DataService.Employee)Session["impersonator"]).gid.ToString()!=ViewBag.Me.gid.ToString())
-    { 
-        DataService.Employee target =  (DataService.Employee)ViewBag.Me;
-        <div class="stopimpersonating ">You are browsing as @target.FirstName @target.LastName. 
+    @if (Session["impersonator"] != null && ((DataService.Employee)Session["impersonator"]).gid.ToString() != ViewBag.Me.gid.ToString())
+    {
+        DataService.Employee target = (DataService.Employee)ViewBag.Me;
+        <div class="stopimpersonating ">
+            You are browsing as @target.FirstName @target.LastName.
             <a class="btn btn-warning rounded" style="padding:5px;margin:5px;" href="@Url.Content("~/controlcenter/stopimpersonating")">Click to stop impersonating</a>
-    </div>
+        </div>
     }
 
 
@@ -211,39 +223,50 @@
 
 
     <style>
-        #penav_me {
-        margin-top:10px;
+        .error {
+            color: red;
+            font-family: verdana;
+            font-size: 10pt;
+            font-weight: bolder;
         }
-        .stopimpersonating {
-            position:fixed;
-            left:50%;
-            bottom:0px;
-            background-color:rgba(253,253,90,1);
-            color:black;
-            padding:3px;
-            padding-left:15px;
-            padding-right:15px;
-            border:thin solid gray;
-            border-top-left-radius:10px;
-            border-top-right-radius:10px;
-            transform:translateX(-50%);
 
+        #penav_me {
+            margin-top: 10px;
         }
+
+        .stopimpersonating {
+            position: fixed;
+            left: 50%;
+            bottom: 0px;
+            background-color: rgba(253,253,90,1);
+            color: black;
+            padding: 3px;
+            padding-left: 15px;
+            padding-right: 15px;
+            border: thin solid gray;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            transform: translateX(-50%);
+        }
+
             .stopimpersonating a {
-            color:white;
+                color: white;
             }
-         .icon-bar a.selected {
+
+        .icon-bar a.selected {
             background-color: #f5f5f5;
             color: black !important;
             border-bottom-left-radius: 4px;
             border-top-left-radius: 4px;
         }
+
         .icon-bar > .item:hover > i, .icon-bar > .item:hover > label {
-        color:#FFF;
+            color: #FFF;
         }
-            .icon-bar > .item.selected:hover > i, .icon-bar > .item.selected:hover > label ,.icon-bar a.selected > i, .icon-bar a.selected > label {
-                color: black;
-            }
+
+        .icon-bar > .item.selected:hover > i, .icon-bar > .item.selected:hover > label, .icon-bar a.selected > i, .icon-bar a.selected > label {
+            color: black;
+        }
         /*.columns.sidebar {
                 float: left;
                 position: fixed;
@@ -415,40 +438,71 @@
         .left-off-canvas-menu {
             box-shadow: none !important;
         }
-        .introjs-button {
-        margin-right:5px;
 
+        .introjs-button {
+            margin-right: 5px;
         }
+
         .introjs-prevbutton {
             border-right: 1px solid #d4d4d4;
         }
+
         .icon-bar.vertical .item, .icon-bar.small-vertical .item {
-            padding-left:6px!important;
+            padding-left: 6px !important;
         }
+
         .icon-bar a {
-            height:auto!important;
+            height: auto !important;
         }
-        
+
         /* Chrome, Safari, Opera */
         @@-webkit-keyframes example {
-            0%   {color: #999;}
-            25%  {color: #55C7C7;}
-            50%  {color: #00FFFF;}
-            75%  {color: #55C7C7;}
-            100% {color: #85A6A6;}
+            0% {
+                color: #999;
+            }
+
+            25% {
+                color: #55C7C7;
+            }
+
+            50% {
+                color: #00FFFF;
+            }
+
+            75% {
+                color: #55C7C7;
+            }
+
+            100% {
+                color: #85A6A6;
+            }
         }
 
 
-        @@keyframes newlinkcolors{
-            0%   {color: #999;}
-            25%  {color: #55C7C7;}
-            50%  {color: #00FFFF;}
-            75%  {color: #55C7C7;}
-            100% {color: #85A6A6;}
+        @@keyframes newlinkcolors {
+            0% {
+                color: #999;
+            }
+
+            25% {
+                color: #55C7C7;
+            }
+
+            50% {
+                color: #00FFFF;
+            }
+
+            75% {
+                color: #55C7C7;
+            }
+
+            100% {
+                color: #85A6A6;
+            }
         }
 
-        .newlink{
-            color:#999;
+        .newlink {
+            color: #999;
             -webkit-animation-name: newlinkcolors; /* Chrome, Safari, Opera */
             -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
             -webkit-animation-iteration-count: infinite; /* Chrome, Safari, */
@@ -459,15 +513,13 @@
     </style>
     <style>
         .introjs-tooltip {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,cccccc+100;Gren+3D */
-background: rgb(238,238,238); /* Old browsers */
-background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
-
+            /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,cccccc+100;Gren+3D */
+            background: rgb(238,238,238); /* Old browsers */
+            background: -moz-linear-gradient(top, rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
         }
-
     </style>
 
     @Scripts.Render("~/bundles/foundation")
@@ -485,69 +537,67 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
     @*<script src="~/Scripts/vertical-responsive-menu.min.js"></script>*@
     <script>
 
-    $(document).foundation();
-    function sideNav() {
+        $(document).foundation();
+        function sideNav() {
 
-        if ($(window).width() < 769) {
+            if ($(window).width() < 769) {
 
-            $('.off-canvas-wrap').removeClass('move-right');
+                $('.off-canvas-wrap').removeClass('move-right');
 
-            $('.left-off-canvas-toggle').show();
+                $('.left-off-canvas-toggle').show();
 
-        } else {
+            } else {
 
-            $('.off-canvas-wrap').addClass('move-right');
+                $('.off-canvas-wrap').addClass('move-right');
 
-            $('.left-off-canvas-toggle').hide();
+                $('.left-off-canvas-toggle').hide();
+
+            }
 
         }
 
-    }
-
-    function starttour(pageid) {
-        @if (ViewBag.Me!=null && ((DataService.Employee)ViewBag.Me).FirstTime.HasValue && ((DataService.Employee)ViewBag.Me).FirstTime.Value == false)
+        function starttour(pageid) {
+            @if (ViewBag.Me!=null && ((DataService.Employee)ViewBag.Me).FirstTime.HasValue && ((DataService.Employee)ViewBag.Me).FirstTime.Value == false)
         {
-            @:return ;
-                        }
-        $.get("@Url.Content("~/home/getSessionValue?key=")" + pageid, function (r) {
-            if (r == "")
-            {
-                var introguide = introJs();
-                introguide.start();
-                $.post("@Url.Content("~/home/addtosession")", { "key": pageid, "value": "1" });
-            }
-        });
+            @:return;
+                                    }
+            $.get("@Url.Content("~/home/getSessionValue?key=")" + pageid, function (r) {
+                if (r == "") {
+                    var introguide = introJs();
+                    introguide.start();
+                    $.post("@Url.Content("~/home/addtosession")", { "key": pageid, "value": "1" });
+                }
+            });
 
 
 
-    }
-    @*function markPageAsAssisted(pageid)
+        }
+        @*function markPageAsAssisted(pageid)
     {
         $.post("@Url.Content("~/home/addtosession")", { "key": "pageshown", "value": pageid });
     }*@
-    function markasexpert()
-    {
-        $.post("@Url.Content("~/home/markasexpert")");
-    }
+        function markasexpert() {
+            $.post("@Url.Content("~/home/markasexpert")");
+        }
         (function () {
-            
-        if (selectedmenuid == null || selectedmenuid == undefined || selectedmenuid == "undefined")
-            return;
-        $("#penav_" + selectedmenuid).addClass("selected");
-    })();
-    $(window).resize(function () {
 
-        sideNav();
+            if (selectedmenuid == null || selectedmenuid == undefined || selectedmenuid == "undefined")
+                return;
+            $("#penav_" + selectedmenuid).addClass("selected");
+        })();
+        $(window).resize(function () {
 
-    });
-    $(function () {
-        @if (!Request.Url.ToString().ToLower().Contains("employee/aboutme"))
+            sideNav();
+
+        });
+        $(function () {
+            @if (!Request.Url.ToString().ToLower().Contains("employee/aboutme"))
             {
                @: $("aside").removeAttr("data-step").removeAttr("data-intro");
-                    }
+                                }
 
-        // var startbtn   = $('#startdemotour');
-    });
+            // var startbtn   = $('#startdemotour');
+        });
         $(document).ajaxError(function (event, xhr, settings) {
             var isDirty = false;
             var commonAlertText = "Oops! Looks like you have been inactive for quite some time. You will have to re-authenticate yourself. ";
@@ -569,9 +619,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
             catch (x) { }
         });
 
-      
-    //var site = new Bamboo();
-    //new gnMenu(document.getElementById('gn-menu'));
+
+        //var site = new Bamboo();
+        //new gnMenu(document.getElementById('gn-menu'));
     </script>
     <div id="downtimewarning">
         @Html.Partial("MaintenenceWarning");
@@ -585,17 +635,33 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
                 $.post("@Url.Content("~/home/keepalive")", function (r) {
                     if (r.isoffline)
                         window.location.reload();
-                    if (r.scheduled)
-                    {
+                    if (r.scheduled) {
                         $("#downtimewarning").load("@Url.Content("~/home/ScheduledDowntimeWarning")");
                     }
                 });
             }, 15000);
+            $('input').each(function (i, o) {
+                if ($(o).data("val-required") != null) {
+                    $(o).closest(".form-group").children("label").prepend("<i class='error'>* </i> ");
+                }
+            });
 
-           
+
+
         });
 
     </script>
-    
+    <script>
+    $(document).ready(function () {
+        $("h2").each(function (i, o) {
+            if ($.trim($(o).html()) == "Create" || $.trim($(o).html()) == "Edit") {
+                $(o).html($(o).html() + " @ViewBag.EntityName");
+            }
+        });
+    });
+    </script>
+
+
+
 </body>
 </html>

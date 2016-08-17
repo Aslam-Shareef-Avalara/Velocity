@@ -110,6 +110,16 @@ namespace DataService
                 badge.Viewed = false;
                 dbx.Badges.Add(badge);
                 dbx.SaveChanges();
+                try
+                {
+                    badge = dbx.Badges.Where(x => x.BadgeType == BadgeType.EVALUATION_REJECTED && x.FromBadge == emp.Manager.Value && x.ToBadge == emp.gid).FirstOrDefault();
+                    if (badge != null)
+                    {
+                        Badges badgesService = new Badges(OrgId, AppName);
+                        badgesService.Delete(badge.Id);
+                    }
+                }
+                catch { }
             }
             mgrEvalService.CalculateAvgRating(employeeId);
         }

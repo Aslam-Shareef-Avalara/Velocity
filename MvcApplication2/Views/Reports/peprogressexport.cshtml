@@ -90,11 +90,11 @@
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@nextStage</td>
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;"><a href="sip:@(nextStage.Contains("Employee")?item.Employee.Email:(nextStage.Contains("Manager")?item.Manager.Email:""))">Click to chat</a></td>
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@item.Manager.FirstName &nbsp; @item.Manager.LastName </td>
-            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@item.EvalRating.ManagerOverllRating</td>
-            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@item.EvalRating.SelfOverallRating</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.EvalRating == null || !item.EvalRating.ManagerOverllRating.HasValue ? "-" : Convert.ToString(item.EvalRating.ManagerOverllRating))</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.EvalRating == null || !item.EvalRating.SelfOverallRating.HasValue ? "-" : Convert.ToString(item.EvalRating.SelfOverallRating))</td>
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.MeetingSummarySubmitted ? item.EvalRating.ManagerOverllRating : 0M)</td>
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.Conclusion != null ? item.Conclusion.meetingsummary : "") </td>
-            @Html.Raw(item.Conclusion != null ? RestructureTraining(item.Conclusion.training, counter) : "") 
+            @Html.Raw(item.Conclusion != null && !string.IsNullOrWhiteSpace(item.Conclusion.training) ? RestructureTraining(item.Conclusion.training, counter) : "") 
             @Html.Raw(item.Feedback != null && item.Feedback.Count > 0 ? RestructureFeedback(item.Feedback, counter) : "")     
         </tr>
         counter++;

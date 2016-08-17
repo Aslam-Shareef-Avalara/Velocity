@@ -448,6 +448,8 @@ namespace MvcApplication2.Controllers
                 emp.Manager = e.Manager;
             if (!string.IsNullOrEmpty(e.Department))
             emp.Department = e.Department;
+            if (!string.IsNullOrEmpty(e.Designation))
+                emp.Designation = e.Designation;
             if(e.DoB.HasValue)
                 emp.DoB = e.DoB;
             if (e.DoJ.HasValue)
@@ -465,31 +467,31 @@ namespace MvcApplication2.Controllers
         }
 
         // GET: /Employee/Delete/5
-        public async Task<ActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Employee employee = await db.Employees.FindAsync(id);
-            if (employee == null)
-            {
-                return HttpNotFound();
-            }
-            return View(employee);
-        }
+        //public async Task<ActionResult> Delete(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Employee employee = await db.Employees.FindAsync(id);
+        //    if (employee == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(employee);
+        //}
 
-        // POST: /Employee/Delete/5
-        [HttpPost, ActionName("Delete")]
-        //[ValidateInput(false)]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(Guid id)
-        {
-            Employee employee = await db.Employees.FindAsync(id);
-            db.Employees.Remove(employee);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+        //// POST: /Employee/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        ////[ValidateInput(false)]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> DeleteConfirmed(Guid id)
+        //{
+        //    Employee employee = await db.Employees.FindAsync(id);
+        //    db.Employees.Remove(employee);
+        //    await db.SaveChangesAsync();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="68ede061455a4108ade26780fc62c45b" Name="Diagram1">
+        <EntityTypeShape EntityType="InvMgmtModel.Asset" Width="1.5" PointX="14.5" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.AssetIssue" Width="1.5" PointX="16.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.Country" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.Department" Width="1.5" PointX="7.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.InventoryClass" Width="1.5" PointX="7.75" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.InventoryClassDepartmentMap" Width="1.5" PointX="10" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.IssuedItem" Width="1.5" PointX="14.5" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.ItemMaster" Width="1.5" PointX="12.25" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.ItemType" Width="1.5" PointX="10" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.LegalEntity" Width="1.5" PointX="0.75" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.State" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.Vendor" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.VendorAddress" Width="1.5" PointX="5.25" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.VendorBankDetail" Width="1.5" PointX="5.25" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.VendorContact" Width="1.5" PointX="5.25" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="InvMgmtModel.VendorTaxDetail" Width="1.5" PointX="5.25" PointY="16.375" IsExpanded="true" />
+        <AssociationConnector Association="InvMgmtModel.FK_Asset_ItemMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_AssetIssue_Asset" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_State_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_VendorAddresses_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_InventoryClassDepartmentMap_Department" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_InventoryClassDepartmentMap_InventoryClass" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_ItemType_InventoryClass" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_IssuedItems_ItemMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_ItemMaster_ItemMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_Vendors_LegalEntity" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_VendorAddresses_State" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_VendorAddresses_Vendors" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_VendorBankDetail_Vendor" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_VendorContact_Vendor" ManuallyRouted="false" />
+        <AssociationConnector Association="InvMgmtModel.FK_VendorTaxDetails_Vendor" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

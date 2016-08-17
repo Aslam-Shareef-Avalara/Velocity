@@ -58,7 +58,7 @@
         <input type="submit" class="btn btn-rounded btn-info" id="btn_searchbyname" value="Search" />
     </p>
 </form>
-<form action="@(Url.Content("~/"))reports/exportpeprogress" method="post" class="form-inline">
+<form action="@(Url.Content("~/"))reports/exportpeprogress?evalcycleid=@ViewBag.EvalCycleId" method="post" class="form-inline">
     <input type="submit" class="btn btn-success" value="Export All" />
 </form>
 <br/>
@@ -97,7 +97,7 @@
 
 
     Page @(Model.peprogressList.PageCount < Model.peprogressList.PageNumber ? 0 : Model.peprogressList.PageNumber) of @Model.peprogressList.PageCount
-    @Html.PagedListPager(Model.peprogressList, page => Url.Action("peprogress", new { page, sortOrder = ViewBag.CurrentSort, search = ViewBag.CurrentFilter, status = Request.QueryString["status"] == "-1" ? null : Request.QueryString["status"] }))
+    @Html.PagedListPager(Model.peprogressList, page => Url.Action("peprogress", new {evalcycleid=ViewBag.EvalCycleId, page, sortOrder = ViewBag.CurrentSort, search = ViewBag.CurrentFilter, status = Request.QueryString["status"] == "-1" ? null : Request.QueryString["status"] }))
     <script>
         function getForPe() {
             $("#evalcycleid").val($("#pecycle").val());

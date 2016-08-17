@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="InvMgmtModelStoreContainer" CdmEntityContainer="InvMgmtEntities">
+    <EntitySetMapping Name="Assets">
+      <EntityTypeMapping TypeName="InvMgmtModel.Asset">
+        <MappingFragment StoreEntitySet="Asset">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ItemMasterId" ColumnName="ItemMasterId" />
+          <ScalarProperty Name="GRNId" ColumnName="GRNId" />
+          <ScalarProperty Name="IsAssetized" ColumnName="IsAssetized" />
+          <ScalarProperty Name="AssetTag" ColumnName="AssetTag" />
+          <ScalarProperty Name="AssetizedBy" ColumnName="AssetizedBy" />
+          <ScalarProperty Name="AssetizedDate" ColumnName="AssetizedDate" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="IsIssued" ColumnName="IsIssued" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AssetIssues">
+      <EntityTypeMapping TypeName="InvMgmtModel.AssetIssue">
+        <MappingFragment StoreEntitySet="AssetIssue">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="AssetId" ColumnName="AssetId" />
+          <ScalarProperty Name="DateIssued" ColumnName="DateIssued" />
+          <ScalarProperty Name="IssuedTo" ColumnName="IssuedTo" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="IssuedBy" ColumnName="IssuedBy" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Countries">
+      <EntityTypeMapping TypeName="InvMgmtModel.Country">
+        <MappingFragment StoreEntitySet="Country">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Departments">
+      <EntityTypeMapping TypeName="InvMgmtModel.Department">
+        <MappingFragment StoreEntitySet="Department">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InventoryClasses">
+      <EntityTypeMapping TypeName="InvMgmtModel.InventoryClass">
+        <MappingFragment StoreEntitySet="InventoryClass">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InventoryClassDepartmentMaps">
+      <EntityTypeMapping TypeName="InvMgmtModel.InventoryClassDepartmentMap">
+        <MappingFragment StoreEntitySet="InventoryClassDepartmentMap">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="InventoryClassId" ColumnName="InventoryClassId" />
+          <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IssuedItems">
+      <EntityTypeMapping TypeName="InvMgmtModel.IssuedItem">
+        <MappingFragment StoreEntitySet="IssuedItems">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ItemMasterId" ColumnName="ItemMasterId" />
+          <ScalarProperty Name="IssuedOn" ColumnName="IssuedOn" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="IssuedBy" ColumnName="IssuedBy" />
+          <ScalarProperty Name="IssuedTo" ColumnName="IssuedTo" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ItemMasters">
+      <EntityTypeMapping TypeName="InvMgmtModel.ItemMaster">
+        <MappingFragment StoreEntitySet="ItemMaster">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ItemTypeId" ColumnName="ItemTypeId" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Perishable" ColumnName="Perishable" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ItemTypes">
+      <EntityTypeMapping TypeName="InvMgmtModel.ItemType">
+        <MappingFragment StoreEntitySet="ItemType">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+          <ScalarProperty Name="InventoryClassId" ColumnName="InventoryClassId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LegalEntities">
+      <EntityTypeMapping TypeName="InvMgmtModel.LegalEntity">
+        <MappingFragment StoreEntitySet="LegalEntity">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="States">
+      <EntityTypeMapping TypeName="InvMgmtModel.State">
+        <MappingFragment StoreEntitySet="State">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Vendors">
+      <EntityTypeMapping TypeName="InvMgmtModel.Vendor">
+        <MappingFragment StoreEntitySet="Vendor">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="LegalEntityId" ColumnName="LegalEntityId" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="OrgId" ColumnName="OrgId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VendorAddresses">
+      <EntityTypeMapping TypeName="InvMgmtModel.VendorAddress">
+        <MappingFragment StoreEntitySet="VendorAddresses">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+          <ScalarProperty Name="Line1" ColumnName="Line1" />
+          <ScalarProperty Name="Line2" ColumnName="Line2" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="StateId" ColumnName="StateId" />
+          <ScalarProperty Name="County" ColumnName="County" />
+          <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+          <ScalarProperty Name="Zip" ColumnName="Zip" />
+          <ScalarProperty Name="Phone1" ColumnName="Phone1" />
+          <ScalarProperty Name="Phone2" ColumnName="Phone2" />
+          <ScalarProperty Name="Landmark" ColumnName="Landmark" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VendorBankDetails">
+      <EntityTypeMapping TypeName="InvMgmtModel.VendorBankDetail">
+        <MappingFragment StoreEntitySet="VendorBankDetail">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+          <ScalarProperty Name="BeneficiaryName" ColumnName="BeneficiaryName" />
+          <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+          <ScalarProperty Name="BankName" ColumnName="BankName" />
+          <ScalarProperty Name="Branch" ColumnName="Branch" />
+          <ScalarProperty Name="MICR" ColumnName="MICR" />
+          <ScalarProperty Name="IFSC" ColumnName="IFSC" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VendorContacts">
+      <EntityTypeMapping TypeName="InvMgmtModel.VendorContact">
+        <MappingFragment StoreEntitySet="VendorContact">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="email" ColumnName="email" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VendorTaxDetails">
+      <EntityTypeMapping TypeName="InvMgmtModel.VendorTaxDetail">
+        <MappingFragment StoreEntitySet="VendorTaxDetails">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+          <ScalarProperty Name="VATNumber" ColumnName="VATNumber" />
+          <ScalarProperty Name="TINNumber" ColumnName="TINNumber" />
+          <ScalarProperty Name="ServiceTaxNumber" ColumnName="ServiceTaxNumber" />
+          <ScalarProperty Name="PanNumber" ColumnName="PanNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using System.Web.Caching;
@@ -201,7 +202,7 @@ namespace MvcApplication2.Controllers
         }
         protected override void OnResultExecuting(ResultExecutingContext filterContext)
         {
-
+            ViewBag.EntityName = RouteData.Values["controller"].ToString().LegitimizeString();
             ViewBag.Me = currentUser;
             try
             {
@@ -310,7 +311,7 @@ namespace MvcApplication2.Controllers
                 {
 
 
-
+                    emp = CurrentUser;
 
                     if (string.Compare(CurrentUser.Department, "hr", true) == 0)
                     {
@@ -398,7 +399,7 @@ namespace MvcApplication2.Controllers
                 string e = DateTime.Now.ToLongDateString() + " - " + message;
                 if (x != null)
                 {
-                    e = "***Exception Message : " + x.Message;
+                    e += "***Exception Message : " + x.Message;
                     if (x.InnerException != null)
                     {
                         e += "*** Inner Exception : " + x.InnerException.Message + " **Inner stack trace **" + x.InnerException.StackTrace;
@@ -413,4 +414,6 @@ namespace MvcApplication2.Controllers
         }
 
     }
+
+   
 }

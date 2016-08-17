@@ -35,6 +35,7 @@ namespace MvcApplication2
             if (!Roles.RoleExists("Hr")) Roles.CreateRole("Hr");
             if (!Roles.RoleExists("HrAdmin")) Roles.CreateRole("HrAdmin");
             if (!Roles.RoleExists("Admin")) Roles.CreateRole("Admin");
+            if (!Roles.RoleExists("Enabler")) Roles.CreateRole("Enabler");
 
 
 
@@ -45,21 +46,25 @@ namespace MvcApplication2
             {
                 string ipaddress = "";
                 Exception x = Server.GetLastError();
+                LogError(x, "Application Level Error : " + DateTime.Now.ToString() + " ");
                 try
                 {
                     ipaddress = System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
                 }
                 catch { }
-                if (System.Web.HttpContext.Current.Request == null)
+                if (System.Web.HttpContext.Current!=null && System.Web.HttpContext.Current.Request == null)
                     LogError(x, "Application Level Error : " + DateTime.Now.ToString() + " ");
                 else
                 {
-                    string username = "Anonymous";
-                    if (x.Message.ToLower().Contains("a potentially dangerous"))
-                        System.Web.HttpContext.Current.Session["hacker"] = true;
-                    if (System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER] != null)
-                        username = ((Employee)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER]).Email;
-                    LogError(x, "User = "+username + " URL = " + System.Web.HttpContext.Current.Request.RawUrl + " - Application Level Error : " + DateTime.Now.ToString() + " " + System.Web.HttpContext.Current.Request.UserHostAddress + " and " + ipaddress + " ");
+                    if (System.Web.HttpContext.Current != null)
+                    {
+                        string username = "Anonymous";
+                        if (x.Message != null && x.Message.ToLower().Contains("a potentially dangerous"))
+                            System.Web.HttpContext.Current.Session["hacker"] = true;
+                        if (System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER] != null)
+                            username = ((Employee)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER]).Email;
+                        LogError(x, "User = " + username + " URL = " + System.Web.HttpContext.Current.Request.RawUrl + " - Application Level Error : " + DateTime.Now.ToString() + " " + System.Web.HttpContext.Current.Request.UserHostAddress + " and " + ipaddress + " ");
+                    }
                 }
 
                 if (System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] == null || System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == null)
@@ -71,7 +76,8 @@ namespace MvcApplication2
                 }
             }
             catch(Exception x) {
-                LogError(x, "Error occured in Application_error handler --- " + x.Message);
+                LogError(x, "Error occured in Application_error handler --- " + x.Message +" "+ (x.InnerException==null?"":" Inner Exception: "+x.InnerException.Message));
+                
             }
 
         }

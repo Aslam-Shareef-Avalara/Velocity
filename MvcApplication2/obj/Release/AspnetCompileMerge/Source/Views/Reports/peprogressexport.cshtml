@@ -28,26 +28,29 @@
     {
         return val ? "Yes" : "No";
     }
-    public string RestructureFeedback(List<DataService.FeedbackAnswer> feedback)
+    public string RestructureFeedback(List<DataService.FeedbackAnswer> feedback, int counter=0)
     {
         string answers = "";
-        foreach (DataService.FeedbackAnswer ans in feedback)
+        foreach (DataService.FeedbackAnswer ans in feedback.OrderBy(x=>x.QuestionId))
         {
-            answers += ans.Answer + "<br>";
+            answers += "<td style=\"border:thin solid gray;background-color:" + (counter % 2 == 0 ? "#dddddd" : "white") + " ;\">" + ans.Answer+ "</td>"; 
         }
         return answers;
     }
-    public string RestructureTraining(string training)
+    public string RestructureTraining(string training, int counter=0)
     {
         string trainingNeeds = "";
         string[] s = training.Split(new string[] { "$$$" }, StringSplitOptions.RemoveEmptyEntries);
-        int counter = 1;
+        
         foreach (string t in s)
         {
-            trainingNeeds += counter +") "+t + "<br>";
-            counter++;
+            trainingNeeds += "<td style=\"border:thin solid gray;background-color:"+(counter % 2 == 0 ? "#dddddd" : "white")+" ;\">"+t+"</td>";
         }
-        return trainingNeeds;
+        for (int i = s.Length; i < 5; i++)
+        {
+            trainingNeeds += "<td style=\"border:thin solid gray;background-color:" + (counter % 2 == 0 ? "#dddddd" : "white") + " ;\">-</td>";
+        }
+            return trainingNeeds;
     }
 }
 
@@ -63,8 +66,16 @@
         <th class="controls-head">Employee Rating</th>
         <th class="controls-head">Published Rating</th>
         <th class="controls-head">Summary</th>
-        <th class="controls-head">Training</th>
-        <th class="controls-head">Feedback</th>
+        <th class="controls-head">Training 1</th>
+        <th class="controls-head">Training 2</th>
+        <th class="controls-head">Training 3</th>
+        <th class="controls-head">Training 4</th>
+        <th class="controls-head">Training 5</th>
+        @foreach(DataService.FeedbackQuestion q in ((List<DataService.FeedbackQuestion>)ViewBag.FeedbackQuestions).OrderBy(x=>x.QuestionId))
+        { 
+            <th class="controls-head">FB - @q.Question</th>
+        }
+ 
     </tr>
     @{
         int counter = 1;
@@ -79,12 +90,12 @@
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@nextStage</td>
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;"><a href="sip:@(nextStage.Contains("Employee")?item.Employee.Email:(nextStage.Contains("Manager")?item.Manager.Email:""))">Click to chat</a></td>
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@item.Manager.FirstName &nbsp; @item.Manager.LastName </td>
-            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@item.EvalRating.ManagerOverllRating</td>
-            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@item.EvalRating.SelfOverallRating</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.EvalRating == null || !item.EvalRating.ManagerOverllRating.HasValue ? "-" : Convert.ToString(item.EvalRating.ManagerOverllRating))</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.EvalRating == null || !item.EvalRating.SelfOverallRating.HasValue ? "-" : Convert.ToString(item.EvalRating.SelfOverallRating))</td>
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.MeetingSummarySubmitted ? item.EvalRating.ManagerOverllRating : 0M)</td>
             <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.Conclusion != null ? item.Conclusion.meetingsummary : "") </td>
-            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@Html.Raw(item.Conclusion != null ? RestructureTraining(item.Conclusion.training) : "")  </td>
-            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@Html.Raw(item.Feedback != null && item.Feedback.Count > 0 ? RestructureFeedback(item.Feedback) : "")       </td>
+            @Html.Raw(item.Conclusion != null && !string.IsNullOrWhiteSpace(item.Conclusion.training) ? RestructureTraining(item.Conclusion.training, counter) : "") 
+            @Html.Raw(item.Feedback != null && item.Feedback.Count > 0 ? RestructureFeedback(item.Feedback, counter) : "")     
         </tr>
         counter++;
     }

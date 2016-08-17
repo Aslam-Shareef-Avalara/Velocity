@@ -182,6 +182,84 @@
     <Compile Include="InstancesTable.cs">
       <DependentUpon>PEModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="InventoryManagement\Asset.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\AssetIssue.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\Country.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\Department.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\InventoryClass.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\InventoryClassDepartmentMap.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\InvMgmtModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvMgmtModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\InvMgmtModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\InvMgmtModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvMgmtModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\IssuedItem.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\ItemMaster.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\ItemType.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\LegalEntity.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\MetaData\AssetIssueMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\AssetMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\CountryMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\DepartmentMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\InventoryClassMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\IssuedItemMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\ItemMasterMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\ItemTypeMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\LegalEntityMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\StateMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\VendorAddressMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\VendorBankDetailMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\VendorContactMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\VendorMetadata.cs" />
+    <Compile Include="InventoryManagement\MetaData\VendorTaxDetailMetadata.cs" />
+    <Compile Include="InventoryManagement\State.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\Vendor.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\VendorAddress.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\VendorBankDetail.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\VendorContact.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryManagement\VendorTaxDetail.cs">
+      <DependentUpon>InvMgmtModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="KeysTable.cs">
       <DependentUpon>PEModel.tt</DependentUpon>
     </Compile>
@@ -274,6 +352,26 @@
     <None Include="App.Config">
       <SubType>Designer</SubType>
     </None>
+    <EntityDeploy Include="InventoryManagement\InvMgmtModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>InvMgmtModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="InventoryManagement\InvMgmtModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>InvMgmtModel.edmx</DependentUpon>
+      <LastGenOutput>InvMgmtModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="InventoryManagement\InvMgmtModel.edmx.diagram">
+      <DependentUpon>InvMgmtModel.edmx</DependentUpon>
+    </None>
+    <None Include="InventoryManagement\InvMgmtModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>InvMgmtModel.edmx</DependentUpon>
+      <LastGenOutput>InvMgmtModel.cs</LastGenOutput>
+    </None>
+    <None Include="InventoryManagement\Web.config" />
+    <None Include="InventoryManagement\Web.Debug.config" />
+    <None Include="InventoryManagement\Web.Release.config" />
     <None Include="packages.config" />
     <EntityDeploy Include="PEModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>

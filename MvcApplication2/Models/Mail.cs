@@ -162,7 +162,7 @@ namespace MvcApplication2.Models
 
             return alternateView;
         }
-        private AlternateView GetMailBody(ACTION_TYPE actionType, Guid g, ref Employee ToEmp, ref string subject, long evalcycleid)
+        private AlternateView GetMailBody(ACTION_TYPE actionType, Guid? FromUser, Guid? ToUser, ref Employee ToEmp, ref string subject, long evalcycleid)
         {
             AlternateView alternateView = null;
             bool attachEmployeeImage = false;
@@ -172,10 +172,11 @@ namespace MvcApplication2.Models
             string evalcycleName = "";
             Stream ms = null, logoStream = null, mailiconStream = null;
             //Guid g = Guid.Parse("cf0d7fa6-a1df-4913-b869-a3abfbff8a02");
-            var em = db.Employees.FirstOrDefault(x => x.gid == g);
-            if (em.Active == false)
+            var currentUser = db.Employees.FirstOrDefault(x => x.gid == FromUser);
+            if (currentUser.Active == false)
                 return null;
-            var mgr = db.Employees.FirstOrDefault(x => x.gid == em.Manager);
+            var mgr = db.Employees.FirstOrDefault(x => x.gid == currentUser.Manager);
+            var toUser = db.Employees.FirstOrDefault(x => x.gid == ToUser);
             LinkedResource employeeImage = null, logoImage = null, mailicon = null;
             logoStream = new FileStream(System.Web.HttpContext.Current.Server.MapPath("~/images/logo.png"), FileMode.Open, FileAccess.Read);
             logoImage = new LinkedResource(logoStream);
@@ -199,95 +200,98 @@ namespace MvcApplication2.Models
                     subject = "VELOCITY - Goals Submitted";
                     attachEmployeeImage = true;
                     ToEmp = mgr;
-                    FromEmployee = em;
+                    FromEmployee = currentUser;
                     break;
-                case ACTION_TYPE.APPROVE_EVALUATIONS: variableContent = string.Format("I have evaluated and submitted my review of &nbsp;{0}'s performance. Please do an audit of the ratings and evaluations.", em.FirstName + " " + em.LastName);
+                case ACTION_TYPE.APPROVE_EVALUATIONS: variableContent = string.Format("I have evaluated and submitted my review of &nbsp;{0}'s performance. Please do an audit of the ratings and evaluations.", toUser.FirstName + " " + toUser.LastName);
                     subject = "VELOCITY - Evaluation Pending Approval";
                     attachEmployeeImage = true;
                     ToEmp = new Employee() { FirstName = "TMG", LastName = "Bharat", Email = "tmg@avalara.com" };
-                    FromEmployee = mgr;
+                    FromEmployee = currentUser;
                     break;
                 case ACTION_TYPE.EVALUATE_REPORTEE:
                     variableContent = string.Format("I have submitted the &nbsp;{0} self-evaluations to you. Request you to log in to <a href='http://velocity.pn.avalara.net/'>VELOCITY</a> review my performance at your convenience.", evalcycleName);
                     subject = "VELOCITY - Self-Evaluation Submitted";
                     attachEmployeeImage = true;
                     ToEmp = mgr;
-                    FromEmployee = em;
+                    FromEmployee = currentUser;
                     break;
                 case ACTION_TYPE.EVALUATE_SELF:
                     variableContent = string.Format("Please begin your self evaluation at the earliest for {0}.", evalcycleName);
                     subject = "VELOCITY - Evaluation Phase Started";
                     attachEmployeeImage = false;
-                    ToEmp = em;
+                    ToEmp = toUser;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.PUBLISH:
-                    variableContent = string.Format("Evaluation for {0} of {1} have been approved. Request you to log in to <a href='http://velocity.pn.avalara.net/'>VELOCITY</a> publish the evaluations/review after a meeting with the employee.", evalcycleName, em.FirstName + " " + em.LastName);
+                    variableContent = string.Format("Evaluation for {0} of {1} have been approved. Request you to log in to <a href='http://velocity.pn.avalara.net/'>VELOCITY</a> publish the evaluations/review after a meeting with the employee.", evalcycleName, toUser.FirstName + " " + toUser.LastName);
                     subject = "VELOCITY - Evaluations Approved By HR";
                     attachEmployeeImage = false;
+                    mgr = db.Employees.FirstOrDefault(x => x.gid == toUser.Manager);
                     ToEmp = mgr;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.SEND_EVALUATION_TO_HR:
-                    variableContent = string.Format("Please send your review for {0} of {1} to HR for audit.", evalcycleName, em.FirstName + " " + em.LastName);
+                    variableContent = string.Format("Please send your review for {0} of {1} to HR for audit.", evalcycleName, toUser.FirstName + " " + toUser.LastName);
                     subject = "VELOCITY - Send Evaluations To HR";
                     attachEmployeeImage = false;
-                    ToEmp = mgr;
+                    ToEmp = currentUser;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.SEND_GOALS_FOR_APPROVAL:
                     variableContent = string.Format("Please send your goal for {0} to your manager.", evalcycleName);
                     subject = "VELOCITY - Send Goals For Approval";
                     attachEmployeeImage = false;
-                    ToEmp = mgr;
+                    ToEmp = currentUser;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.SET_YOUR_GOALS:
                     variableContent = string.Format("Please freeze your goals for {0} on or before {1}", evalcycleName, eval.GoalEndDate.Value.ToShortDateString());
                     subject = "VELOCITY - Set Your Goals";
                     attachEmployeeImage = false;
-                    ToEmp = em;
+                    ToEmp = toUser;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.SUBMIT_EVALUATION_TO_MANAGER:
                     variableContent = string.Format("Please submit your evaluations for {0} to your manager at the earliest", evalcycleName);
                     subject = "VELOCITY - Submit Your Evaluations to Manager";
                     attachEmployeeImage = false;
-                    ToEmp = em;
+                    ToEmp = toUser;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.GOALS_REJECTED:
                     variableContent = "The goals submitted by you have been rejected. Please review and re-submit the same.";
                     subject = "VELOCITY - Your Goals Have Been Rejected!";
                     attachEmployeeImage = false;
-                    ToEmp = em;
+                    ToEmp = toUser;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.EVALUATION_REJECTED_BY_MANAGER:
                     variableContent = "The self-evaluation submitted by you have been rejected. Please review and re-submit the same.";
                     subject = "VELOCITY - Your Evaluations Have Been Rejected!";
                     attachEmployeeImage = false;
-                    ToEmp = em;
+                    ToEmp = toUser;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.EVALUATION_REJECTED_BY_HR:
-                    variableContent = string.Format("The evaluation submitted by you for {0} has been rejected during TMG Audit. Please review and re-submit the same.", em.FirstName + " " + em.LastName);
+                    variableContent = string.Format("The evaluation submitted by you for {0} has been rejected during TMG Audit. Please review and re-submit the same.", toUser.FirstName + " " + toUser.LastName);
                     subject = "VELOCITY - Evaluations Rejected By HR!";
                     attachEmployeeImage = false;
+                    mgr = db.Employees.FirstOrDefault(x => x.gid == toUser.Manager);
                     ToEmp = mgr;
+                    FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.GOALS_APPROVED:
-                    variableContent = "The goals submitted by you has been approved by your Manager. Now you can login to Velocity to check the approved goals.";
+                    variableContent = "The goals submitted by you have been approved by your Manager. Now you can login to Velocity to check the approved goals.";
                     subject = "VELOCITY - Goals Approved!";
                     attachEmployeeImage = true;
-                    ToEmp = em;
+                    ToEmp = toUser;
                     FromEmployee = TMG;
                     break;
                 case ACTION_TYPE.SUBMIT_FEEDBACK:
                     variableContent = "The process feedback is pending from your end.  To complete the PE cycle, please submit the same at the earliest.";
                     subject = "VELOCITY - Feedback required.";
                     attachEmployeeImage = false;
-                    ToEmp = em;
+                    ToEmp = currentUser;
                     FromEmployee = TMG;
                     break;
 
@@ -302,7 +306,7 @@ namespace MvcApplication2.Models
                 if (ToEmp != null)
                 {
                     if (FromEmployee == null)
-                        FromEmployee = ToEmp.gid.ToString() == mgr.gid.ToString() ? em : mgr;
+                        FromEmployee = ToEmp.gid.ToString() == mgr.gid.ToString() ? currentUser : mgr;
                     if (FromEmployee.ProfilePix != null && FromEmployee.ProfilePix.Length > 0)
                     {
                         ms = new MemoryStream(FromEmployee.ProfilePix);
@@ -333,7 +337,7 @@ namespace MvcApplication2.Models
             return alternateView;
 
         }
-        public bool SendEmail(ACTION_TYPE actionType, Guid employeeId, long evalcycleid = 0, bool isReminder = false)
+        public bool SendEmail(ACTION_TYPE actionType, Guid MailToemployeeId, Guid currentUserId, long evalcycleid = 0, bool isReminder = false)
         {
             string notificationStatus = (string)System.Web.HttpContext.Current.Session[CONSTANTS.NOTIFICATION_STATUS];
             if (string.IsNullOrEmpty(notificationStatus) || notificationStatus.ToLower() == "off")
@@ -346,9 +350,9 @@ namespace MvcApplication2.Models
                 string subject = "";
                 AlternateView alternateView = null;
                 if (!isReminder)
-                    alternateView = GetMailBody(actionType, employeeId, ref employee, ref subject, evalcycleid);
+                    alternateView = GetMailBody(actionType, currentUserId, MailToemployeeId, ref employee, ref subject, evalcycleid);
                 else
-                    alternateView = GetReminderEmailBody(actionType, employeeId, ref employee, ref subject, evalcycleid);
+                    alternateView = GetReminderEmailBody(actionType, MailToemployeeId, ref employee, ref subject, evalcycleid);
                 if (alternateView == null)
                     return false;
                 mail.From = new MailAddress("donotreply@avalara.com", "Velocity");
@@ -379,7 +383,7 @@ namespace MvcApplication2.Models
                 string subject = "";
                 AlternateView alternateView = null;
                 mail.From = new MailAddress("donotreply@avalara.com", "Velocity");
-                
+
                 mail.To.Add("aslam.shareef@avalara.com");
                 mail.Subject = mailTitle;
                 mail.Body = mailBody;

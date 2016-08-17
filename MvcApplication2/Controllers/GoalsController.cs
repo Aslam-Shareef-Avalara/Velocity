@@ -26,6 +26,7 @@ namespace MvcApplication2.Controllers
         private int rejected = 0;
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
+
             employeeService = new EmployeeService(OrgId, AppName);
             base.Initialize(requestContext);
         }
@@ -38,11 +39,20 @@ namespace MvcApplication2.Controllers
             ViewBag.ActionButtonToShow = "";
             ViewBag.AllowEdit = true;
             GoalsViewModel viewmodel = new GoalsViewModel();
-            viewmodel.Goals = goalService.GetFixedGoals();
+            var goals = goalService.GetFixedGoals();
+            EmployeeService es = new EmployeeService(OrgId, AppName);
+            var reportees = es.GetReportees(currentUser.gid);
+            if ((reportees == null || reportees.Count == 0) && !User.IsInRole("Hr") && !User.IsInRole("HrAdmin"))
+            {
+
+                goals.RemoveAll(x => x.EmployeeId.HasValue);
+            }
+            
             viewmodel.ButtonToShow = "";
             viewmodel.PECycle = new EvaluationCycle() { Id = 1, Title = "Fixed Goals" };
             viewmodel.Editable = true;
             viewmodel.TotalWeightage = viewmodel.Goals.Sum(x => x.Weightage.Value);
+            viewmodel.Goals = goals;
             return View("Index", new List<GoalsViewModel> { viewmodel });
         }
 
@@ -148,8 +158,8 @@ namespace MvcApplication2.Controllers
             switch (goalstatus)
             {
                 case GoalStatus.EMPLOYEE_EVAL_SAVED: titleSuffix += "Submit self-evaluation manager";
-                    ec.GoalSettingStatus = GoalCycleStatus.STARTED;
-                    goalsviewmodel = UIHintsForGoalCycle(goalsviewmodel, empid, ec);
+                 //   ec.GoalSettingStatus = GoalCycleStatus.STARTED;
+                    //goalsviewmodel = UIHintsForGoalCycle(goalsviewmodel, empid, ec);
                     break;
                 case GoalStatus.EMPLOYEE_EVAL_PUBLISHED:
                 case GoalStatus.MANAGER_EVAL_SAVED:
@@ -454,6 +464,8 @@ namespace MvcApplication2.Controllers
             }
             else
             {
+                if (goalsviewmodel.EvaluationStatus < EvalCycleStatus.PUBLISHED)
+                    goalsviewmodel.EvaluationStatus = EvalCycleStatus.NO_ACTION_REQUIRED;
                 var reportee = employeeService.GetEmployee(idOfEmployeeForGoals.Value);
                 if (reportee != null)
                     ViewBag.EmployeeName = employeeService.GetEmployee(idOfEmployeeForGoals.Value).FirstName + "'s";
@@ -524,6 +536,7 @@ namespace MvcApplication2.Controllers
             });
         }
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult CreateGoal(Goal goal)
         {
             
@@ -611,6 +624,7 @@ namespace MvcApplication2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [JsonFilter(JsonDataType = typeof(Goal[]), Parameter = "goals")]
+        [ValidateInput(false)]
         public JsonResult Create(Goal[] goals)
         {
             Guid empid = new Guid();
@@ -622,12 +636,12 @@ namespace MvcApplication2.Controllers
                 empid = currentUser.gid;
             if (ModelState.IsValid)
             {
-                int count = 0;
-                var gs = db.Goals.Where(x => !x.Fixed && x.EmployeeId == currentUser.gid && x.Evalcycleid == CurrentGoalCycle.Id && x.Status.Value == GoalStatus.MANAGER_EVAL_SAVED);
-                if (gs != null)
-                    count = gs.Count();
-                if (count == 0)
-                    new Mail().SendEmail(Mail.ACTION_TYPE.SEND_GOALS_FOR_APPROVAL, currentUser.gid, CurrentGoalCycle.Id);
+                //int count = 0;
+                //var gs = db.Goals.Where(x => !x.Fixed && x.EmployeeId == currentUser.gid && x.Evalcycleid == CurrentGoalCycle.Id && x.Status.Value == GoalStatus.MANAGER_EVAL_SAVED);
+                //if (gs != null)
+                //    count = gs.Count();
+                //if (count == 0)
+                //    new Mail().SendEmail(Mail.ACTION_TYPE.SEND_GOALS_FOR_APPROVAL, currentUser.gid, CurrentGoalCycle.Id);
               
                 CreateOrUpdateGoals(goals, GoalSaveAction.CREATE_OR_SAVE, empid);
             }
@@ -654,7 +668,7 @@ namespace MvcApplication2.Controllers
             {
                 if (goals == null || goals.Count() == 0)
                     goals = new Goal[] { new Goal() { gid = new Guid(), Evalcycleid = evalcycleid, Goal1 = "" } };
-                new Mail().SendEmail(Mail.ACTION_TYPE.GOALS_APPROVED, empid, evalcycleid);
+                new Mail().SendEmail(Mail.ACTION_TYPE.GOALS_APPROVED, empid,currentUser.gid, evalcycleid);
                 CreateOrUpdateGoals(goals, GoalSaveAction.APPROVE, empid);
             }
             return Index(1);
@@ -698,22 +712,24 @@ namespace MvcApplication2.Controllers
                             g.Status = GoalStatus.EMPLOYEE_GOAL_SAVED;
                             b.BadgeType = BadgeType.GOALS_REJECTED;
                             rejectionMessage.EvaluationPhase = PECycle.GOAL_SETTING.ToString();
+                            b.Description = "Your goals have been rejected. Please talk to  " + currentUser.FirstName;
                         }
                         else
                         {
                             g.Status = GoalStatus.EMPLOYEE_EVAL_SAVED;
                             b.BadgeType = BadgeType.EVALUATION_REJECTED;
                             rejectionMessage.EvaluationPhase = PECycle.EVALUATION.ToString();
+                            b.Description = "Your self-evaluations have been rejected. Please talk to  " + currentUser.FirstName;
                         }
                             db.Entry(g).State = EntityState.Modified;
                         db.SaveChanges();
                     }
 
-                    new Mail().SendEmail(mailAction, empid, pecycleid);
+                    new Mail().SendEmail(mailAction, empid,currentUser.gid, pecycleid);
 
                     
                    
-                    b.Description = "Your goals have been rejected. Please talk to  " + currentUser.FirstName;
+                   
                     b.FromBadge = currentUser.gid;
                     b.ToBadge = empid;
                     b.Viewed = false;
@@ -783,7 +799,8 @@ namespace MvcApplication2.Controllers
                 empid = currentUser.gid;
             if (ModelState.IsValid)
             {
-                new Mail().SendEmail(Mail.ACTION_TYPE.APPROVE_GOALS, empid, evalcycleid);
+                var user = db.Employees.FirstOrDefault(x => x.gid == empid);
+                new Mail().SendEmail(Mail.ACTION_TYPE.APPROVE_GOALS,user.Manager.Value, empid, evalcycleid);
                 CreateOrUpdateGoals(new Goal[] { new Goal() { gid = new Guid(), Evalcycleid = evalcycleid, Goal1="" } }, GoalSaveAction.PUBLISH, empid);
                 PECycle pecyclephase = PECycle.GOAL_SETTING;
                 //Commented below because when rejecing we always set goal_setting as cycle phase
@@ -840,7 +857,7 @@ namespace MvcApplication2.Controllers
                     goal.ModifiedBy = currentUser.gid;
                     goal.ModifiedDate = DateTime.Now;
                     goal.OrgId = OrgId;
-                    goal.Weightage = goal.Weightage;
+                    goal.Weightage = 0; // was goal.Weightage ... changed to remove Weightages
 
                     if (goal.gid.ToString() == newguid.ToString())
                     {
@@ -889,6 +906,7 @@ namespace MvcApplication2.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [ValidateInput(false)]
         //[ValidateInput(false)]
         public JsonResult Edit(Goal goal)
         {
@@ -896,7 +914,7 @@ namespace MvcApplication2.Controllers
             if (ModelState.IsValid)
             {
                 goalFromDb.Title = goal.Title;
-                goalFromDb.Weightage = goal.Weightage;
+                goalFromDb.Weightage = 0;//was goal.Weightage ... chantged to remove weightages
                 goalFromDb.Goal1 = goal.Goal1;
                 goalFromDb.ModifiedBy = currentUser.gid;
                 goalFromDb.ModifiedDate = DateTime.Now;

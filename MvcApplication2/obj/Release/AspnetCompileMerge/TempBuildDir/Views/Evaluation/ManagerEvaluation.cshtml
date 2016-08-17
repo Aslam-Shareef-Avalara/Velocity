@@ -8,6 +8,26 @@
 }
 <script src="~/Scripts/ckeditor/ckeditor.js"></script>
 @functions{
+    public string translateRating(int rating)
+    {
+        string translatedRating = "";
+        switch (rating)
+        {
+            case 1: translatedRating = "Not a fit";
+                break;
+            case 2: translatedRating = "Underachieving";
+                break;
+            case 3: translatedRating = "Orange";
+                break;
+            case 4: translatedRating = "G'in the JD";
+                break;
+            case 5: translatedRating = "Crushed It!";
+                break;
+            default: translatedRating = "Unrated";
+                break;
+        }
+        return translatedRating;
+    }
     public DataService.EmployeeEvaluation GetValidEmployeeEvalObj(Guid gid)
     {
         var g = Model.SelfEvaluations.Where(x => x.GoalId == gid).FirstOrDefault();
@@ -50,7 +70,7 @@
     <div class="pull-left" style="width: 100%;">
         @if (Model.IsEditable)
         {
-            <button id="sendtohrbutton" class="btn btn-lg btn-success" onclick="return publishreview('@Model.EmployeeDetails.gid')" style="margin-bottom:10px;@(Model.Goals.FirstOrDefault(x => !x.Fixed).Status == DataService.GoalStatus.HR_APPROVED?"display:none;":"") "><span class="fi-checkbox" style="font-size:15px;padding-right:5px;">&nbsp;</span>Send To HR</button>
+            <button id="sendtohrbutton" class="btn btn-lg btn-success" data-toggle="modal" data-target="#finalcomment_popup" @*onclick="return publishreview('@Model.EmployeeDetails.gid')"*@ style="margin-bottom:10px;@(Model.Goals.FirstOrDefault(x => !x.Fixed).Status == DataService.GoalStatus.HR_APPROVED?"display:none;":"") "><span class="fi-checkbox" style="font-size:15px;padding-right:5px;">&nbsp;</span>Send To HR</button>
             <span id="publishmsg" style="padding:10px;margin-left:5px;"></span>
             if (Model.Goals.FirstOrDefault(x => !x.Fixed).Status < DataService.GoalStatus.MANAGER_EVAL_PUBLISHED)
             {
@@ -77,18 +97,37 @@
             </div>
         }
         <div class="pull-right" id="selfevalrating" style="margin-left:20px;margin-right: 25px;">
-            <span style="padding-left:2px;">Self Overall Rating:</span>
+            @*<span style="padding-left:2px;">Self Overall Rating:</span>
             <div data-initval="@Model.Rating.SelfOverallRating" class="selfoverallrating goalrating">
-            </div>
+            </div>*@
 
-            <div class="counter" id="selfoverallrating">@Model.Rating.SelfOverallRating</div>
+            <span style="padding-left:2px;">Self Overall rating: <span id="selfoverallrating_value" class="btn-info">@translateRating((int)Math.Round(Model.Rating.SelfOverallRating.HasValue ? Model.Rating.SelfOverallRating.Value : 0))</span></span>
         </div>
         <div class="pull-right" id="evalrating" style="margin-left:20px;margin-right: 25px;">
-            <span style="padding-left:2px;">Overall rating:</span>
-            <div data-initval="@Model.Rating.ManagerOverllRating" class="mgroverallrating goalrating">
-            </div>
+            @*<span style="padding-left:2px;">Overall rating:</span>*@
+            <span style="padding-left:2px;">Manager Overall rating: 
+                @if (Model.IsEditable)
+                {
+                    <span id="manageroverallrating_value">
+                        <select class="ratingdropdown" id="overall_manager_grading">
+                            <option>-- Select One --</option>
+                            <option value="1">Not a fit</option>
+                            <option value="2">Underachieving</option>
+                            <option value="3">Orange</option>
+                            <option value="4">G'in the JD</option>
+                            <option value="5">Crushed It!</option>s
+                        </select>
+                    </span>
+                }
+                else
+                {
+                    <span id="manageroverallrating_value" class="btn-info">@translateRating((int)Math.Round(Model.Rating.ManagerOverllRating.HasValue ? Model.Rating.ManagerOverllRating.Value : 0))</span>
+                }
+                    </span>
+            @*<div data-initval="@Model.Rating.ManagerOverllRating" class="mgroverallrating goalrating">
+    </div>
 
-            <div class="counter" id="overallrating">@Model.Rating.ManagerOverllRating</div>
+    <div class="counter" id="overallrating">@Model.Rating.ManagerOverllRating</div>*@
         </div>
     </div>
 </div>
@@ -108,7 +147,7 @@
                     DataService.ManagerEvaluation mgrE = GetManagerEvalObj(g.gid);
                     <!--Individual Goals Template Start -->
                     <div class="va-slice va-slice-color-1" id="_@g.gid">
-                        <h3 class="va-title @(g.Fixed ? "CompetencyHeader" : "GoalHeader")">@(g.Fixed ? "Success Trait" : "Goal") : @g.Title <span class="pull-right bold">Weightage : @g.Weightage %</span></h3>
+                        <h3 class="va-title @(g.Fixed ? "CompetencyHeader" : "GoalHeader")">@(g.Fixed ? "Success Trait" : "Goal") : @g.Title @*<span class="pull-right bold">Weightage : @g.Weightage %</span>*@</h3>
                         
                         <div class="va-content">
                             <ul class="nav nav-tabs" style="max-width:100%">
@@ -120,7 +159,7 @@
                                     <div class="scroll-pane" style="float:left;display:inline-block;width:100%;height:283px;overflow-y:auto;">
                                        
                                         <p>
-                                            @g.Goal1
+                                            @Html.Raw(g.Goal1)
                                         </p>
 
                                     </div>
@@ -131,7 +170,7 @@
                                          var attachments = Model.Attachments.Where(x => x.EvaluationGoalId == se.Id && x.EvaluationType == DataService.EvaluationType.SELF_EVALUATION).ToList();
                                         }
                                         <div class="ratingcontainer pull-left">
-                                            <p style="margin-bottom:0px!important;margin-top:5px;">Self Rating : </p><div id="ratingfor_self_@g.gid" data-initval="@GetValidEmployeeEvalObj(g.gid).GoalRating" class="goalrating emplrating"></div><div class="counter">@GetValidEmployeeEvalObj(g.gid).GoalRating</div>
+                                            <p style="margin-bottom:0px!important;margin-top:5px;">Self-rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value : 0) </div>
                                         </div>
                                         @if (attachments != null && attachments.Count > 0)
                                         {
@@ -192,8 +231,22 @@
                                                 $('#reviewcomment_@g.gid').val(evt.editor.getData())
                                         });
                                     </script>
-                                    <div class="ratingcontainer pull-left">
-                                        <p style="margin-bottom:0px!important;margin-top:5px;">Rate @Model.EmployeeDetails.FirstName's Performance : </p><div id="ratingfor_@g.gid" data-initval="@GetManagerEvalObj(g.gid).GoalRating" class="goalrating managerrating"></div><div class="counter editable" data-goalid="@g.gid" id="rating_@g.gid"></div>
+    <text>
+
+                                <input data-goaltitle="@g.Title.Replace("'","").Replace("\"","")" type="hidden" id="numericRating_@g.gid" data-goalid="@g.gid" class="numericRating" value="@GetManagerEvalObj(g.gid).GoalRating" />
+    </text>
+
+                                    <div class="ratingcontainer ">
+                                        <p style="margin-bottom:0px!important;margin-top:5px;">Rate @Model.EmployeeDetails.FirstName's Performance : </p>@*<div id="ratingfor_@g.gid" data-initval="@GetManagerEvalObj(g.gid).GoalRating" class="goalrating managerrating"></div><div class="counter editable" data-goalid="@g.gid" id="rating_@g.gid"></div>*@
+                                        <select class="ratingdropdown" id="grading_@g.gid" onclick="savegrading('@g.gid',$(this));">
+                                            <option>-- Select One --</option>
+                                            <option value="1">Not a fit</option>
+                                            <option value="2">Underachieving</option>
+                                            <option value="3">Orange</option>
+                                            <option value="4">G'in the JD</option>
+                                            <option value="5">Crushed It!</option>s
+                                        </select>
+                                        <label id="ratingdesc_@g.gid" class="ratingdesc"></label>
                                     </div>
                                     <button onclick="return AddAttachments('@g.gid')" class="btn btn-info pull-right" style="margin-top:5px; margin-left:5px;" data-toggle="modal" data-target="#attachmentscontainer_popup">Add Attachments</button>
                                     <button id="save_@g.gid" class="btn btn-success pull-right" style="margin-top: 5px;" data-goalid="@g.gid" onclick="SaveReview('@g.gid')">
@@ -210,8 +263,9 @@
 
                                         </p>
                                     </div>
+  
                                     <div class="ratingcontainer pull-left">
-                                        <p style="margin-bottom:0px!important;margin-top:5px;">Your Evaluation Rating : </p><div id="ratingfor_@g.gid" data-initval="@mgrE.GoalRating" class="goalrating managerrating"></div><div class="counter" id="rating_@g.gid">@mgrE.GoalRating</div>
+                                        <p style="margin-bottom:0px!important;margin-top:5px;">Your Evaluation Rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(mgrE.GoalRating.HasValue?mgrE.GoalRating.Value:0)</div>
                                     </div>
                                 }
                                 <div id="selfattachments_@g.gid" class="pull-left clear-fix" style="padding-top:10px;width:100%">
@@ -333,7 +387,26 @@
 
     </div>
 </div>
+<div id="finalcomment_popup" class="modal fade" role="dialog">
+    <div class="modal-dialog  large-7 small-7">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Overall Review Comment: </h4>
+            </div>
+            <div class="modal-body">
+                <textarea id="overallreviewcomment" >@Model.Rating.OverAllReviewComment</textarea>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-success" value="Save" onclick="return saveoverallreviewcomment('@Model.EmployeeDetails.gid')" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 <script>
     var selectedmenuid = "team";
     
@@ -345,6 +418,32 @@
     var automove=false;
     var currentGoalForAttachments="";
 
+
+    function savegrading(goalid, selectControl)
+    {
+        $("#numericRating_"+goalid).val(selectControl.val());
+        $("#ratingdesc_"+goalid).html(getRatingDescription(selectControl.val()));
+    }
+    function getRatingDescription(ratingValue)
+    {
+        var rating  = parseInt(ratingValue);
+        switch(rating)
+        {
+            case 1:return "Hit it out of the park – performance stands out at a level not achieved by others. Exceptional Performance.";
+                break;
+            case 2:return "Getting the job done, the Avalara way – with high quality and superior results. High Performance";
+                break;
+            case 3:return "Accomplished goals and delivered work as expected.  Solid Performance.";
+                break;
+            case 4:return "Performance fell short of expectations and needs to improve.  Full results/goals were not achieved.";
+                break;
+            case 5:return "Not getting the job done and inhibiting results or performance of the company and others.";
+                break;
+            default:return " ";
+                break;
+        }
+    }
+
     function toggleattachment(showattachments, goalid) {
         if(showattachments)
         {
@@ -355,10 +454,29 @@
         {
             $('#reporteeattachments_'+goalid).fadeOut();
             $('#employeecomment_'+goalid).fadeIn();
-        
+
         }
     }
+    function saveoverallreviewcomment(empid)
+    {
 
+        if($("#overall_manager_grading").val()=="" || $("#overall_manager_grading").val()==null)
+        {
+            alert("Please give an overall rating!");
+            continuePublishing = false;
+            return false;
+        }
+        var overallcomment =  $("#overallreviewcomment").val();
+        $.post("@Url.Content("~/evaluation/saveoverallreviewcomment")",{"overallcomment":overallcomment,"empid":empid,"overallrating":$("#overall_manager_grading").val()},function(r){
+            if(!r.status)
+            {
+                alert("Error saving comment");
+                return;
+            }
+            else
+                publishreview(empid);
+        });
+    }
     function savesummary(empid)
     {
         var summary =  $("#meetingsummary").val();
@@ -487,13 +605,14 @@
     {
         if(!verifychanges())
             return false;
-
+        
         if(anythingChanged)
         {
             alert("Since there are some modifications, the review will be sent back to HR for approval when you click 'OK'.");
             publishreview(empId);
             return false;
         }
+        
         $.post("@Url.Content("~/evaluation/Publish")?reporteeId="+empId,function(r){
             if(r=="error")
             {
@@ -515,6 +634,13 @@
         });
     }
     function publishreview(empId) {
+
+        if($("#overall_manager_grading").val()=="" || $("#overall_manager_grading").val()==null)
+        {
+            alert("Please give an overall rating!");
+            continuePublishing = false;
+            return false;
+        }
         if(!verifychanges())
             return false;
 
@@ -539,7 +665,19 @@
         });
         if(!continuePublishing)
             return false;
+
         $("#publishmsg").hide();
+
+        if(anythingChanged)
+        {
+            if(confirm("Would you like to change the overall rating for the employee?")==true)
+            {
+                return false;
+            }
+           
+            
+        }
+
         $.post("@Url.Content("~/evaluation/PublishReporteeEvaluation")?reporteeId="+empId,function(r){
             $("#publishmsg").show();
             if(r=="error")
@@ -562,8 +700,10 @@
     function SaveReview(goalid)
     {
         anythingChanged =true;
+
+
         var reviewcomment = $("#reviewcomment_"+goalid).val();
-        var reviewrating = $("#rating_"+goalid).text();
+        var reviewrating = $("#numericRating_"+goalid).val();
         if(reviewrating=="0")
         {
             alert("You need to give some rating. Click on the stars to rate.");
@@ -585,8 +725,25 @@
             else
             {
                 $("#save_"+goalid).addClass("alertsaved").html("Saved successfully!");
-                $(".mgroverallrating").rateYo("option", "rating", r.viewmodel.Rating.ManagerOverllRating);
-                $(".mgroverallrating").next(".counter").text(r.viewmodel.Rating.ManagerOverllRating);
+                var translatedRating="";
+                switch(Math.round(r.viewmodel.Rating.ManagerOverllRating))
+                {
+                    case 1:translatedRating ="Not a fit";
+                        break;
+                    case 2:translatedRating ="Underachieving";
+                        break;
+                    case 3:translatedRating ="Orange";
+                        break;
+                    case 4:translatedRating ="G'in the JD";
+                        break;
+                    case 5:translatedRating ="Crushed It!";
+                        break;
+                    default:translatedRating="Unrated";
+                        break;
+                }
+                $("#overallrating").html(translatedRating);
+                //$(".mgroverallrating").rateYo("option", "rating", r.viewmodel.Rating.ManagerOverllRating);
+                //$(".mgroverallrating").next(".counter").text(r.viewmodel.Rating.ManagerOverllRating);
             }
 
             setTimeout(function(){
@@ -611,9 +768,28 @@
         $("#selfattachments_"+currentGoalForAttachments).load("@Url.Content("~/evaluation/AttachmentList")?evaltype=Manager%20Evaluation&goalid="+  currentGoalForAttachments+"&gid=@Model.EmployeeDetails.gid.ToString()&hashvalue="+new Date().getTime());
     }
     var _updatecounter=0;
+
     var updateCounter = function (rating) {
         _updatecounter++;
-        $(this).next(".counter").text(rating);
+        var translatedRating="";
+        switch(rating)
+        {
+            case 1:translatedRating ="Not a fit";
+                break;
+            case 2:translatedRating ="Underachieving";
+                break;
+            case 3:translatedRating ="Orange";
+                break;
+            case 4:translatedRating ="G'in the JD";
+                break;
+            case 5:translatedRating ="Crushed It!";
+                break;
+            default:translatedRating="Unrated";
+                break;
+        }
+        $(this).next(".counter").text(translatedRating);
+        var goalid =$(this).attr("id").replace("ratingfor_","");
+        $("#numericRating_"+goalid).val(rating);
     };
 
     var setCounter = function(rating)
@@ -639,12 +815,30 @@
         }
 
 
-        $(this).next(".counter").text(rating);
+        var translatedRating="";
+        switch(rating)
+        {
+            case 1:translatedRating ="Not a fit";
+                break;
+            case 2:translatedRating ="Underachieving";
+                break;
+            case 3:translatedRating ="Orange";
+                break;
+            case 4:translatedRating ="G'in the JD";
+                break;
+            case 5:translatedRating ="Crushed It!";
+                break;
+            default:translatedRating="Unrated";
+                break;
+        }
+        $(this).next(".counter").text(translatedRating);
     }
+    var somethingHasChangedFlag=false;
     function dataIsDirty()
     {
         $("#sendtohrbutton").show();
         $("#finalpublish").hide();
+        somethingHasChangedFlag=true;
     }
     $(function () {
         $('#va-accordion').vaccordion({
@@ -810,7 +1004,10 @@
             }
         }
 
+        $(".numericRating").each(function(i,o){
+            $("#grading_"+$(o).data("goalid")).val($(o).val());
 
+        });
 
     });
 
@@ -825,6 +1022,15 @@
     }
 </script>
 <style>
+    .readonlyrating {
+      background-color:orange;
+        font-weight:600;
+        text-align:center;
+        color:black;
+        font-size:15pt;
+        padding:5px;
+        border-radius:5px;
+    }
    .va-title.expandedpane {
     background-color: rgb(55, 70, 89) !important;
     color: white !important;
@@ -901,8 +1107,8 @@
         position: relative;
     }
 
-    div.counter::before, div.counter *::before {
-        border-color: transparent #DDD transparent transparent;
+     div.counter::before, div.counter *::before {
+        border-color: transparent darkorange transparent transparent;
         border-style: solid;
         border-width: 5px 5px 5px 0;
         content: "";
@@ -917,30 +1123,40 @@
 
 
     div.counter {
-        background-color: #DDD;
+        background-color: darkorange;
         color: #000;
         display: block;
         font-size: 15px;
-        height: 20px;
+        height: 25px;
         line-height: 0;
         margin-top: -10px;
         min-width: 20px;
         padding: 5px;
         position: absolute;
-        right: -36px;
+        left: 210px;
         top: 50%;
+        min-width:100px;
+        transform: translateY(-50%);
     }
 
     div.counter {
         float: left;
         font-weight: bold;
         margin-left: 10px;
-        margin-top: 12px;
+        margin-top: 15px;
+    }
+    
+div.selfeval div.counter::before, div.selfeval div.counter *::before
+{
+    border-color: transparent darkorange transparent transparent;
     }
 
-    div.selfeval div.counter {
-        margin-top: 7px;
-    }
+div.selfeval div.counter {
+    background-color: orange;
+    left: 150px;
+    margin-top: 7px;
+    transform: translateY(-16%);
+}
 
     .va-slice-color-1 {
         background-color: #FFF;
@@ -977,7 +1193,7 @@
     }
 
     .jspDrag {
-        background: #ddd none repeat scroll 0 0;
+        background: #8b8b9f none repeat scroll 0 0;
     }
 
     .jspArrowUp {
@@ -1061,5 +1277,21 @@
     }
     html, .off-canvas-wrap {
     overflow-x:auto!important;
+    }
+
+       #selfoverallrating_value, #manageroverallrating_value.btn-info {
+    /*background-color: #374659;*/
+    border-radius: 5px;
+    color: white;
+    margin-bottom: 3px;
+    padding: 5px;
+    font-weight:bold;
+    }
+        .ratingdesc {
+      color: #374659;
+    font-family: Georgia,serif,helvetica;
+    font-size: 15px;
+    font-style: italic;
+    font-weight: 300;
     }
 </style>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -24,6 +24,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -80,6 +81,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -105,7 +108,7 @@
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -163,6 +166,7 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -191,13 +195,29 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AssetController.cs" />
+    <Compile Include="Controllers\AssetIssueController.cs" />
     <Compile Include="Controllers\AuthorizationAttribute.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ControlCenterController.cs" />
+    <Compile Include="Controllers\CountryController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FeedbackController.cs" />
+    <Compile Include="Controllers\InventoryClassController.cs" />
+    <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\IssuedItemController.cs" />
+    <Compile Include="Controllers\ItemMasterController.cs" />
+    <Compile Include="Controllers\ItemTypeController.cs" />
+    <Compile Include="Controllers\LegalEntityController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\StateController.cs" />
+    <Compile Include="Controllers\VendorAddressController.cs" />
+    <Compile Include="Controllers\VendorBankDetailController.cs" />
+    <Compile Include="Controllers\VendorContactController.cs" />
+    <Compile Include="Controllers\VendorController.cs" />
+    <Compile Include="Controllers\VendorTaxDetailController.cs" />
     <Compile Include="Models\EmployeeEvaluationListModel.cs" />
     <Compile Include="Controllers\EvaluationController.cs" />
     <Compile Include="Controllers\GoalsController.cs" />
@@ -208,6 +228,7 @@
     </Compile>
     <Compile Include="Models\ActiveDirectoryHelper.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\ExtensionsAndHelpers.cs" />
     <Compile Include="Models\FeedbackModel.cs" />
     <Compile Include="Models\Festivals.cs" />
     <Compile Include="Models\FestivalSourceOfficeHoldaysDotCom.cs" />
@@ -227,11 +248,20 @@
     <Compile Include="ViewModel\ViewHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\foundation\app.css" />
     <Content Include="Content\morris.css" />
     <Content Include="Images\404.jpg" />
     <Content Include="Images\access-denied4.jpg" />
     <Content Include="Images\blinking_new.gif" />
+    <Content Include="Images\crushedit.png" />
     <Content Include="Images\down-arrow-circle-md.png" />
+    <Content Include="Images\ginjd.png" />
+    <Content Include="Images\notafit.png" />
+    <Content Include="Images\orange.png" />
+    <Content Include="Images\ui-icons_222222_256x240.png" />
+    <Content Include="Images\ui-icons_888888_256x240.png" />
+    <Content Include="Images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Images\underachiever.png" />
     <Content Include="Images\_500hold-it-right-there.jpg" />
     <Content Include="Scripts\morris.min.js" />
     <Content Include="Scripts\Raphael.js" />
@@ -1060,7 +1090,71 @@
     <Content Include="Views\Error\FileNotFound.cshtml" />
     <Content Include="Views\Error\AccessDenied.cshtml" />
     <Content Include="Views\Error\InternalServerError.cshtml" />
+    <Content Include="Views\ControlCenter\GetPeProgressCharts.cshtml" />
     <Content Include="Views\Employee\PerformanceGraphs.cshtml" />
+    <Content Include="Views\AssetIssue\Create.cshtml" />
+    <Content Include="Views\AssetIssue\Edit.cshtml" />
+    <Content Include="Views\AssetIssue\EditForm.cshtml" />
+    <Content Include="Views\AssetIssue\Index.cshtml" />
+    <Content Include="Views\Asset\Create.cshtml" />
+    <Content Include="Views\Asset\Edit.cshtml" />
+    <Content Include="Views\Asset\EditForm.cshtml" />
+    <Content Include="Views\Asset\Index.cshtml" />
+    <Content Include="Views\Country\Create.cshtml" />
+    <Content Include="Views\Country\Edit.cshtml" />
+    <Content Include="Views\Country\EditForm.cshtml" />
+    <Content Include="Views\Country\Index.cshtml" />
+    <Content Include="Views\Department\Create.cshtml" />
+    <Content Include="Views\Department\Edit.cshtml" />
+    <Content Include="Views\Department\EditForm.cshtml" />
+    <Content Include="Views\Department\Index.cshtml" />
+    <Content Include="Views\InventoryClass\Create.cshtml" />
+    <Content Include="Views\InventoryClass\Edit.cshtml" />
+    <Content Include="Views\InventoryClass\EditForm.cshtml" />
+    <Content Include="Views\InventoryClass\Index.cshtml" />
+    <Content Include="Views\IssuedItem\Create.cshtml" />
+    <Content Include="Views\IssuedItem\Edit.cshtml" />
+    <Content Include="Views\IssuedItem\EditForm.cshtml" />
+    <Content Include="Views\IssuedItem\Index.cshtml" />
+    <Content Include="Views\ItemMaster\Create.cshtml" />
+    <Content Include="Views\ItemMaster\Edit.cshtml" />
+    <Content Include="Views\ItemMaster\EditForm.cshtml" />
+    <Content Include="Views\ItemMaster\Index.cshtml" />
+    <Content Include="Views\ItemType\Create.cshtml" />
+    <Content Include="Views\ItemType\Edit.cshtml" />
+    <Content Include="Views\ItemType\EditForm.cshtml" />
+    <Content Include="Views\ItemType\Index.cshtml" />
+    <Content Include="Views\LegalEntity\Create.cshtml" />
+    <Content Include="Views\LegalEntity\Edit.cshtml" />
+    <Content Include="Views\LegalEntity\EditForm.cshtml" />
+    <Content Include="Views\LegalEntity\Index.cshtml" />
+    <Content Include="Views\State\Create.cshtml" />
+    <Content Include="Views\State\Edit.cshtml" />
+    <Content Include="Views\State\EditForm.cshtml" />
+    <Content Include="Views\State\Index.cshtml" />
+    <Content Include="Views\VendorAddress\Create.cshtml" />
+    <Content Include="Views\VendorAddress\Edit.cshtml" />
+    <Content Include="Views\VendorAddress\EditForm.cshtml" />
+    <Content Include="Views\VendorAddress\Index.cshtml" />
+    <Content Include="Views\VendorBankDetail\Create.cshtml" />
+    <Content Include="Views\VendorBankDetail\Edit.cshtml" />
+    <Content Include="Views\VendorBankDetail\EditForm.cshtml" />
+    <Content Include="Views\VendorBankDetail\Index.cshtml" />
+    <Content Include="Views\VendorContact\Create.cshtml" />
+    <Content Include="Views\VendorContact\Edit.cshtml" />
+    <Content Include="Views\VendorContact\EditForm.cshtml" />
+    <Content Include="Views\VendorContact\Index.cshtml" />
+    <Content Include="Views\VendorTaxDetail\Create.cshtml" />
+    <Content Include="Views\VendorTaxDetail\Edit.cshtml" />
+    <Content Include="Views\VendorTaxDetail\EditForm.cshtml" />
+    <Content Include="Views\VendorTaxDetail\Index.cshtml" />
+    <Content Include="Views\Vendor\Create.cshtml" />
+    <Content Include="Views\Vendor\Edit.cshtml" />
+    <Content Include="Views\Vendor\EditForm.cshtml" />
+    <Content Include="Views\Vendor\Index.cshtml" />
+    <Content Include="Views\Inventory\Index.cshtml" />
+    <Content Include="Views\Shared\_InvLayoutPage.cshtml" />
+    <Content Include="Views\Shared\GradeDropDown.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -142,12 +142,12 @@
                 <div class="widget singlegoal widget-default widget-item-icon">
                     <div class="widget-data">
                         @*<div class="widget-int num-count num-count-20px">@item.Title</div>*@
-                        <div class="widget-title"><label class="goalsubheadings">@(item.Fixed ? "Success Trait" : "Goal")</label> : @item.Title</div>
+                        <div class="widget-title"><label class="goalsubheadings u">@(item.Fixed ? "Success Trait" : "Goal")</label> : @item.Title</div>
                         <div class="widget-subtitle">
-                            <label class="goalsubheadings">Description</label> : @item.Goal1
+                            <label class="goalsubheadings u" style="float:left;">Description :</label> <div class="goaldesc"> @Html.Raw(item.Goal1)</div>
                         </div>
                         <div class="widget-subtitle">
-                            <label class="goalsubheadings">Weightage</label> :  @item.Weightage %
+                            @*<label class="goalsubheadings u">Weightage</label> :  @item.Weightage %*@
                         </div>
                         @if (goalviewmodel.ManagerEvaluations != null && goalviewmodel.ManagerEvaluations.Count>0)
                                 {
@@ -232,15 +232,15 @@
 
                     foreach (var item in goalviewmodel.Goals)
                     {
-                        <div class="widget singlegoal widget-default widget-item-icon">
+                        <div class="widget singlegoal widget-default widget-item-icon"> 
                             <div class="widget-data">
                                 @*<div class="widget-int num-count num-count-20px">@item.Title</div>*@
                                 <div class="widget-title"><label class="goalsubheadings">@(item.Fixed?"Success Trait":"Goal")</label> : @item.Title</div>
                                 <div class="widget-subtitle">
-                                    <label class="goalsubheadings">Description</label> : @item.Goal1
+                                    <label class="goalsubheadings">Description</label> : @Html.Raw(item.Goal1)
                                 </div>
                                 <div class="widget-subtitle">
-                                    <label class="goalsubheadings">Weightage</label> :  @item.Weightage %
+                                    @*<label class="goalsubheadings">Weightage</label> :  @item.Weightage %*@
                                 </div>
                                 @if (goalviewmodel.ManagerEvaluations != null && goalviewmodel.ManagerEvaluations.Count > 0)
                                 {
@@ -423,11 +423,11 @@
 
     function PublishGoals(totalweightage) {
         getCurrentlySelectedPETab();
-        if(totalweightage<100)
-        {
-            alert("A total of 100% should be allocated to your goals. Your current total goal weightage is "+ totalweightage+ "%");
-            return false;
-        }
+        //if(totalweightage<100)
+        //{
+        //    alert("A total of 100% should be allocated to your goals. Your current total goal weightage is "+ totalweightage+ "%");
+        //    return false;
+        //}
         var urlToPostTo = "@Url.Content("~/goals/publish?reporteeid=")@empId&rejected="+rejected;
         $.post(urlToPostTo, {"evalcycleid":currentlySelectedPEPane}, function (r) {
             $("#goalslist").load('@Url.Content(getgoalsurl)#goalslist', function (re) {
@@ -458,6 +458,9 @@
 
 
 <style>
+    .u {
+    /*text-decoration:underline;*/
+    }
     .rejectionmodal .modal-content {
         border-radius: 0px !important;
         border-width: 0px;
@@ -608,4 +611,8 @@
     .inner-wrap.removemargin {
              margin-left: 0 !important;
          }
+    .goaldesc {
+        width:300px;
+        display:inline-block;
+    }
 </style>
