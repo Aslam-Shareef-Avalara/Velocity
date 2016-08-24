@@ -48,10 +48,11 @@
     }
 
 }
+<script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
 <link href="~/Content/style.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.mousewheel.js"></script>
 <script src="~/Scripts/jquery.easing.1.3.js"></script>
-<script src="~/Scripts/jquery.vaccordion.js"></script>
+@*<script src="~/Scripts/jquery.vaccordion.js"></script>*@
 <link href="@Url.Content("~/content/jquery.jscrollpane.css")" rel="stylesheet" />
 <link href="@Url.Content("~/content/jquery.jscrollpane.lozenge.css")" rel="stylesheet" />
 <script type="text/javascript" src="@Url.Content("~/scripts/jquery.jscrollpane.min.js")"></script>
@@ -63,33 +64,33 @@
     {
         <h2>@Model.EmployeeDetails.FirstName's Review<span class="pull-right" onclick="closereview();"></span></h2>
     }
-        <p>Click each goal title to view it. You can use the navigation keys (onscreen up and down arrows) to move to other goals or scroll with your mouse-wheel.</p>
+    <p>Click each goal title to view it. You can use the navigation keys (onscreen up and down arrows) to move to other goals or scroll with your mouse-wheel.</p>
     <div class="pull-left" style="width: 100%;">
         @if (Model.IsEditable)
         {
 
             <button id="publishbutton" class="btn btn-lg btn-success" onclick="return publishreview('@Model.EmployeeDetails.gid')" style="margin-bottom:10px;"><span class="fi-flag" style="font-size:15px;padding-right:5px;">&nbsp;</span><span id="publishtext">Approve - Send To Manager</span></button>
             <input id="rejectbutton" type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject_popup" style="margin-bottom:10px;" value="Reject" />
-            
-        }
-        @if (ViewBag.ShowSelfRating == null || ViewBag.ShowSelfRating==true)
-        { 
-        <div class="pull-right" id="selfevalrating" style="margin-left:10px;margin-right: 25px;">
-            <span style="padding-left:2px;">Self Overall Rating:</span>
-            <span id="selfoverallrating_value" class="btn-info">@translateRating((int)Math.Round(Model.Rating.SelfOverallRating.HasValue ? Model.Rating.SelfOverallRating.Value : 0))</span>
 
-            
-        </div>
+        }
+        @if (ViewBag.ShowSelfRating == null || ViewBag.ShowSelfRating == true)
+        {
+            <div class="pull-right" id="selfevalrating" style="margin-left:10px;margin-right: 25px;">
+                <span style="padding-left:2px;">Self Overall Rating:</span>
+                <span id="selfoverallrating_value" class="btn-info">@translateRating((int)Math.Round(Model.Rating.SelfOverallRating.HasValue ? Model.Rating.SelfOverallRating.Value : 0))</span>
+
+
+            </div>
         }
         <div class="pull-right" id="evalrating" style="margin-left:0px;margin-right: 0px;">
             <span style="padding-left:2px;">Overall rating:</span>
             <span id="manageroverallrating_value" class="btn-info">@translateRating((int)Math.Round(Model.Rating.ManagerOverllRating.HasValue ? Model.Rating.ManagerOverllRating.Value : 0))</span>
-            </div>
-
-            
         </div>
+
+
     </div>
 </div>
+
 <div id="evalgoalscontainer" class="row">
     <div class="large-12 end">
         <ul class="nav nav-tabs">
@@ -97,129 +98,147 @@
             <li><a data-toggle="tab" href="#managercomment">Overall Evaluation Comment</a></li>
             <li><a data-toggle="tab" href="#summary">Meeting Summary</a></li>
             <li><a data-toggle="tab" href="#training">Training Needs</a></li>
-            @if (ViewBag.ShowFeedback==true)
+            @if (ViewBag.ShowFeedback == true)
             {
-            <li><a data-toggle="tab" href="#feedback">Process Feedback</a></li>
+                <li><a data-toggle="tab" href="#feedback">Process Feedback</a></li>
             }
         </ul>
-        <div class="tab-content" >
+        <div class="tab-content">
             <div id="GoalsAndEvaluations" class="tab-pane fade in active">
                 <div id="va-accordion" class="va-container" style="margin-top:26px;padding-right:10px;">
-                    <div class="va-nav">
-                        <span class="va-nav-prev" style="top:10px;" title="Previous goal">Previous</span>
-                        <span class="va-nav-next" style="bottom:10px;" title="Next goal">Next</span>
-                    </div>
-                    <div class="va-wrapper">
-                        @foreach (DataService.Goal g in Model.Goals.OrderBy(x => x.Fixed).ThenByDescending(y => y.EmployeeId).ToList())
-                        {
-                            DataService.EmployeeEvaluation empEval = GetValidEmployeeEvalObj(g.gid);
-                            DataService.ManagerEvaluation mgrE = GetManagerEvalObj(g.gid);
+                    @*<div class="va-nav">
+                            <span class="va-nav-prev" style="top:10px;" title="Previous goal">Previous</span>
+                            <span class="va-nav-next" style="bottom:10px;" title="Next goal">Next</span>
+                        </div>*@
+                    @*<div class="va-wrapper">*@
+                    @foreach (DataService.Goal g in Model.Goals.OrderBy(x => x.Fixed).ThenByDescending(y => y.EmployeeId).ToList())
+                    {
+                        DataService.EmployeeEvaluation empEval = GetValidEmployeeEvalObj(g.gid);
+                        DataService.ManagerEvaluation mgrE = GetManagerEvalObj(g.gid);
                     <!--Individual Goals Template Start -->
-                            <div class="va-slice va-slice-color-1" id="_@g.gid">
-                                <h3 class="va-title @(g.Fixed ? "CompetencyHeader" : "GoalHeader")">@(g.Fixed ? (g.EmployeeId.HasValue ? "Avalara's People Management Goal" : "Success Trait") : "Goal") : @g.Title @*<span class="pull-right bold">Weightage : @g.Weightage %</span>*@</h3>
+                        @*<div class="va-slice va-slice-color-1" id="_@g.gid">*@
+                        <h3 class="va-title @(g.Fixed ? "CompetencyHeader" : "GoalHeader")">@(g.Fixed ? (g.EmployeeId.HasValue ? "Avalara's People Management Goal" : "Success Trait") : "Goal") : @g.Title @*<span class="pull-right bold">Weightage : @g.Weightage %</span>*@</h3>
 
-                                <div class="va-content">
-                                    <ul class="nav nav-tabs">
-                                        <li class="active"><a data-toggle="tab" href="#description_@g.gid">Description</a></li>
-                                        <li><a data-toggle="tab" href="#selfevaluation_@g.gid">Self Evaluation</a></li>
-                                        <li><a data-toggle="tab" href="#mgrevaluation_@g.gid">Manager Evaluation</a></li>
-                                    </ul>
-                                    <div class="tab-content" style="float:left;">
-                                        <div id="description_@g.gid" class="tab-pane fade in active">
-                                            <div class="scroll-pane" style="float:left;display:inline-block;width:100%;height:283px;overflow-y:auto;">
+                    <div class="va-content" style="margin-top:10px;">
 
-                                                <p>
-                                                    @Html.Raw(g.Goal1)
+                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                            <div class="well bordered-left bordered-themeprimary">
 
-                                                </p>
+                                <a data-toggle="tab" href="#description_@g.gid">Description</a>
+                                <div id="description_@g.gid" class="tab-pane fade in active">
+                                    <div class="scroll-pane" style="float:left;display:inline-block;width:100%;overflow-y:auto;">
 
-                                            </div>
-                                        </div>
-                                        <div id="selfevaluation_@g.gid" class="selfeval tab-pane fade">
-                                            <div class="scroll-pane" style="float:left;display:inline-block;width:100%;height:283px;overflow-y:auto;">
-                                                @{ var se = GetValidEmployeeEvalObj(g.gid);
-                                                 var attachments = Model.Attachments.Where(x => x.EvaluationGoalId == se.Id && x.EvaluationType == DataService.EvaluationType.SELF_EVALUATION).ToList();
-                                                }
-                                                <div class="ratingcontainer pull-left">
-                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Self-rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value : 0) </div>
-                                                </div>
-                                                @if (attachments != null && attachments.Count > 0)
-                                                {
-                                                    <div class="pull-right" style="padding-left:15px">
-                                                        <span class="fi-checkbox fi-comment" style="font-size:20px;color:#374659;"></span>
-                                                        <a onclick="toggleattachment(false,'@g.gid')">View Employee Comment (click)</a>
-                                                    </div>
-                                                    <div class="pull-right" style="padding-left:15px;">
-                                                        <span class="fi-checkbox fi-paperclip" style="font-size:20px;color:#374659;"></span>
-                                                        <a onclick="toggleattachment(true,'@g.gid')">@attachments.Count attachment(s) (click)</a>
-                                                    </div>
-                                                }
-                                                <br />
-                                                <div class="q pull-left" id="employeecomment_@g.gid">
-                                                    <span class="quote">“</span>@Html.Raw(empEval.Comment)
+                                        <p>
+                                            @Html.Raw(g.Goal1)
 
-                                                </div>
+                                        </p>
 
-                                            </div>
-                                            <div id="reporteeattachments_@g.gid" class="pull-left clear-fix" style="display:none;padding-top:10px;width:100%">
-
-                                                @if (attachments != null && attachments.Count > 0)
-                                                {
-
-                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
-
-                                                    foreach (DataService.Attachment attachment in attachments)
-                                                    {
-                                                        <span class="label label-default label-form">
-                                                            <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
-                                                        </span>
-                                                    }
-                                                }
-                                            </div>
-
-                                        </div>
-                                        <div id="mgrevaluation_@g.gid" class="mgreval tab-pane fade">
-                                            <div class="scroll-pane" style="float:left;display:inline-block;width:100%;height:283px;overflow-y:auto;">
-                                                <div class="ratingcontainer pull-left">
-                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Manager Rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(@mgrE.GoalRating.HasValue?@mgrE.GoalRating.Value:0) </div>
-                                                </div>
-                                               
-                                                <br />
-                                                <div class="q pull-left">
-                                                    <span class="quote">“</span>@Html.Raw(mgrE.Comment)
-
-                                                </div>
-
-                                            </div>
-                                            <div id="reporteeattachments" class="pull-left clear-fix" style="padding-top:10px;width:100%">
-                                                @{
-                            attachments = Model.Attachments.Where(x => x.EvaluationGoalId == mgrE.Id && x.EvaluationType == DataService.EvaluationType.MANAGER_EVALUATION).ToList();
-                                                }
-                                                @if (attachments != null && attachments.Count > 0)
-                                                {
-
-                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
-
-                                                    foreach (DataService.Attachment attachment in attachments)
-                                                    {
-                                                        <span class="label label-default label-form">
-                                                            <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
-                                                        </span>
-                                                    }
-                                                }
-                                            </div>
-
-                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                            <div class="well bordered-left bordered-yellow">
+                                <a data-toggle="tab" href="#selfevaluation_@g.gid">Self Evaluation</a>
+                                <div id="selfevaluation_@g.gid" class="selfeval tab-pane fade">
+                                    <div class="scroll-pane" style="float:left;display:inline-block;width:100%;overflow-y:auto;">
+                                        @{ var se = GetValidEmployeeEvalObj(g.gid);
+                                         var attachments = Model.Attachments.Where(x => x.EvaluationGoalId == se.Id && x.EvaluationType == DataService.EvaluationType.SELF_EVALUATION).ToList();
+                                        }
+                                        <div class="ratingcontainer pull-left">
+                                            <p style="margin-bottom:0px!important;margin-top:5px;">Self-rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value : 0) </div>
+                                        </div>
+                                        @if (attachments != null && attachments.Count > 0)
+                                        {
+                                            <div class="pull-right" style="padding-left:15px">
+                                                <span class="fi-checkbox fi-comment" style="font-size:20px;color:#374659;"></span>
+                                                <a onclick="toggleattachment(false,'@g.gid')">View Employee Comment (click)</a>
+                                            </div>
+                                            <div class="pull-right" style="padding-left:15px;">
+                                                <span class="fi-checkbox fi-paperclip" style="font-size:20px;color:#374659;"></span>
+                                                <a onclick="toggleattachment(true,'@g.gid')">@attachments.Count attachment(s) (click)</a>
+                                            </div>
+                                        }
+                                        <br />
+                                        <div class="q pull-left" id="employeecomment_@g.gid">
+                                            <span class="quote">“</span>@Html.Raw(empEval.Comment)
 
+                                        </div>
+
+                                    </div>
+                                    <div id="reporteeattachments_@g.gid" class="pull-left clear-fix" style="display:none;padding-top:10px;width:100%">
+
+                                        @if (attachments != null && attachments.Count > 0)
+                                        {
+
+                                            <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
+
+                                            foreach (DataService.Attachment attachment in attachments)
+                                            {
+                                                <span class="label label-default label-form">
+                                                    <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
+                                                </span>
+                                            }
+                                        }
+                                    </div>
 
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                            <div class="well bordered-left bordered-red">
+                                <a data-toggle="tab" href="#mgrevaluation_@g.gid">Manager Evaluation</a><div id="mgrevaluation_@g.gid" class="mgreval tab-pane fade">
+                                    <div class="scroll-pane" style="float:left;display:inline-block;width:100%;overflow-y:auto;">
+                                        <div class="ratingcontainer pull-left">
+                                            <p style="margin-bottom:0px!important;margin-top:5px;">Manager Rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(@mgrE.GoalRating.HasValue ? @mgrE.GoalRating.Value : 0) </div>
+                                        </div>
+
+                                        <br />
+                                        <div class="q pull-left">
+                                            <span class="quote">“</span>@Html.Raw(mgrE.Comment)
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                                    <div id="reporteeattachments" class="pull-left clear-fix" style="padding-top:10px;width:100%">
+                                        @{
+                        attachments = Model.Attachments.Where(x => x.EvaluationGoalId == mgrE.Id && x.EvaluationType == DataService.EvaluationType.MANAGER_EVALUATION).ToList();
+                                        }
+                                        @if (attachments != null && attachments.Count > 0)
+                                        {
+
+                                            <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
+
+                                            foreach (DataService.Attachment attachment in attachments)
+                                            {
+                                                <span class="label label-default label-form">
+                                                    <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
+                                                </span>
+                                            }
+                                        }
+                                    </div>
+
+                                </div>
+                               
+
+
+
+
+
+
+
+                                    </div>
+                                    @*</div>*@
                     <!--Individual Goals Template End-->
-                        }
-                    </div>
+                    }
+                @*</div>*@
                 </div>
-            </div>
+                </div>
+
+
+
             <div id="managercomment" class="tab-pane fade">
                 @Model.Rating.OverAllReviewComment
             </div>
@@ -234,41 +253,41 @@
                     foreach (string t in s)
                     {
                         <text>
-                            <label style="width:100%;">@counter .  @t</label><br/>
+                            <label style="width:100%;">@counter .  @t</label><br />
                         </text>
                         counter++;
                     }
                 }
 
             </div>
-            @if (ViewBag.ShowFeedback==true)
+            @if (ViewBag.ShowFeedback == true)
             {
-            <div id="feedback" class="tab-pane fade">
-                <table class="table table-hover">
-                    <tr>
-                        <th>Question</th>
-                        <th>Feedback Answer</th>
-                        <th class="controls-head"></th>
-                    </tr>
-
-                    @foreach (var item in Model.FeedbackQuestions)
-                    {
+                <div id="feedback" class="tab-pane fade">
+                    <table class="table table-hover">
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Question)
-                            </td>
-                            <td>
-                                @NormalizeAnswers(Model.Feedbackanswers.FirstOrDefault(x => x.QuestionId == item.QuestionId))
-                            </td>
-
+                            <th>Question</th>
+                            <th>Feedback Answer</th>
+                            <th class="controls-head"></th>
                         </tr>
-                    }
 
-                </table>
-            </div>
+                        @foreach (var item in Model.FeedbackQuestions)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Question)
+                                </td>
+                                <td>
+                                    @NormalizeAnswers(Model.Feedbackanswers.FirstOrDefault(x => x.QuestionId == item.QuestionId))
+                                </td>
+
+                            </tr>
+                        }
+
+                    </table>
+                </div>
             }
-            </div>
         </div>
+    </div>
 </div>
 <div id="reject_popup" class="modal fade" role="dialog">
     <div class="modal-dialog  large-5 small-5">
@@ -330,12 +349,12 @@
                 message="Error while rejecting";
                 $("#publishbutton").fadeIn();
             }
-            $("#rejectbutton").val(message).addClass("btn-rounded");    
+            $("#rejectbutton").val(message).addClass("btn-rounded");
             setTimeout(function(){
                 if(message=="Rejected")
                     $("#rejectbutton").removeClass("btn-rounded").fadeOut();
                 else{
-                    $("#rejectbutton").removeClass("btn-rounded").val("Reject").removeAttr("disabled");   
+                    $("#rejectbutton").removeClass("btn-rounded").val("Reject").removeAttr("disabled");
                 }
 
             },2000);
@@ -345,7 +364,7 @@
         });
     }
 
-   
+
     function setGoalID(id)
     {
         currentGoalForAttachments = id;
@@ -390,11 +409,11 @@
         });
         $(".maincontent").css("height",$("#evalgoalscontainer").height()+151);
 
-         @if (ViewBag.ShowFeedback!=true) // This means we are showing to employees
+        @if (ViewBag.ShowFeedback!=true) // This means we are showing to employees
         {
              <text>
-                $(".hreval").closest(".inner-wrap").addClass("removemargin");
-            </text>
+        $(".hreval").closest(".inner-wrap").addClass("removemargin");
+        </text>
          }
     });
     function adjustHeaderWidth()
@@ -434,13 +453,19 @@
         $(this).next(".counter").text(rating);
     }
     $(function () {
-        $('#va-accordion').vaccordion({
-            accordionW: "100%",
-            accordionH: ((500+50*@Model.Goals.Count)+20),// 20 is for additional padding
-            expandedHeight	: 500,
+        var icons = {
+            header: "fa fa-plus",
+            activeHeader: "fa fa-minus"
+        };
+        $('#va-accordion').accordion({
+            //accordionW: "100%",
+            //accordionH: ((500+50*@Model.Goals.Count)+20),// 20 is for additional padding
+            //expandedHeight	: 500,
             visibleSlices: @Model.Goals.Count,
             animOpacity: 1.0,
-            contentAnimSpeed: 100
+            collapsible :true,
+            contentAnimSpeed: 100,
+            icons: icons
         });
 
         $(".emplrating").rateYo({
@@ -480,14 +505,14 @@
             }
         });
 
-           //$($(".va-slice")[0]).find(".va-title").click();
-           //setTimeout(function(){
-           //    $($(".va-slice")[0]).find(".va-title").click();
-           //},500);
+        //$($(".va-slice")[0]).find(".va-title").click();
+        //setTimeout(function(){
+        //    $($(".va-slice")[0]).find(".va-title").click();
+        //},500);
 
         setWidth() ;
 
-         $(".maincontent").css("height",$("#evalgoalscontainer").height()+151);
+        $(".maincontent").css("height",$("#evalgoalscontainer").height()+151);
     });
 
     function setWidth() {
@@ -503,7 +528,7 @@
                 $(o).css("min-width",c);
             });
 
-         //   $("#evalgoalscontainer .nav-tabs,#evalgoalscontainer").css("max-width",c);
+            //   $("#evalgoalscontainer .nav-tabs,#evalgoalscontainer").css("max-width",c);
 
 
 
@@ -557,25 +582,65 @@
             $('#reporteeattachments_'+goalid).fadeOut();
             $('#employeecomment_'+goalid).closest(".scroll-pane").css("height", "283px");
             $('#employeecomment_'+goalid).fadeIn();
-        
+
         }
-       
-      
+
+
     }
 
 </script>
 <style>
+
+    .bordered-themeprimary {
+  border-color: #2dc3e8 !important;
+}
+
+
+.well.bordered-left {
+  border-left: 5px solid #2dc3e8;
+}
+    .bordered-yellow {
+ border-color: #ffce55  !important;
+}
+
+.bordered-red {
+ border-color: #df5138  !important;
+}
+
+.well {
+  -webkit-border-radius: 2px;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 2px;
+  -moz-background-clip: padding;
+  border-radius: 2px;
+  background-clip: padding-box;
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  background-color: #fbfbfb;
+  border: 0;
+  color: #262626;
+  position: relative;
+  margin-bottom: 30px;
+  min-height: 0px;
+    display:inline-block;
+  /*#region Bordered Well*/
+  /*#endregion Bordered Well*/
+  /*#region Colored Well*/
+  /*#endregion Bordered Well*/
+}
+
      .va-title.expandedpane {
     background-color: rgb(55, 70, 89) !important;
     color: white !important;
 }
         #fixedheader h2 span {
             background-image:url(@Url.Content("~/images/closeButton.png"));
-            
-            color:gray; 
-            font-family:Arial; 
+
+            color:gray;
+            font-family:Arial;
             padding-left:3px;
-            cursor:pointer; 
+            cursor:pointer;
             width:32px;
             height:32px;
             vertical-align:top;
@@ -718,7 +783,7 @@
         .scroll-pane,
         .scroll-pane-arrows {
             width: 100%;
-            height: 200px;
+            /*height: 200px;*/
             overflow: auto;
         }
 
@@ -820,7 +885,7 @@
     display:block;
     }
      .readonlyrating {
-    
+
       background-color:orange;
         font-weight:600;
         text-align:center;
@@ -828,5 +893,27 @@
         font-size:15pt;
         padding:5px;
         border-radius:5px;
+    }
+    #va-accordion h3,#va-accordion  .h3
+    {
+        margin-bottom:2px;
+        border-bottom:2px solid, gray;
+
+    padding:10px;
+    }
+    .va-content ul li a{
+        font-size: 15px;
+    font-weight:bold;
+    color:#2DC3E8;
+    }
+     .va-content ul li {
+        list-style:none;
+    }
+    #historicaldatacontent .navbar
+    {
+        display:none;
+    }
+    ..va-content{
+    margin-left:0px;
     }
 </style>

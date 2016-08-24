@@ -55,8 +55,145 @@
         }
     }
 
+    <style>
+        .navbar {
+    border: medium none;
+    height: 45px;
+    margin: 0;
+    min-height: 45px;
+    padding: 0;
+    z-index: 200;
+}
+        .navbar .navbar-inner {
+    background: #2dc3e8 none repeat scroll 0 0;
+    border: 0 none;
+    border-radius: 0;
+    margin: 0;
+    min-height: 45px;
+    padding-left: 0;
+    padding-right: 0;
+    position: relative;
+}
+        .navbar .navbar-inner .navbar-container {
+    padding-left: 10px;
+}
+        .navbar .navbar-inner .navbar-header .navbar-account {
+    height: 45px;
+}
+        .navbar .navbar-inner .navbar-header .navbar-account .account-area, .navbar .navbar-inner .navbar-header .navbar-account .setting-container, .navbar .navbar-inner .navbar-header .navbar-account .setting {
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: all 0.9s ease 0s;
+}
+.navbar .navbar-inner .navbar-header .navbar-account .account-area {
+    display: inline-block;
+    list-style: outside none none;
+    margin-bottom: 0;
+    opacity: 1;
+    position: absolute;
+    right: 50px;
+    top: 0;
+}
+.navbar .navbar-inner .navbar-header .navbar-account .account-area {
+    list-style: outside none none;
+}
+.navbar .navbar-inner .navbar-header .navbar-account .account-area > li {
+    float: left;
+    height: 45px;
+    position: relative;
+}
+.navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section h2 span {
+    color: #fff;
+    display: block;
+    line-height: 25px;
+    overflow: hidden;
+    text-decoration: none;
+    text-overflow: ellipsis;
+}
+.navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section h2 {
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    white-space: nowrap;
+    font-family: "Open Sans","Segoe UI";
+    font-weight: 300 !important;
+}
+.navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area section {
+    display: block;
+    float: left;
+    line-height: 25px;
+    overflow: hidden;
+    width: auto;
+}
+.navbar .navbar-inner .navbar-header .navbar-account .account-area .login-area {
+    cursor: pointer;
+    height: 45px;
+    opacity: 1;
+    padding: 8px 20px 10px;
+    position: relative;
+}
+.navbar .navbar-inner .navbar-header .navbar-account .account-area > li > a {
+    display: inline-block;
+    height: 45px;
+    min-width: 50px;
+    position: relative;
+}
 
+    </style>
 
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="navbar-container">
+                <!-- Navbar Barnd -->
+                <div class="navbar-header pull-left">
+                    <a class="navbar-brand" href="#">
+                        <small>
+                            <img alt="" src="assets/img/logo.png">
+                        </small>
+                    </a>
+                </div>
+                <!-- /Navbar Barnd -->
+                <!-- Sidebar Collapse -->
+                <div id="sidebar-collapse" class="sidebar-collapse">
+                    <i class="collapse-icon fa fa-bars"></i>
+                </div>
+                <!-- /Sidebar Collapse -->
+                <!-- Account Area and Settings --->
+                <div class="navbar-header pull-right">
+                    <div class="navbar-account">
+                        <ul class="account-area">
+                          
+                            <li>
+                                <a data-toggle="dropdown" >
+                                   
+                                    <section style="padding-top:15px;">
+                                        @if (ViewBag.Me.ProfilePix == null || ViewBag.Me.ProfilePix.Count() == 0)
+                                        {
+                                            <span class="fa fi-torso"></span>
+                                        }
+                                        else
+                                        {
+                                            <img style="width:75px;" alt="@ViewBag.Me.FirstName @ViewBag.Me.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(ViewBag.Me.ProfilePix))" class="actualphoto">
+                                        }
+                                        <span style="padding-left:5px;vertical-align:top;color:white;"><span>@ViewBag.Me.FirstName @ViewBag.Me.LastName</span></span>
+                                    </section>
+                                </a>
+                                <!--Login Area Dropdown-->
+                           
+                                <!--/Login Area Dropdown-->
+                            </li>
+                            <!-- /Account Area -->
+                            <!--Note: notice that setting div must start right after account area list.
+                            no space must be between these elements-->
+                            <!-- Settings -->
+                        </ul>
+                        <!-- Settings -->
+                    </div>
+                </div>
+                <!-- /Account Area and Settings -->
+            </div>
+        </div>
+    </div>
     <div class="row maincontent" style="height: 1000px;">
 
 
@@ -231,7 +368,7 @@
         }
 
         #penav_me {
-            margin-top: 10px;
+            /*margin-top: 10px;*/
         }
 
         .stopimpersonating {
@@ -254,18 +391,29 @@
             }
 
         .icon-bar a.selected {
-            background-color: #f5f5f5;
-            color: black !important;
+            background-color: #2dc3e8;
+            color: #fff !important;
             border-bottom-left-radius: 4px;
             border-top-left-radius: 4px;
         }
 
         .icon-bar > .item:hover > i, .icon-bar > .item:hover > label {
-            color: #FFF;
+            color: #2dc3e8 ;
         }
 
         .icon-bar > .item.selected:hover > i, .icon-bar > .item.selected:hover > label, .icon-bar a.selected > i, .icon-bar a.selected > label {
-            color: black;
+            color: #fff;
+        }
+        .icon-bar > a:hover {
+        background-color: #fff;
+        color:#2dc3e8;
+        }
+        [class^="icon-"], [class*=" icon-"] {
+        background-image:none!important;
+        }
+        .icon-bar > a.selected:hover {
+        color: #fff;
+        background-color:#2dc3e8;
         }
         /*.columns.sidebar {
                 float: left;
@@ -386,15 +534,15 @@
             position: fixed;
             width: 0;
             height: 100%;
-            background: #374659 none repeat scroll 0 0;
+            background: #fff none repeat scroll 0 0;
         }
 
         .move-right .left-off-canvas-menu {
-            width: 86px;
+            width: 90px;
         }
 
         .icon-bar {
-            background: #374659 none repeat scroll 0 0;
+            background: #fff none repeat scroll 0 0;
         }
 
         .move-right .exit-off-canvas {
@@ -436,7 +584,7 @@
         }
 
         .left-off-canvas-menu {
-            box-shadow: none !important;
+            /*box-shadow: none !important;*/
         }
 
         .introjs-button {

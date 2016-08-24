@@ -19,9 +19,10 @@ namespace MvcApplication2.Controllers
         EvaluationViewModel evaluationViewModel = new EvaluationViewModel();
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
+            base.Initialize(requestContext);
             empEvalService = new EmployeeEvaluationService(OrgId, AppName);
             goalservice = new GoalService(OrgId, AppName);
-            base.Initialize(requestContext);
+           
         }
 
         public EvaluationController()

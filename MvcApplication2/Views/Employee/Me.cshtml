@@ -12,26 +12,7 @@
 <script type="text/javascript" src="@Url.Content("~/scripts/jquery.jscrollpane.min.js")"></script>
 
 <div id="mycoutercontainer" class="row">
-    <div class="welcomeblock large-6 columns card-plain" style="text-align:center;border-top: 2px solid navy;">
-        @if (Model.Myself.ProfilePix == null || Model.Myself.ProfilePix.Count() == 0)
-        {
-
-            <img alt="@Model.Myself.FirstName @Model.Myself.LastName" style="width:75px" src="@Url.Content("~/images/follower-man-user-login-round-512.png")">
-            <br /><span class="alert-warning" style="padding:3px; padding-right:5px;padding-left:5px; border-radius:2px;"><span class="fi fi-alert" style="color:white;font-weight:600;font-size:20px;padding-right:5px;"></span>Looks like you dont have a photo in outlook!</span>
-        }
-        else
-        {
-            <img style="width:100px;margin-top:15px;" alt="@Model.Myself.FirstName @Model.Myself.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.Myself.ProfilePix))" class="actualphoto">
-        }
-        @*<img src="@Url.Content("~/images/follower-man-user-login-round-512.png")" />*@
-        <h1>Welcome, @Model.Myself.FirstName  </h1>
-        This portal is a place where everything related to your job is stored.<br>
-        <br>
-        Your contact info is all setup.<br>
-        <a href="mailto:@Model.Myself.Email">@Model.Myself.Email</a><br>
-        <span class="designation">@Model.Designation</span><br>
-        @Model.Myself.Phone
-    </div>
+   
 
 
     @*This is the template*@
@@ -134,7 +115,7 @@
             <div class=" panel panel-default">
                 <div class="panel-heading">
                     <div class="panel-title-box">
-                        <h3 class="panel-title">Your Contact Liaisons:</h3>
+                        <h3 class="panel-title">Your Contact Liaisons</h3>
 
                     </div>
 
@@ -201,7 +182,7 @@
         <div class=" panel panel-default">
             <div class=" panel-heading">
                 <div class="panel-title-box">
-                    <h3 class="panel-title">Pending Tasks:</h3>
+                    <h3 class="panel-title">Pending Tasks</h3>
                 </div>
             </div>
 
@@ -291,7 +272,7 @@
             }
         </div>
     </div>*@
-<div class="row">
+@*<div class="row">
     <div class="toolsandpeopleblock large-12 columns" style="text-align:center;" data-step="4" data-intro="These are some suseful link that you can use.">
         <div class=" panel panel-default">
             <div class="panel-heading">
@@ -358,7 +339,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <div id="tourpref_popup" class="modal fade" role="dialog">
     <div class="modal-dialog  large-8 small-5">
 

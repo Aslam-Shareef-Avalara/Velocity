@@ -26,9 +26,9 @@ namespace MvcApplication2.Controllers
         private int rejected = 0;
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
-
-            employeeService = new EmployeeService(OrgId, AppName);
             base.Initialize(requestContext);
+            employeeService = new EmployeeService(OrgId, AppName);
+           
         }
 
         public ActionResult GetFixedGoals()
