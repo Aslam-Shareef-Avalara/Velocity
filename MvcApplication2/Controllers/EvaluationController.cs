@@ -146,8 +146,10 @@ namespace MvcApplication2.Controllers
                 if (attch != null && attch.Count > 0)
                     evaluationViewModel.Attachments.AddRange(attch);
             }
-            if (selfevaldisplay)
+            if (selfevaldisplay && !ControllerContext.IsChildAction)
                 return View("SelfEvaluation", evaluationViewModel);
+            else if (selfevaldisplay && ControllerContext.IsChildAction)
+                return PartialView("SelfEvaluation", evaluationViewModel);
             else
             {
                 evaluationViewModel.Feedbackanswers = db.FeedbackAnswers.Where(x => x.EmployeeId == empid && x.EvalCycleId == evalcycleid).ToList();
@@ -160,7 +162,7 @@ namespace MvcApplication2.Controllers
                 ViewBag.ShowFeedback = false;
                 ViewBag.ShowSelfRating = false;
                 ViewBag.Evalcycleid = evalcycleid;
-                return View("HrEvaluation", evaluationViewModel);
+                return PartialView("HrEvaluation", evaluationViewModel);
             }
         }
 

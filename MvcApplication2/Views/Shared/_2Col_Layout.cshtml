@@ -167,13 +167,13 @@
                                 <a data-toggle="dropdown" >
                                    
                                     <section style="padding-top:15px;">
-                                        @if (ViewBag.Me.ProfilePix == null || ViewBag.Me.ProfilePix.Count() == 0)
+                                        @if (ViewBag.Me.ProfilePix == null || ViewBag.Me.ProfilePix.Length == 0)
                                         {
                                             <span class="fa fi-torso"></span>
                                         }
                                         else
                                         {
-                                            <img style="width:75px;" alt="@ViewBag.Me.FirstName @ViewBag.Me.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(ViewBag.Me.ProfilePix))" class="actualphoto">
+                                            <img style="width:25px;" alt="@ViewBag.Me.FirstName @ViewBag.Me.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(ViewBag.Me.ProfilePix))" class="actualphoto">
                                         }
                                         <span style="padding-left:5px;vertical-align:top;color:white;"><span>@ViewBag.Me.FirstName @ViewBag.Me.LastName</span></span>
                                     </section>

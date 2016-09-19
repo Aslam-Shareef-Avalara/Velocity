@@ -1,5 +1,8 @@
 ﻿@model MvcApplication2.ViewModel.EvaluationViewModel
-
+@{
+    
+    //Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
 @functions{
     public string translateRating(int rating)
     {
@@ -91,7 +94,7 @@
     </div>
 </div>
 
-<div id="evalgoalscontainer" class="row">
+<div id="hrevalgoalscontainer" class="row">
     <div class="large-12 end">
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#GoalsAndEvaluations">Goals/Evaluations</a></li>
@@ -105,7 +108,7 @@
         </ul>
         <div class="tab-content">
             <div id="GoalsAndEvaluations" class="tab-pane fade in active">
-                <div id="va-accordion" class="va-container" style="margin-top:26px;padding-right:10px;">
+                <div  class="va-container" style="margin-top:26px;padding-right:10px;">
                     @*<div class="va-nav">
                             <span class="va-nav-prev" style="top:10px;" title="Previous goal">Previous</span>
                             <span class="va-nav-next" style="bottom:10px;" title="Next goal">Next</span>
@@ -121,12 +124,12 @@
 
                     <div class="va-content" style="margin-top:10px;">
 
-                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-10 col-sm-10 col-xs-10">
                             <div class="well bordered-left bordered-themeprimary">
 
-                                <a data-toggle="tab" href="#description_@g.gid">Description</a>
+                                <a data-toggle="tab" class="contenttitle" href="#description_@g.gid">Description</a>
                                 <div id="description_@g.gid" class="tab-pane fade in active">
-                                    <div class="scroll-pane" style="float:left;display:inline-block;width:100%;overflow-y:auto;">
+                                    <div class="scroll-pane" style="display:inline-block;width:100%;overflow-y:auto;">
 
                                         <p>
                                             @Html.Raw(g.Goal1)
@@ -137,17 +140,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-10 col-sm-10 col-xs-10">
                             <div class="well bordered-left bordered-yellow">
-                                <a data-toggle="tab" href="#selfevaluation_@g.gid">Self Evaluation</a>
-                                <div id="selfevaluation_@g.gid" class="selfeval tab-pane fade">
-                                    <div class="scroll-pane" style="float:left;display:inline-block;width:100%;overflow-y:auto;">
+                                <a data-toggle="tab" class="contenttitle" href="#selfevaluation_@g.gid">Self Evaluation</a>
+                                <div class="ratingcontainer pull-right">
+                                    <div class="readonlyrating" id="rating_@g.gid">@translateRating(GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value : 0) </div>
+                                </div>
+                                <div id="selfevaluation_@g.gid" class="selfeval tab-pane ">
+                                    <div class="scroll-pane" style="display:inline-block;width:100%;overflow-y:auto;">
                                         @{ var se = GetValidEmployeeEvalObj(g.gid);
                                          var attachments = Model.Attachments.Where(x => x.EvaluationGoalId == se.Id && x.EvaluationType == DataService.EvaluationType.SELF_EVALUATION).ToList();
                                         }
-                                        <div class="ratingcontainer pull-left">
-                                            <p style="margin-bottom:0px!important;margin-top:5px;">Self-rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value : 0) </div>
-                                        </div>
+                                        
                                         @if (attachments != null && attachments.Count > 0)
                                         {
                                             <div class="pull-right" style="padding-left:15px">
@@ -185,13 +189,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-10 col-sm-10 col-xs-10">
                             <div class="well bordered-left bordered-red">
-                                <a data-toggle="tab" href="#mgrevaluation_@g.gid">Manager Evaluation</a><div id="mgrevaluation_@g.gid" class="mgreval tab-pane fade">
-                                    <div class="scroll-pane" style="float:left;display:inline-block;width:100%;overflow-y:auto;">
-                                        <div class="ratingcontainer pull-left">
-                                            <p style="margin-bottom:0px!important;margin-top:5px;">Manager Rating : </p><div class="readonlyrating" id="rating_@g.gid">@translateRating(@mgrE.GoalRating.HasValue ? @mgrE.GoalRating.Value : 0) </div>
-                                        </div>
+                                <a data-toggle="tab" class="contenttitle" href="#mgrevaluation_@g.gid">Manager Evaluation</a>
+                                <div class="ratingcontainer pull-right">
+                                    <div class="readonlyrating" id="rating_@g.gid">@translateRating(@mgrE.GoalRating.HasValue ? @mgrE.GoalRating.Value : 0) </div>
+                                </div>
+                                <div id="mgrevaluation_@g.gid" class="mgreval tab-pane ">
+                                    <div class="scroll-pane" style="display:inline-block;width:100%;overflow-y:auto;">
+
 
                                         <br />
                                         <div class="q pull-left">
@@ -202,25 +208,30 @@
                                     </div>
                                 </div>
                             </div>
-                                    <div id="reporteeattachments" class="pull-left clear-fix" style="padding-top:10px;width:100%">
-                                        @{
+                            <div id="reporteeattachments" class="pull-left clear-fix" style="padding-top:10px;width:100%">
+                                @{
                         attachments = Model.Attachments.Where(x => x.EvaluationGoalId == mgrE.Id && x.EvaluationType == DataService.EvaluationType.MANAGER_EVALUATION).ToList();
-                                        }
-                                        @if (attachments != null && attachments.Count > 0)
-                                        {
+                                }
+                                @if (attachments != null && attachments.Count > 0)
+                                {
 
-                                            <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
+                                    <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
 
-                                            foreach (DataService.Attachment attachment in attachments)
-                                            {
-                                                <span class="label label-default label-form">
-                                                    <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
-                                                </span>
-                                            }
-                                        }
-                                    </div>
+                                    foreach (DataService.Attachment attachment in attachments)
+                                    {
+                                        <span class="label label-default label-form">
+                                            <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
+                                        </span>
+                                    }
+                                }
+                            </div>
 
-                                </div>
+                        </div>
+
+
+
+
+
                                
 
 
@@ -393,7 +404,7 @@
     $(document).ready(function(){
 
         $('.nav-tabs a').on('shown.bs.tab', function(){
-            $('.scroll-pane:visible').jScrollPane({
+            $('#hrevalgoalscontainer .scroll-pane:visible').jScrollPane({
                 showArrows: true,
                 horizontalGutter: 10
             });
@@ -405,16 +416,18 @@
         adjustHeaderWidth();
         $(window).resize(function(){
             adjustHeaderWidth();
-            $(".maincontent").css("height",$("#evalgoalscontainer").height()+151);
+            $(".maincontent").css("height",$("#hrevalgoalscontainer").height()+151);
         });
-        $(".maincontent").css("height",$("#evalgoalscontainer").height()+151);
+        $(".maincontent").css("height",$("#hrevalgoalscontainer").height()+151);
 
         @if (ViewBag.ShowFeedback!=true) // This means we are showing to employees
         {
              <text>
-        $(".hreval").closest(".inner-wrap").addClass("removemargin");
+      //  $(".hreval").closest(".inner-wrap").addClass("removemargin");
         </text>
          }
+         
+        window.resizeBy(1,1);
     });
     function adjustHeaderWidth()
     {
@@ -457,7 +470,7 @@
             header: "fa fa-plus",
             activeHeader: "fa fa-minus"
         };
-        $('#va-accordion').accordion({
+        $('#GoalsAndEvaluations .va-container').accordion({
             //accordionW: "100%",
             //accordionH: ((500+50*@Model.Goals.Count)+20),// 20 is for additional padding
             //expandedHeight	: 500,
@@ -512,23 +525,23 @@
 
         setWidth() ;
 
-        $(".maincontent").css("height",$("#evalgoalscontainer").height()+151);
+        $(".maincontent").css("height",$("#hrevalgoalscontainer").height()+151);
     });
 
     function setWidth() {
         setTimeout(function(){
             adjustHeaderWidth();
-            var c = $(".va-content").width();
+            var c = $("#hrevalgoalscontainer .va-content").width();
             if(c<200)
             {
                 setWidth();
                 return;
             }
-            $(".scroll-pane").each(function(i,o){
-                $(o).css("min-width",c);
-            });
+            //$("#hrevalgoalscontainer .scroll-pane").each(function(i,o){
+            //    $(o).css("min-width",c);
+            //});
 
-            //   $("#evalgoalscontainer .nav-tabs,#evalgoalscontainer").css("max-width",c);
+            //   $("#hrevalgoalscontainer .nav-tabs,#hrevalgoalscontainer").css("max-width",c);
 
 
 
@@ -537,7 +550,7 @@
 
     function externalEventHandler_Navigate() {
         var idoftitle="";
-        $(".va-slice").each(function(i,o){
+        $("#hrevalgoalscontainer .va-slice").each(function(i,o){
             if($(o).data("expanded"))
             {
                 idoftitle = $(o).attr("id");
@@ -545,7 +558,7 @@
                 return false;
             }
         });
-        $(".va-slice").each(function(i,o){
+        $("#hrevalgoalscontainer .va-slice").each(function(i,o){
             $("#"+$(o).attr("id") +" .va-title").removeClass("expandedpane");
         });
         $("#"+idoftitle +" .va-title").addClass("expandedpane");
@@ -556,15 +569,15 @@
 
         automove=true;
         setTimeout(function(){
-            if($(".scroll-pane:visible").data("eval_scrollpane")=="initialized")
+            if($("#hrevalgoalscontainer .scroll-pane:visible").data("eval_scrollpane")=="initialized")
                 return;
-            $('.scroll-pane:visible').jScrollPane({
+            $('#hrevalgoalscontainer .scroll-pane:visible').jScrollPane({
                 showArrows: true,
                 horizontalGutter: 10
             });
         },350);
         try{
-            $(".maincontent").css("height",$("#evalgoalscontainer").height()+151);
+            $(".maincontent").css("height",$("#hrevalgoalscontainer").height()+151);
         }
         catch(x){}
     }
@@ -594,6 +607,9 @@
     .bordered-themeprimary {
   border-color: #2dc3e8 !important;
 }
+     .bordered-themeprimary a{
+  color: #2dc3e8 !important;
+}
 
 
 .well.bordered-left {
@@ -602,9 +618,15 @@
     .bordered-yellow {
  border-color: #ffce55  !important;
 }
+.bordered-yellow a{
+ color: #ffce55  !important;
+}
 
 .bordered-red {
  border-color: #df5138  !important;
+}
+    .bordered-red a{
+ color: #df5138  !important;
 }
 
 .well {
@@ -623,7 +645,7 @@
   position: relative;
   margin-bottom: 30px;
   min-height: 0px;
-    display:inline-block;
+    display:block;
   /*#region Bordered Well*/
   /*#endregion Bordered Well*/
   /*#region Colored Well*/
@@ -890,18 +912,18 @@
         font-weight:600;
         text-align:center;
         color:black;
-        font-size:15pt;
+        font-size:15px;
         padding:5px;
         border-radius:5px;
     }
-    #va-accordion h3,#va-accordion  .h3
+    #GoalsAndEvaluations .va-container h3,#GoalsAndEvaluations .va-container  .h3
     {
         margin-bottom:2px;
         border-bottom:2px solid, gray;
 
     padding:10px;
     }
-    .va-content ul li a{
+    #GoalsAndEvaluations .va-container .va-content ul li a{
         font-size: 15px;
     font-weight:bold;
     color:#2DC3E8;
@@ -913,7 +935,12 @@
     {
         display:none;
     }
-    ..va-content{
+    #GoalsAndEvaluations .va-container .va-content{
     margin-left:0px;
+    }
+    .contenttitle
+    {
+        font-size:16px;
+    font-weight:bold;
     }
 </style>
