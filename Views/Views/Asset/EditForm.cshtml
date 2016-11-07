@@ -1,0 +1,72 @@
+﻿@model  DataService.InventoryManagement.Asset
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ItemMasterId, "ItemMasterId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ItemMasterId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ItemMasterId,"" , new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GRNId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GRNId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GRNId,"" , new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsAssetized, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <!--div class="checkbox"-->
+                    @Html.EditorFor(model => model.IsAssetized, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.IsAssetized,"" , new { @class = "text-danger" })
+                <!--/div-->
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetTag, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AssetTag, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AssetTag,"" , new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetizedBy, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AssetizedBy, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AssetizedBy,"" , new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetizedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AssetizedDate, "Date")
+                @Html.ValidationMessageFor(model => model.AssetizedDate,"" , new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Comment,"" , new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsIssued, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <!--div class="checkbox"-->
+                    @Html.EditorFor(model => model.IsIssued, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.IsIssued,"" , new { @class = "text-danger" })
+                <!--/div-->
+            </div>
+        </div>
+
+
+

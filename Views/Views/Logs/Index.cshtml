@@ -1,0 +1,54 @@
+﻿@using X.Scaffolding.Core
+@using PagedList.Mvc;
+@model PagedList.IPagedList<DataService.Log>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+</p>
+<table class="table table-hover">
+    <tr>
+        <th>Id</th>
+        <th>Log Type</th>
+        <th>Message</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                <span class="@item.Level">@item.Level</span>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Message)
+            </td>
+           
+        </tr>
+    }
+
+</table>
+
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
+<style>
+    .navbar-fixed-bottom, .navbar-fixed-top {
+    position:relative!important;
+    }
+    .ERROR {
+     color:red;
+    }
+
+    .INFO {
+    color:blue;
+    }
+</style>

@@ -1,0 +1,68 @@
+﻿@using X.Scaffolding.Core
+@model MvcApplication2.Models.FeedbackModel
+
+<h1>Feedback for @Model.Evalcycle.Title (@Model.Evalcycle.Description)</h1>
+@functions{
+    public string NormalizeAnswers(DataService.FeedbackAnswer fbans) {
+
+        if (fbans == null || string.IsNullOrEmpty(fbans.Answer) || string.IsNullOrWhiteSpace(fbans.Answer))
+        {
+            return "Feedback not provided";
+        }
+        else return fbans.Answer;
+    }
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table class="table table-hover">
+        <tr>
+            <th>Question</th>
+            <th>Feedback Answer</th>
+            <th class="controls-head"></th>
+        </tr>
+
+        @foreach (var item in Model.Questions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Question)
+                </td>
+                <td>
+                    @if (Model.IsEditable)
+                    {
+                        if (Model.Options.Any(x => x.QuestionId == item.QuestionId))
+                        {
+                            <select id="answer_@item.QuestionId" name="answer_@item.QuestionId">
+                                @foreach (DataService.FeedbackAnswerOption answer_option in Model.Options.Where(x => x.QuestionId == item.QuestionId).ToList())
+                                {
+                                    <option value="@answer_option.AnswerOption">@answer_option.AnswerOption</option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <textarea id="answer_@item.QuestionId" name="answer_@item.QuestionId"></textarea>
+                        }
+                    }
+                    else
+                    {
+                        @NormalizeAnswers(Model.Answers.FirstOrDefault(x => x.QuestionId == item.QuestionId))
+                    }
+                </td>
+
+            </tr>
+        }
+
+    </table>
+    if (Model.IsEditable) { 
+    <button type="submit" value="Save" class="btn btn-success ">Save</button>
+    }
+    else
+    { 
+        <text>
+            <div class="message-box message-box-success">Your feedback has been submitted.</div>
+        </text>
+    }
+}
+
+

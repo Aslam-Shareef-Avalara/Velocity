@@ -1,0 +1,108 @@
+﻿@using X.Scaffolding.Core
+@model DataService.Goal
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>Goal</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Goal1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Goal1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fixed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fixed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Publshed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Publshed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Draft)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Draft)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Saved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Saved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Approved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Approved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EvaluationCycle.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EvaluationCycle.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Organization.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Organization.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.gid }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,56 @@
+﻿@using X.Scaffolding.Core
+@model DataService.FeedbackQuestion
+
+@{
+    ViewBag.Title = "Create Feedback Question";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Question
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextAreaFor(model => model.Question)                 
+                @Html.ValidationMessageFor(model => model.Question)
+            </div>
+        </div>
+
+        <div class="form-group" style="display:none;">
+            <label class="control-label col-md-2">
+            OrgId
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.OrgId)                 
+                @Html.ValidationMessageFor(model => model.OrgId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Questions", null, new { @class = "btn btn-default" })
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $("#OrgId").val("@ViewBag.OrgId");
+    });
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

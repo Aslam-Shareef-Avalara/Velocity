@@ -1,0 +1,148 @@
+﻿@{
+    Layout = null;
+}
+@if (ViewBag.PerformanceData != null && ViewBag.PerformanceData.Count >= 2)
+        {
+<style>
+    .flipimage {
+        -moz-transform: scaleY(-1);
+        -o-transform: scaleY(-1);
+        -webkit-transform: scaleY(-1);
+        transform: scaleY(-1);
+        filter: FlipV;
+        -ms-filter: "FlipV";
+    }
+</style>
+<script src="~/Scripts/chart.js"></script>
+<div id="rollup" style="width:100%;display:inline-block; margin-bottom:20px;">
+    <div  id="rolluphead" style="font-size:15pt;cursor:pointer;background-color:lightblue;padding:10px;vertical-align:middle;border-radius:5px;height:auto"><img class="flipimage toggle" src="~/images/down-arrow-circle-md.png" width="25"/><span class="fa fa-bar-chart" style="margin-right:10px;margin-left:20px;"></span>Performance Metrics <span style="font-size:10pt;" id="clickmsg">(click to view/hide)</span> <img src="~/Images/blinking_new.gif" ></div>
+    <div id="rollupbody" style="padding-top:10px;border:thin solid lightgray;border-radius:5px; height:auto;display:inline-block;">
+       
+            <div class="large-4 columns ">
+                <div class="widget widget-default widget-item-icon" id="fixedgoals" style="height:440px;">
+                    <div class="widget-data1" style="height:386px;padding-left:10px;">
+                        <div class="widget-int num-count"><span style="font-size:12px;vertical-align:middle;">@ViewBag.Salutation Performance</span></div>
+                        <canvas id="performance" width="350" height="325"></canvas>
+                    </div>
+
+                </div>
+            </div>
+            @{
+                int _i = 1;
+            foreach (string key in ((System.Collections.Hashtable)ViewBag.SuccessTraitsData).Keys)
+            {
+                _i++;
+                List<MvcApplication2.Models.PerformanceChartModel> successTraitData = (List<MvcApplication2.Models.PerformanceChartModel>)((System.Collections.Hashtable)ViewBag.SuccessTraitsData)[key];
+                <text>
+                    <div class="large-4 columns ">
+                        <div class="widget widget-default widget-item-icon" id="successTrait_@_i" style="height:440px;">
+                            <div class="widget-data1" style="height:386px;padding-left:10px;">
+                                <div class="widget-int num-count"><span style="font-size:12px;vertical-align:middle;">@ViewBag.Salutation @key trend</span></div>
+                                <canvas id="performance_@_i" width="350" height="325"></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </text>
+                <script>
+                    var statlabel@_i = [];
+                    var statdata@_i = [];
+                    @foreach (MvcApplication2.Models.PerformanceChartModel stat in successTraitData)
+                        {
+                             <text>
+                                statlabel@(_i).push("@stat.PETitle");
+                                statdata@(_i).push(@stat.Rating);
+                            </text>
+                        }
+                    
+                    var data@_i = {
+                        labels: statlabel@_i, //["Goals Not Set", "Self-Evaluating", "Manager Evaluating", "HR Audit", "Final Publish Pending", "Published"],
+                    datasets: [
+                        {
+                            label: "Performance Stats",
+                            fillColor: "rgba(220,220,220,0.2)",
+                            strokeColor: "rgba(255,179,71,0.9)",
+                            highlightFill: "rgba(255,179,71,0.9)",
+                            highlightStroke: "rgba(100,70,28,0.9)",
+                            pointColor: "rgba(220,0,0,0)",
+                            pointStroke: "rgba(220,0,0,0)",
+                            data: statdata@_i,
+                        datasetFill: false
+
+                    }
+                    ]
+                    };
+                    var ctx@_i = $("#performance_@_i").get(0).getContext("2d");
+                    var peStatsChart@_i = new Chart(ctx@_i).Line(data@_i, {
+                    scaleOverride: true,
+                    scaleStartValue: 0,
+                    scaleStepWidth: 1,
+                    scaleSteps: 5
+                    });
+                    
+                </script>
+
+                
+            }
+            }
+
+        
+    </div>
+</div>
+        }
+<script>
+
+    var statlabel1 = [];
+    var statdata1 = [];
+    $(document).ready(function () {
+             @if (ViewBag.PerformanceData != null && ViewBag.PerformanceData.Count>=2)
+             {
+                 foreach (dynamic stat in ViewBag.PerformanceData)
+                 {
+                     <text>
+                        statlabel1.push("@stat.PETitle");
+                        statdata1.push(@stat.Rating);
+                    </text>
+                }
+                <text>
+                var data1 = {
+                     labels: statlabel1, //["Goals Not Set", "Self-Evaluating", "Manager Evaluating", "HR Audit", "Final Publish Pending", "Published"],
+                     datasets: [
+                         {
+                             label: "Performance Stats",
+                             fillColor: "rgba(255,179,71,0.4)",
+                             strokeColor: "rgba(255,179,71,1)",
+                             highlightFill: "rgba(255,179,71,0.9)",
+                             highlightStroke: "rgba(100,70,28,0.9)",
+                             pointColor: "rgba(220,220,220,1)",
+                             data: statdata1
+                   
+                         }
+                     ]
+                 };
+                 var ctx1 = $("#performance").get(0).getContext("2d");
+                 var peStatsChart1 = new Chart(ctx1).Line(data1, {
+                     scaleOverride: true,
+                     scaleStartValue: 0,
+                     scaleStepWidth: 1,
+                     scaleSteps: 5
+                 });
+                 </text>
+            }
+        setTimeout(function () {
+            $("#rollupbody").slideUp(function () {
+                $("#rolluphead .toggle").toggleClass("flipimage");
+            });
+        }, 1000);
+        
+        $("#rolluphead").click(function () {
+            $("#rolluphead .toggle").toggleClass("flipimage");
+            $("#rollupbody").slideToggle(function () {
+                //$("canvas").width = $(".widget-data1")[0].offsetWidth - 100;
+            });
+        });
+    });
+    
+
+</script>

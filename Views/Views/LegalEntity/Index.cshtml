@@ -1,0 +1,36 @@
+﻿@model IEnumerable<DataService.InventoryManagement.LegalEntity>
+
+@{
+    ViewBag.Title = "Index"; 
+  Layout = "~/Views/Shared/_InvLayoutPage.cshtml";
+}
+<style type='text/css'>
+    
+    td:nth-child(2){text-align: right;}
+</style>
+<h2>Index</h2>
+<h4></h4>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+
+    </tr>
+}
+
+</table>

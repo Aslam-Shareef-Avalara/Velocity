@@ -1,0 +1,106 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie6" lang="en"><![endif]-->
+<!--[if IE 7]><html class="ie7" lang="en"><![endif]-->
+<!--[if IE 8]><html class="ie8" lang="en"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>File Not Found | Velocity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="~/Content/aqvatarius.css" rel="stylesheet" />
+    @*<link rel="stylesheet" href="/static/css/global_static_import.css" media="screen, print" />
+    <link rel="stylesheet" href="/static/css/sections/error.css" media="screen, print" />*@
+    <!--[if IE 6]><link rel="stylesheet" href="/static/css/fix/ie6.css" media="screen, print" /><![endif]-->
+    <!--[if IE 7]><link rel="stylesheet" href="/static/css/fix/ie7.css" media="screen, print" /><![endif]-->
+
+    @*<script src="/static/js/library/modernizr.custom.js"></script>*@
+    <!--[if lte IE 8]><script src="/static/js/library/respond.min.js"></script><![endif]-->
+</head>
+
+<body id="page_static_error" style="line-height: 25px; margin: 0 0 0 10px;background-color:white;">
+    
+
+    <div class="container">
+        <div class="fields">
+            <div class="region size1of1">
+                <div id="header">
+                   
+
+                    <a id="logo" href="/" rel="home">
+                        <img src="@Url.Content("~/images/velocitylogo.png")" alt="Avalara Velocity" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container main_content" id="content" tabindex="0" style="background:url(@Url.Content("~/images/404.jpg")) bottom right no-repeat">
+        <div class="fields">
+            <h1 class="region size2of3">We&rsquo;re sorry &mdash; something has gone wrong on our&nbsp;end.</h1>
+        </div>
+
+        <div class="fields">
+            <div class="region size2of3 suffix1of3">
+                <h3>What could have caused this?</h3>
+                <ul>
+                    <li>Well, something technical went wrong on our site.</li>
+                    <li>We might have removed the page when we redesigned.</li>
+                    <li>Or the link you clicked might be old and does not work anymore.</li>
+                    <li>Or you might have accidentally typed the wrong URL in the address bar.</li>
+                </ul>
+
+                <h3>What you can do?</h3>
+                <ul>
+                    <li>You might try retyping the URL and trying again.</li>
+                    <li>Or we could take you back to the <a href="@Url.Content("~/")">Velocity home page</a>. </li>
+                    <li>Or you could <a href="@(Request.UrlReferrer == null ? Url.Content("~/") : Request.UrlReferrer.ToString())">go back </a> to find what you’re looking for.</li>
+                </ul>
+
+                <p>
+                    <strong>One more thing:</strong><br />
+                    If you want to help us fix this issue, we are here to help.  Please contact us and <a href="sip:aslam.shareef@avalara.com" >let us know what went wrong</a>. Be sure to let us know what Web Browser and Operating System you were using when this occurred.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- part of resourceSet: framework_js -->
+    @*<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/js/jquery-1.7.2.min.js"><\/script>')</script>
+    <script src="/static/js/sb/sb.js"></script>
+    <script src="/static/js/sb/sb.type.js"></script>
+    <script src="/static/js/sb/sb.console.js"></script>*@
+
+    <!-- part of resourceSet: global_js -->
+    @*<script src="/static/js/shared/sb.rwd.js"></script>
+    <script src="/static/js/global.js"></script>*@
+
+    <!--[if lte IE 6]><script src="/static/js/fix/lteie6.js"></script><![endif]-->
+
+    <script>
+			// Google Analytics
+			
+
+            function RedirectUrl()
+			{
+                try {
+                    var url = window.location.protocol + "//" + window.location.host + "/" + 'customer-service/contact/online-customer-feedback';
+                    window.parent.location = url;
+                }
+                catch (err)
+                {
+                }
+            }
+    </script>
+</body>
+</html>
