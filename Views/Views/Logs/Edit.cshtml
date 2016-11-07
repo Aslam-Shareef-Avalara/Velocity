@@ -1,0 +1,53 @@
+﻿@using X.Scaffolding.Core
+@model DataService.Log
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">        
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.HiddenFor(model => model.Date)
+
+        @Html.HiddenFor(model => model.Thread)
+
+        @Html.HiddenFor(model => model.Level)
+
+        @Html.HiddenFor(model => model.Logger)
+
+        @Html.HiddenFor(model => model.Message)
+
+        <div class="form-group">
+			<label class="control-label col-md-2">
+            Exception
+            </label>
+			<div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Exception)                 
+                @Html.ValidationMessageFor(model => model.Exception)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

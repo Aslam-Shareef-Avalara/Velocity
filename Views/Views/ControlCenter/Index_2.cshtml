@@ -1,0 +1,479 @@
+﻿@using System.Collections;
+@using X.Scaffolding.Core;
+@model Hashtable
+
+@{
+    ViewBag.Title = "HR Dashboard";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+   
+}
+<link href="~/Content/owl.carousel.css" rel="stylesheet" />
+<link href="~/Content/owl.theme.css" rel="stylesheet" />
+<script src="~/Scripts/owl.carousel.min.js"></script>
+@*<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />*@
+
+
+<link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<script>
+    var selectedmenuid = "hr";
+
+
+</script>
+<script src="~/Scripts/chart.js"></script>
+<a href="@Url.Content("~/controlcenter/ReCalculateRatings")">Click to Re-Calculate Ratings</a>
+<div class="row">
+    <div class="large-4 columns " style="text-align:center;">
+        <div class="widget widget-default widget-item-icon" id="StartPE" style="height:176px;">
+            <div class="widget-item-left">
+                <span class="fa fi-shield"></span>
+            </div>
+            <div class="widget-data">
+                <div class="widget-int num-count">Start a new PE Cycle</div>
+                <div class="widget-title"><a href="#dialog-form" style="text-decoration:underline;" onclick="ShowPEConfig()"> Start new cycle</a></div>
+                <div class="widget-subtitle">Click the above link to start a new employee evaluation cycle.</div>
+                <div class="pull-left" style="margin-bottom:15px;"><a style="text-decoration:underline" href="~/controlcenter/EditPECycles">Click here</a> to view edit evaluation cycles.</div>
+
+                <div class="widget-title"><a href="~/goals/getfixedgoals" style="text-decoration:underline;">View/Edit Fixed Goals</a></div>
+            </div>
+
+        </div>
+
+        <div id="lean_overlay" style="display: none; opacity: 0.5;"></div>
+    </div>
+    <div class="large-5 columns " style="text-align:center;">
+        <div class="widget widget-default widget-item-icon" id="currentcycles" style="height:176px;">
+            <div class="widget-item-left">
+                <span class="fa fi-graph-pie"></span>
+            </div>
+            <div class="widget-data">
+                <div class="widget-int num-count" style="float:none;">Current Cycle(s)</div>
+                <div id="nocyclestatus" style="display:none;"></div>
+                <div class="owl-carousel">
+                    <div id="licurrentcyclestatus0" class="item">
+                        <div id="currentcyclestatus0" class="currentcyclestatus">
+                            <span id="cycletype0" class="widget-title">Checking PE Cycle Status</span>
+                            <span id="percentcomplete0" class="medium-text-center">0%</span>
+                            <div class="progress">
+                                <div style="width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="licurrentcyclestatus1" class="item">
+                        <div id="currentcyclestatus1" class="currentcyclestatus" style="display:none;">
+                            <span id="cycletype1" class="widget-title">Checking PE Cycle Status</span>
+                            <span id="percentcomplete1" class="medium-text-center">0%</span>
+                            <div class="progress">
+                                <div style="width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="large-3 columns " style="text-align:center;">
+        <div class="widget widget-default widget-item-icon" id="cycle_ending_on" style="height:176px;">
+            <div class="widget-item-left">
+                <span class="fa fi-calendar"></span>
+            </div>
+            <div class="widget-data">
+                <div class="owl-carousel">
+                    <div class="item" id="goalending">
+                        <div class="widget-int num-count">Goal Cycle</div>
+                        <div class="widget-title"></div>
+                        <div class="widget-subtitle"></div>
+                    </div>
+                    <div class="item" id="evalending">
+                        <div class="widget-int num-count">Evaluation Cycle</div>
+                        <div class="widget-title"></div>
+                        <div class="widget-subtitle"></div>
+                    </div>
+                </div>
+            </div> @*Owlcrousel*@
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="large-4 columns " style="text-align:center; ">
+        <div class="widget widget-default widget-item-icon" id="evaluations" style="height:176px;">
+            <div class="widget-item-left">
+                <span class="fa fi-eye"></span>
+            </div>
+            <div class="widget-data">
+                <div class="widget-int num-count">View Evaluations</div>
+                <div class="widget-title"><a href="~/evaluation/EmployeeEvaluationStatus" style="text-decoration:underline;">View/Edit Evaluations</a></div>
+                <div class="widget-subtitle">Click the above link to view/publish/reject manager approved evaluations.</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="large-5 columns " style="text-align:center;">
+        <div class="widget widget-default widget-item-icon" id="Impersonate" style="height:176px;">
+            <div class="widget-item-left" style="height:160px;">
+                <img src="~/Images/impersonate.png" style="position: relative; top: 50%; transform: translateY(-50%)" />
+            </div>
+            <div class="widget-data">
+                <div class="widget-int num-count">Impersonate</div>
+                <div class="widget-title">Login as another user.</div>
+                <div style="margin-right:15px;">
+                    Select Employee : @Html.DropDownList("impersonate", (SelectList)ViewBag.Employees, new { id = "impersonate" })
+                    <a class="btn btn-primary" style="color:white!important;" onclick="impersonate();">Impersonate</a>
+                    <span style=" float: right; font-weight: bold; color: #ff6a00;">
+                    <span style="font-size:15px;" class="fi fi-refresh"></span>
+                    &nbsp;&nbsp;
+                    <a style="text-decoration:underline; font-weight: bold; color: #ff6a00 ;" href="~/controlcenter/sync">
+                        Sync Employee Data
+                        </a>
+                    </span>
+                </div>
+               
+            </div>
+
+        </div>
+    </div>
+    <div class="large-3 columns pull-left " style="text-align:center;">
+        <div class="widget widget-default widget-item-icon" id="OnlineUsers" style="height:176px;">
+            <div class="widget-item-left" style="height:160px;">
+                <span class="fa fi-foot"></span>
+            </div>
+            <div class="widget-data">
+                <div class="widget-int num-count">Online Users</div>
+                <div class="widget-title"></div>
+                <div>
+                    <h4>
+                        @(((List<string>)System.Web.HttpContext.Current.Cache[DataService.CONSTANTS.ONLINE_USERS]).Count) User(s) Online.
+                    </h4>
+                    <div style="overflow-y:auto;height:50px;">
+                        @foreach (string a in (List<string>)System.Web.HttpContext.Current.Cache[DataService.CONSTANTS.ONLINE_USERS])
+                        {
+                            <a href="sip:@(a + "@avalara.com")">@a</a><br>
+                        }
+                    </div>
+                    <a href="#downtimepicker" onclick=" $('#downtimepicker').modal('show');" style="text-decoration:underline!important;color:red!important;">Schedule Downtime</a>
+                    <div class="modal fade" id="downtimepicker">
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-body ">
+
+
+
+                                    <table width="100%">
+                                        <tr>
+                                            <td>
+                                                Select downtime start :
+                                            </td>
+                                            <td>
+                                                <div class="well timepicker">
+                                                    <div id="datetimepicker2" class="input-append">
+                                                        <input class="timeinput" id="downtime" data-format="MM/dd/yyyy HH:mm:ss PP" type="text" />
+                                                        <span class="add-on">
+                                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+
+                                                            </i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Enter downtime duration (minutes) :
+                                            </td>
+                                            <td>
+                                                <input id="durationInMins" value="5" type="text" />
+                                            </td>
+                                        </tr>
+                                    </table>
+
+
+
+                                    <input type="button" class="btn btn-default" value="Schedule Offline" onclick="takeoffline();" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    @*<div class="large-3 columns end" >
+                   @Html.Action("pedashboardstatus", "Reports")
+        </div>*@
+
+</div>
+<div class="row">
+    <div class="large-6 columns ">
+        
+        
+        <div id="pechartcontainer">
+            @Html.Action("GetPeProgressCharts", "ControlCenter")
+
+        </div>
+    </div>
+    @Html.Action("NotificationDash", "ControlCenter")
+</div>
+
+
+@Html.Partial("CreateEditPECycle", new DataService.EvaluationCycle())
+
+<script>
+
+    function loadPeProgress(evalcycleid) {
+        var ar = evalcycleid.split("-", 2);
+        evalcycleid = ar[0];
+        //$("#pechartcontainer").load("@Url.Content("~/controlcenter/GetPeProgressCharts?evalcycleId=")" + evalcycleid);
+        $.get("@Url.Content("~/controlcenter/GetPeProgressCharts?evalcycleId=")" + evalcycleid+"&phase="+ar[1], function (resp) {
+            $("#pechartcontainer").html(resp);
+        });
+    }
+
+    function takeoffline() {
+
+        if (isNaN(parseInt($.trim($("#durationInMins").val())))) {
+            alert("Please enter only numbers");
+            $("#durationInMins").val("").focus();
+            return;
+        }
+        $.post("@Url.Content("~/controlcenter/ScheduleShutdown")", { "durationInMins": $("#durationInMins").val(), "shutdownStartTime": $("#downtime").val() }, function () {
+            window.location.reload();
+        });
+    }
+
+    $(function () {
+        $('#datetimepicker2').datetimepicker({
+            language: 'en',
+            pick12HourFormat: true
+        });
+    });
+    function impersonate() {
+        window.location.href = "@Url.Content("~/controlcenter/startimpersonating?g=")" + $("#impersonate").val();
+    }
+    function switchimage(obj) {
+        imgsrc = $(obj).children("img").attr("src");
+        if (imgsrc.indexOf("sepia") < 0) {
+            imgsrc = imgsrc.replace(".png", "_sepia.png");
+            $(obj).parent().children("h3").css("color", "#8F8080");
+        }
+        else {
+            imgsrc = imgsrc.replace("_sepia.png", ".png");
+            $(obj).parent().children("h3").css("color", "#EFC849");
+        }
+        $(obj).children("img").attr("src", imgsrc);
+
+    }
+    var dialog, form;
+    function loadEmployeeGoals(eid) {
+        $.get('@Url.Content("~/goals?")reporteeid=' + eid, function (response) {
+            $("#maincontent").html(response);
+            window.location.href = "#maincontent";
+        });
+
+    }
+    function ShowPEConfig() {
+        //  $("#dialog-form").show();
+        $("#dialog-form").modal('show');
+        //setTimeout(function () {
+        //    $("#dialog-form").css({
+        //        //'margin-top': function () { //vertical centering
+        //        //    return -($(this).height() / 2);
+        //        //},
+        //        'margin-left': function () { //Horizontal centering
+        //            return -($(this).width() / 2);
+        //        }
+        //    });
+        //}, 200);
+
+
+    }
+    function FireWorkflow(actionCommand) {
+        $.post("~/ControlCenter/Start");
+    }
+    var lisToHide = "";
+
+
+    $(document).ready(function () {
+
+        
+
+
+        //$(".row").each(function (i, o) {
+        //    var maxht = $(o).outerHeight();
+        //    console.log(maxht);
+        //    $(o).find(".columns").each(function (idx, obj) {
+
+        //        //  $(obj).css("height",maxht);
+        //        //
+        //    });
+
+        //});
+        setTimeout(function () {
+            $(".owl-carousel").owlCarousel(
+               {
+                   items: 1,
+                   itemsDesktop: 1,
+                   itemsDesktopSmall: 1,
+                   itemsTablet: 1,
+                   itemsTabletSmall: 1,
+                   itemsMobile: 1,
+                   navigation: false,
+                   autoplay: true,
+                   autoplayHoverPause: false,
+                   loop: true
+               }
+               );
+        }, 100);
+        $.get("@Url.Content("~/controlcenter/currentcyclestatus")", function (resp) {
+            var g = 0, e = 0;
+            $("#currentcyclestatus1").parent().hide();
+            if (Object.prototype.toString.call(resp) === '[object Array]') {
+                for (i = 0; i < resp.length; i++) {
+
+
+                    if (resp[i].title != "") {
+                        $("#currentcyclestatus" + i + " .progress .progress-bar").css("width", resp[i].percentComplete + "%");
+                        $("#percentcomplete" + i).html(resp[i].daysRemaining + " ");
+                        $("#cycletype" + i).html(resp[i].cycletype);
+                        //$("#cycletype" + i).hide();
+                        $("#currentcyclestatus" + i).parent().show();
+                        $("#currentcyclestatus" + i).show();
+
+                        if (resp[i].cycletype.indexOf("Goal Setting") > 0) {
+                            g = 1;
+                            $("#goalending .widget-title").html(resp[i].title + " ends on :");
+                            $("#goalending .widget-subtitle").html(eval("new " + resp[i].end.replace(/\//g, "")).toDateString());
+                        }
+                        if (resp[i].cycletype.indexOf("Evaluation Process") > 0) {
+                            e = 1;
+                            $("#evalending .widget-title").html(resp[i].title + " ends on :");
+
+                            $("#evalending .widget-subtitle").html(eval("new " + resp[i].end.replace(/\//g, "")).toDateString());
+                        }
+                    }
+                    else {
+                        if (lisToHide != "")
+                            lisToHide += ",";
+                        lisToHide = "#licurrentcyclestatus" + i;
+                    }
+
+                }
+                if (g == 0)
+                    $("#goalending").remove();
+                if (e == 0)
+                    $("#evalending").remove();
+                if (resp.length == 1)
+                    $("#licurrentcyclestatus1").remove();
+                if (lisToHide != "")
+                    $(lisToHide).remove();
+
+
+            }
+            else {
+                $("#currentcyclestatus0 .progress").hide();
+                $("#percentcomplete0").parent().hide();
+                $("#nocyclestatus").html("No cycle is currently active !!").show();
+            }
+
+
+        });
+        
+        starttour("controlindex_2");
+    });
+</script>
+<style>
+    .columns a {
+        font-size: 12px;
+        color: gray;
+    }
+
+    h3 {
+        color: gray;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    #lean_overlay {
+        position: fixed;
+        z-index: 100;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        width: 100%;
+        background: #000;
+        display: none;
+    }
+
+
+
+
+
+
+
+    #teammembers {
+        list-style: none;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+        #teammembers li {
+            float: left;
+            padding: 20px;
+        }
+
+
+
+    .currentcyclestatus .progress {
+        background: #999 none repeat scroll 0 0;
+        height: 9px;
+        margin: 5px 10px 16px;
+        border: none;
+        padding: 0px;
+    }
+
+        .currentcyclestatus .progress .progress-bar-success {
+            background: #ffa400 none repeat scroll 0 0;
+        }
+
+    #cyclecontainer {
+        width: 80%;
+        padding-left: 30px;
+    }
+
+    .columns {
+        padding-right: 10px;
+    }
+
+    .panel-default .panel-footer {
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        background: #f5f5f5 none repeat scroll 0 0;
+        border-color: #e3e3e3 -moz-use-text-color -moz-use-text-color;
+        border-image: none;
+        border-style: solid none none;
+        border-width: 1px 0 0;
+        line-height: 30px;
+        padding: 10px;
+    }
+
+    .panel-default .panel-heading, .panel-default .panel-footer, .panel-default .panel-body {
+        float: left;
+        width: 100%;
+    }
+
+
+    .owl-carousel li {
+        list-style: none;
+    }
+
+    ul.owl-carousel {
+        margin-left: 0px;
+    }
+</style>

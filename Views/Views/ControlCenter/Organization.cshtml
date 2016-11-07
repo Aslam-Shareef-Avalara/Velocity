@@ -1,0 +1,52 @@
+﻿@model string
+<link href="~/Content/jquery.orgchart.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.orgchart.js"></script>
+<div id="orgChartContainer">
+    <div id="orgChart"></div>
+</div>
+<div id="consoleOutput">
+</div>
+
+<script>
+    var orgdata = @Html.Raw(Model);
+    var gidMap = @Html.Raw(ViewBag.GidMap);
+    $(function () {
+        org_chart = $('#orgChart').orgChart({
+            data: orgdata,
+            showControls: true,
+            allowEdit: true,
+            onAddNode: function (node) {
+                log('Created new node on node ' + node.data.id);
+                org_chart.newNode(node.data.id);
+            },
+            onDeleteNode: function (node) {
+                log('Deleted node ' + node.data.id);
+                org_chart.deleteNode(node.data.id);
+            },
+            onClickNode: function (node) {
+                log('Clicked node ' + node.data.id);
+            }
+
+        });
+    });
+
+    // just for example purpose
+    function log(text) {
+        $('#consoleOutput').append('<p>' + text + '</p>')
+    };
+</script>
+<style>
+    .orgChart table, .orgChart tr {
+border:none;
+background:none!important;   
+ margin-bottom: 0px!important; 
+}
+.orgChart .right,.orgChart .left {
+    float: none !important;
+}
+    div.orgChart div.node {
+    
+height:80px;
+width:100px;
+}
+</style>

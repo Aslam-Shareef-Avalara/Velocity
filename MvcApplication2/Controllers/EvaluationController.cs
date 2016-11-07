@@ -996,6 +996,10 @@ namespace MvcApplication2.Controllers
                     viewmodel.MgrEvals = empEvalService.GetManagersEvaluation(gid, evalcycleid);
                 }
                 viewmodel.GradingObject = new EmployeeEvaluationService(OrgId, AppName).GetOverallEvaluationRating(gid, evalcycleid);
+                if (viewmodel.GradingObject == null)
+                {
+                    viewmodel.GradingObject = new EvaluationRating();
+                }
             }
             catch { }
             return View(viewmodel);

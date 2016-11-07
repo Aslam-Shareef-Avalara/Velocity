@@ -1,0 +1,61 @@
+﻿@model IEnumerable<DataService.InventoryManagement.AssetIssue>
+
+@{
+    ViewBag.Title = "Index"; 
+  Layout = "~/Views/Shared/_InvLayoutPage.cshtml";
+}
+<style type='text/css'>
+    
+    td:nth-child(1){text-align: right;}
+    td:nth-child(2){text-align: right;}
+</style>
+<h2>Index</h2>
+<h4></h4>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateIssued)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedTo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Asset.AssetTag)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateIssued)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedTo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Asset.AssetTag)
+        </td>
+
+    </tr>
+}
+
+</table>

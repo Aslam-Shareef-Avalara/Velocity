@@ -1,0 +1,103 @@
+﻿@using PagedList.Mvc;
+@model MvcApplication2.ViewModel.PeProgressViewModel
+
+@{
+
+    ViewBag.Title = "PE Progress";
+
+    if (Model.peprogressList.Count() > 0)
+    {
+        ViewBag.Title = Model.peprogressList[0].Evalcycle.Title;
+    }
+    else
+    {
+        List<DataService.EvaluationCycle> evs = ViewBag.EvalCycles;
+        if (evs != null && evs.Any(x => x.Id == ViewBag.EvalCycleId))
+        {
+            ViewBag.Title = evs.FirstOrDefault(x => x.Id == ViewBag.EvalCycleId).Title;
+        }
+
+    }
+}
+@functions{
+    public string translateStatus(int? statusCode)
+    {
+        return DataService.GoalStatus.Translate(statusCode);
+    }
+    public string translateBoolean(bool val)
+    {
+        return val ? "Yes" : "No";
+    }
+    public string RestructureFeedback(List<DataService.FeedbackAnswer> feedback, int counter=0)
+    {
+        string answers = "";
+        foreach (DataService.FeedbackAnswer ans in feedback.OrderBy(x=>x.QuestionId))
+        {
+            answers += "<td style=\"border:thin solid gray;background-color:" + (counter % 2 == 0 ? "#dddddd" : "white") + " ;\">" + ans.Answer+ "</td>"; 
+        }
+        return answers;
+    }
+    public string RestructureTraining(string training, int counter=0)
+    {
+        string trainingNeeds = "";
+        string[] s = training.Split(new string[] { "$$$" }, StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (string t in s)
+        {
+            trainingNeeds += "<td style=\"border:thin solid gray;background-color:"+(counter % 2 == 0 ? "#dddddd" : "white")+" ;\">"+t+"</td>";
+        }
+        for (int i = s.Length; i < 5; i++)
+        {
+            trainingNeeds += "<td style=\"border:thin solid gray;background-color:" + (counter % 2 == 0 ? "#dddddd" : "white") + " ;\">-</td>";
+        }
+            return trainingNeeds;
+    }
+}
+
+<table class="" style="border:thin solid gray; letter-spacing:1px;" id="employeelist">
+    <tr class="header" style="background-color: rgb(55, 70, 89);color:white;">
+        <th class="controls-head">Employee Id</th>
+        <th class="controls-head">Employee Name</th>
+        <th class="controls-head">Status</th>
+        <th class="controls-head">Pending Action</th>
+        <th class="controls-head">Chat</th>
+        <th class="controls-head">Manager</th>
+        <th class="controls-head">Manager Rating</th>
+        <th class="controls-head">Employee Rating</th>
+        <th class="controls-head">Published Rating</th>
+        <th class="controls-head">Summary</th>
+        <th class="controls-head">Training 1</th>
+        <th class="controls-head">Training 2</th>
+        <th class="controls-head">Training 3</th>
+        <th class="controls-head">Training 4</th>
+        <th class="controls-head">Training 5</th>
+        @foreach(DataService.FeedbackQuestion q in ((List<DataService.FeedbackQuestion>)ViewBag.FeedbackQuestions).OrderBy(x=>x.QuestionId))
+        { 
+            <th class="controls-head">FB - @q.Question</th>
+        }
+ 
+    </tr>
+    @{
+        int counter = 1;
+    }
+    @foreach (var item in Model.peprogressList)
+    {
+        string nextStage = DataService.GoalStatus.NextStage(item.goal.Status);
+        <tr style="background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">
+            <td style="border:thin solid gray;background-color:@(counter%2==0?"#dddddd":"white") ;">@item.Employee.OrgEmpId</td>
+            <td style="border:thin solid gray;background-color:@(counter%2==0?"#dddddd":"white") ;">@item.Employee.FirstName @item.Employee.LastName</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@translateStatus(item.goal.Status)</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@nextStage</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;"><a href="sip:@(nextStage.Contains("Employee")?item.Employee.Email:(nextStage.Contains("Manager")?item.Manager.Email:""))">Click to chat</a></td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@item.Manager.FirstName &nbsp; @item.Manager.LastName </td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.EvalRating == null || !item.EvalRating.ManagerOverllRating.HasValue ? "-" : Convert.ToString(item.EvalRating.ManagerOverllRating))</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.EvalRating == null || !item.EvalRating.SelfOverallRating.HasValue ? "-" : Convert.ToString(item.EvalRating.SelfOverallRating))</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.MeetingSummarySubmitted ? item.EvalRating.ManagerOverllRating : 0M)</td>
+            <td style="border:thin solid gray;background-color:@(counter % 2 == 0 ? "#dddddd" : "white") ;">@(item.Conclusion != null ? item.Conclusion.meetingsummary : "") </td>
+            @Html.Raw(item.Conclusion != null && !string.IsNullOrWhiteSpace(item.Conclusion.training) ? RestructureTraining(item.Conclusion.training, counter) : "") 
+            @Html.Raw(item.Feedback != null && item.Feedback.Count > 0 ? RestructureFeedback(item.Feedback, counter) : "")     
+        </tr>
+        counter++;
+    }
+
+</table>

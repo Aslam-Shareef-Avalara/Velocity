@@ -1,0 +1,82 @@
+﻿@using X.Scaffolding.Core
+@using PagedList.Mvc;
+@model List<DataService.EvaluationCycle>
+
+@{
+    ViewBag.Title = "Edit Evaluation Cycles";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+<h2>@ViewBag.Title</h2>
+<p>
+    <a href="javascript:void(0)" class="btn btn-success create" onclick="createeditpe(null)">Create New Cycle</a>
+    
+</p>
+<div class="table-responsive">
+    <table class="table table-hover  table-condensed table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Goal Setting Start </th>
+                <th>Goal Setting  End</th>
+                <th>Evaluation Start</th>
+                <th>Evaluation End</th>
+                <th class="controls-head"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.GoalStartDate.Value.ToString("dd/MMM/yyyy")
+                    </td>
+                    <td>
+                        @item.GoalEndDate.Value.ToString("dd/MMM/yyyy")
+                    </td>
+                    <td>
+                        @item.EvaluationStart.Value.ToString("dd/MMM/yyyy")
+                    </td>
+                    <td>
+                        @item.EvaluationEnd.Value.ToString("dd/MMM/yyyy")
+                    </td>
+
+                    <td>
+                        <a href="javascript:void(0)" class="btn btn-xs btn-info edit" onclick="createeditpe(@item.Id)" >Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div id="peeditordiv">
+    @*@Html.Partial("CreateEditPECycle", new DataService.EvaluationCycle())*@ 
+    </div>
+<script> 
+    var selectedmenuid = "hr";
+    function createeditpe(peid)
+    {
+        $.get("@Url.Content("~/controlcenter/getpeeditor?evalcycleid=")" + peid, function (r) { $("#peeditordiv").html(r); 
+            $("#dialog-form").modal('show');
+        });
+    }
+</script>
+<style>
+      .progress {
+        background: #999 none repeat scroll 0 0;
+        height: 9px;
+         margin: 5px 10px 16px;
+        border: none;
+        padding: 0px;
+    }
+
+        .progress .progress-bar-success {
+            background: #ffa400 none repeat scroll 0 0;
+        }
+</style>

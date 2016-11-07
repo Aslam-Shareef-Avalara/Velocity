@@ -1,0 +1,112 @@
+﻿@model List<MvcApplication2.ViewModel.NotificationDashViewModel>
+<div class="large-6 columns " style="text-align:center;">
+    <div class="widget widget-default widget-item-icon" id="StartPE" >
+        <div class="widget-item-left" style="height: 425px;" >
+            <span class="fa fi-mail" style="top:50%;transform:translateY('-50%');position:relative"></span>
+        </div>
+        <div class="widget-data">
+            <div class="widget-int num-count">Send Reminders</div>
+            <div class="widget-title">Click each button to send remider to employees.</div>
+            <div>
+                <div>
+                    <table style="width:100%">
+                        @{
+                            int counter = 1;   
+                        }
+                        @foreach (var notificationType in Model)
+                        {
+                            if (string.IsNullOrEmpty(notificationType.ReminderTypeDisplay))
+                            {
+                                continue;
+                            }
+                            <tr @(counter%2==0?"class=alternate":"")>
+                                <td width="200px">
+                                    <input id="@notificationType.ReminderType" style="width:100%;" @(notificationType.NotificationCount == -1 ? "disabled" : "") type="button" class="btn @(notificationType.NotificationCount == -1 ? "btn-warning" : "btn-success") " value="@notificationType.ReminderTypeDisplay" onclick="sendnotification('@notificationType.ReminderType')" />
+                                </td>
+                                <td>
+                                    @if (notificationType.LastRun.HasValue)
+                                    {
+                                        <span id="Span_@notificationType.ReminderType" style="letter-spacing:1px; width:100%;display:block;" class="">Last run : @notificationType.LastRun.Value.ToString("dd-MMM-yyyy") @(notificationType.Since<45? "("+notificationType.Since.ToString() + " days ago)":"") </span>
+                                        if(notificationType.NotificationCount == -1) 
+                                        {
+                                            <text>
+                                                 Notification sending in progress...
+                                            </text>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span id="Span_@notificationType.ReminderType" style="letter-spacing:1px; width:100%;display:block;" class="">Never run</span>
+                                    }
+                                </td>
+                            </tr>
+                                    counter++;
+                        }
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+
+    <div id="lean_overlay" style="display: none; opacity: 0.5;"></div>
+</div>
+<script>
+    function sendnotification(typeofnotification) {
+        $("#Span_" + typeofnotification).html("Notification Sending In Progress...")
+        switch (typeofnotification)
+        {
+            case "SEND_GOALS_FOR_APPROVAL":
+                $.post("@(Url.Content("~/controlcenter/"))SendGoalSubmissionReminderToEmployee", function (re) {
+                    updateStatus("Span_" + typeofnotification, re.status);
+                });
+                break;
+            case "APPROVE_GOALS":
+                $.post("@(Url.Content("~/controlcenter/"))SendGoalApprovalReminderToManager", function (re) {
+                    updateStatus("Span_" + typeofnotification, re.status);
+                });
+                break;
+            case "EVALUTATE_SELF":
+                $.post("@(Url.Content("~/controlcenter/"))SendEvaluationReminderToEmployee", function (re) {
+                    updateStatus("Span_" + typeofnotification, re.status);
+                });
+                break;
+            case "SEND_EVALUATION_TO_HR":
+                $.post("@(Url.Content("~/controlcenter/"))SendAuditReminder", function (re) {
+                    updateStatus("Span_" + typeofnotification, re.status);
+                });
+                break;
+            case "SET_YOUR_GOALS":
+                $.post("@(Url.Content("~/controlcenter/"))SendGoalSettingReminderToEmployee", function (re) {
+                    updateStatus("Span_" + typeofnotification, re.status);
+                });
+                break;
+            case "SUBMIT_EVALUATION_TO_MANAGER":
+                $.post("@(Url.Content("~/controlcenter/"))SendSelfEvaluationReminder", function (re) {
+                    updateStatus("Span_" + typeofnotification, re.status);
+                });
+                break;
+            case "SUBMIT_FEEDBACK":
+                $.post("@(Url.Content("~/controlcenter/"))SendFeedbackReminder", function (re) {
+                    updateStatus("Span_" + typeofnotification, re.status);
+                });
+                break;
+        }
+    }
+
+    function updateStatus(spanid, count)
+    {
+        if (count == "-1") {
+            $("#" + spanid).html("Notification is already in progress");
+        }
+        else {
+            $("#" + spanid).html("("+ count+" Sent)");
+        }
+    }
+    </script>
+<style>
+    tr.alternate {
+    background-color:#ddd!important;
+    }
+</style>

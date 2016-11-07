@@ -1,0 +1,13 @@
+﻿@model System.Collections.Generic.List<DataService.Attachment>
+@if (Model != null && Model.Count > 0)
+{
+
+    <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
+
+    foreach (DataService.Attachment attachment in Model)
+    {
+        <span class="label label-default label-form">
+            <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
+        </span>
+    }
+}

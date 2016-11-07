@@ -1,0 +1,621 @@
+﻿@using X.Scaffolding.Core
+@using PagedList.Mvc;
+@model List<MvcApplication2.ViewModel.GoalsViewModel>
+
+@{
+    ViewBag.Title = "Goals";
+    int counter = 1;
+    int tabcounter = 1;
+    //if (Model == null)
+    //{
+    //    return;
+    //}
+}
+@helper RenderGoal(string goal)
+{
+
+}
+@{
+
+    var empId =(string.IsNullOrEmpty(Convert.ToString(ViewBag.ReporteeId))?ViewBag.Me.gid.ToString():ViewBag.ReporteeId.ToString());
+    var getgoalsurl="~/goals/index/?reporteeid="+empId;
+    var delgoalsurl ="~/goals/delete/";
+    var creategoalsurl = "~/goals/creategoal/?reporteeid=" + empId;
+
+    if(ViewBag.FixedGoals == true)
+    {
+        getgoalsurl="~/goals/getfixedgoals?x=1";
+        creategoalsurl = "~/controlcenter/CreateFixedGoals/?";
+    }
+}
+
+<script>
+    var selectedmenuid = "goals";
+    var currentlySelectedPEPane="";
+    var rejected=0;
+    var isManager = 0;
+    function displaystatus(status)
+    {
+        $("#statusli").fadeOut('slow',function(){
+            if(status!="")
+            {
+                $("#currentstatus").text(status);
+                $("#statusli").fadeIn();
+            }
+        });
+        
+        
+            
+    }
+</script>
+<link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+<div id="goalslist" style="padding:10px;">
+    <h3 class="title" id="GoalViewTitle">@ViewBag.EmployeeName Goals</h3>
+    
+    @Html.Action("PerformanceData", "Employee", new { reporteeID = Guid.Parse(empId) })
+    @if (ViewBag.EmployeeName != null && ViewBag.EmployeeName.ToLower() == "your")
+    {
+        
+        <div id="rejectionMessage" style="display:none;" class="alert alert-warning">
+
+        </div>
+    }
+    else
+    {
+        <script>
+            isManager = 1;
+            var selectedmenuid = "team";
+
+        </script>
+
+    }
+    <ul class="nav nav-tabs nav-pills " id="goalstabs" data-step="1" data-intro="Each tab represents one evaluation cycle. Clicking each one will show you the goals for that cycle or a link to the goals.">
+        @if (Model != null)
+        {
+            foreach (MvcApplication2.ViewModel.GoalsViewModel goalviewmodel in Model)
+            {
+                <li  @(tabcounter == 1 ? "class=active" : "") data-pecycleid="@goalviewmodel.PECycle.Id"><a onclick="displaystatus('@goalviewmodel.CurrentStatus')" href="#_@goalviewmodel.PECycle.Id" data-toggle="tab">@goalviewmodel.PECycle.Title</a></li>
+                tabcounter++;
+            }
+        }
+        @if (ViewBag.FixedGoals != true)
+        {
+            <li onclick="displaystatus('')" @(Model == null ? "class=active" : "") data-status="" data-pecycleid="0"><a data-toggle="tab" href="#_0">Past Evaluations</a></li>
+        }
+        @if (Model!=null && Model.Count>0)
+        {
+            <li id="statusli" class="pull-right" style="@(string.IsNullOrEmpty(Model[0].CurrentStatus)?"display:none;":"") border-color: azure; background-color:lightblue; border-radius:5px;border-width:thin;border-style:solid;padding:5px;">
+                <label style="display:inline-block; letter-spacing:1px; ">Status : </label>&nbsp;<span id="currentstatus" style="color:black!important;">@Model[0].CurrentStatus</span>
+            </li>
+        }
+    </ul>
+    @{tabcounter = 1;}
+    <div class="tab-content">
+        @if (Model!=null)
+        {
+        foreach (MvcApplication2.ViewModel.GoalsViewModel goalviewmodel in Model)
+        {
+
+
+            <script>
+                var totalweightage_@goalviewmodel.PECycle.Id = @goalviewmodel.TotalWeightage;
+            </script>
+            <div id="_@goalviewmodel.PECycle.Id" class="tab-pane fade @(tabcounter==1?"in active":"")">
+                <h5 style="color:#808080">@goalviewmodel.PECycle.Description</h5>
+                <div><img src="~/images/i-icon-new.png" /> <a href="#" style="color:blue;text-decoration:underline;" onclick="exportgoals('@goalviewmodel.EmployeeId', @goalviewmodel.PECycle.Id)">Click here</a> to export goals / Evaluations</div>
+                <br />
+                @if (goalviewmodel.PE_Cycle == DataService.PECycle.GOAL_SETTING)
+                {
+                <div style="display: inline-block; height: auto; width: 100%;">
+                    @if (goalviewmodel.Editable)
+                     {
+                        <a href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use- this button to ADD a new goal." class=" fa fa-plus-circle btnaddgoal" onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
+                            <label>Add</label>
+                        </a>
+                     }
+                    @if (goalviewmodel.ButtonToShow == "Publish")
+                    {
+                        <a style="float: right;" href="javascript:void(0);" title="Click to submit to manager for approval" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them." class="fa fi-web  btnpublishgoals" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
+                            <label>Submit to manager</label>
+                        </a>
+                        @*<input type="submit" value="Submit to Manager" onclick="SetAction('publish');" />*@
+                    }
+                    else if (goalviewmodel.ButtonToShow == "Approve")
+                    {
+                        <a style="float: right;" href="javascript:void(0);" class="fa fa-thumbs-o-up  btnpublishgoals"
+                           data-step="4" data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button."
+                           onclick="Approve()">
+                            <label>Approve</label>
+                        </a>
+                        <a style="float: right;" href="javascript:void(0);" data-toggle="modal"
+                           data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
+                           data-target="#myModal" class="fa fa-thumbs-o-down  btnpublishgoals">
+                            <label>Reject</label>
+                        </a>
+                        @*<input type="submit" value="Approve" onclick="SetAction('approve')" />*@
+                    }
+
+                </div>
+
+                    foreach (var item in goalviewmodel.Goals.OrderBy(x=>x.Fixed).ThenByDescending(y=>y.EmployeeId).ThenBy(f=>f.gid).ToList())
+                    {
+                        if (item.Fixed && ViewBag.FixedGoals == false) { continue; }
+                <div class="widget singlegoal widget-default widget-item-icon">
+                    <div class="widget-data">
+                        @*<div class="widget-int num-count num-count-20px">@item.Title</div>*@
+                        <div class="widget-title"><label class="goalsubheadings u">@(item.Fixed ? "Success Trait" : "Goal")</label> : @item.Title</div>
+                        <div class="widget-subtitle">
+                            <label class="goalsubheadings u" style="float:left;">Description :</label> <div class="goaldesc"> @Html.Raw(item.Goal1)</div>
+                        </div>
+                        <div class="widget-subtitle">
+                            @*<label class="goalsubheadings u">Weightage</label> :  @item.Weightage %*@
+                        </div>
+                        @if (goalviewmodel.ManagerEvaluations != null && goalviewmodel.ManagerEvaluations.Count>0)
+                                {
+                                    DataService.ManagerEvaluation mgreval = goalviewmodel.ManagerEvaluations.FirstOrDefault(x=>x.GoalId==item.gid && item.Evalcycleid==x.EvalCycleId);
+                                    if (mgreval!=null && !string.IsNullOrWhiteSpace(mgreval.Comment))
+                                    {
+                                @*<div class="widget-subtitle managercomment">
+                                    <label class="goalsubheadings">Manager Comment</label> :  @goalviewmodel.ManagerEvaluations.First(x => x.GoalId == item.gid && item.Evalcycleid == x.EvalCycleId).Comment
+                                </div>*@
+                                <script>
+                                        rejected =1;
+                                </script>
+                                    }
+                                }
+                        <br />
+                        @if ((goalviewmodel.Editable && (item.EmployeeId.HasValue && item.EmployeeId.Value!=new Guid())) || ViewBag.FixedGoals == true)
+                                {
+                             
+                                <span class="goalactioncontainer">
+                                    <a href="javascript:void(0);" class="btn btn-success fa fa-edit" onclick="EditGoal('@item.gid')">
+                                        <label>Edit </label>
+                                    </a>
+                                    
+                                    <a href="javascript:void(0);" class="btn btn-danger fa fa-times-circle" onclick="DeleteGoal('@item.gid')">
+                                        <label>Delete</label>
+                                    </a>
+                                </span>
+                                }
+                    </div>
+
+                </div>
+                <br />
+
+                                counter++;
+                    }
+                }
+                else
+                {
+                    if (goalviewmodel.EvaluationStatus != DataService.EvalCycleStatus.NO_ACTION_REQUIRED && goalviewmodel.Goals.Any(x => !x.Fixed))
+                    {
+                        <p>This cycle is now in evaluation phase. Please <a class="btn btn-sm btn-success do-btn-round-outline" href="~/evaluation/@(goalviewmodel.EmployeeId == ViewBag.Me.gid ? "SelfEvaluation" : "ReporteeEvaluation?reporteeId="+goalviewmodel.EmployeeId) ">click here</a> to edit/view evaluations.
+
+                        </p>
+                    }
+                    @*else if(goalviewmodel.EmployeeId!=ViewBag.Me.gid)
+                    {
+                        <p>The reportee has not submitted his/her goals or self-evaluation yet.</p>
+                    }
+                    else
+                    {
+                        <p>Awaiting goal approval / evaluation from Manager.</p>
+                    }*@
+
+                    <div style="display: inline-block; height: auto; width: 100%;">
+                        @if (goalviewmodel.Editable)
+                        {
+                            <a href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use this button to ADD a new goal." class=" fa fa-plus-circle btnaddgoal" onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
+                                <label>Add</label>
+                            </a>
+                        }
+                        @if (goalviewmodel.ButtonToShow == "Publish")
+                        {
+                            <a title="Click to submit to manager for approval" style="float: right;" href="javascript:void(0);" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them." class="fa fi-web  btnpublishgoals" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
+                                <label>Submit to manager</label>
+                            </a>
+                            @*<input type="submit" value="Submit to Manager" onclick="SetAction('publish');" />*@
+                        }
+                        else if (goalviewmodel.ButtonToShow == "Approve")
+                        {
+                            <a style="float: right;" href="javascript:void(0);" class="fa fa-thumbs-o-up  btnpublishgoals"
+                               data-step="4" data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button."
+                               onclick="Approve()">
+                                <label>Approve</label>
+                            </a>
+                            <a style="float: right;" href="javascript:void(0);" data-toggle="modal"
+                               data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
+                               data-target="#myModal" class="fa fa-thumbs-o-down  btnpublishgoals">
+                                <label>Reject</label>
+                            </a>
+                            @*<input type="submit" value="Approve" onclick="SetAction('approve')" />*@
+                        }
+
+                    </div>
+
+                    foreach (var item in goalviewmodel.Goals.OrderBy(x => x.Fixed).ThenByDescending(y => y.EmployeeId).ThenBy(f => f.gid).ToList())
+                    {
+                        <div class="widget singlegoal widget-default widget-item-icon"> 
+                            <div class="widget-data">
+                                @*<div class="widget-int num-count num-count-20px">@item.Title</div>*@
+                                <div class="widget-title"><label class="goalsubheadings">@(item.Fixed ? (item.EmployeeId.HasValue ? "Avalara's People Management Goal" : "Success Trait") : "Goal")</label> : @item.Title</div>
+                                <div class="widget-subtitle">
+                                    <label class="goalsubheadings">Description</label> : @Html.Raw(item.Goal1)
+                                </div>
+                                <div class="widget-subtitle">
+                                    @*<label class="goalsubheadings">Weightage</label> :  @item.Weightage %*@
+                                </div>
+                                @if (goalviewmodel.ManagerEvaluations != null && goalviewmodel.ManagerEvaluations.Count > 0)
+                                {
+                                    DataService.ManagerEvaluation mgreval = goalviewmodel.ManagerEvaluations.FirstOrDefault(x => x.GoalId == item.gid && item.Evalcycleid == x.EvalCycleId);
+                                    if (mgreval != null && !string.IsNullOrWhiteSpace(mgreval.Comment))
+                                    {
+                                        @*<div class="widget-subtitle managercomment">
+                                            <label class="goalsubheadings">Manager Comment</label> :  @goalviewmodel.ManagerEvaluations.First(x => x.GoalId == item.gid && item.Evalcycleid == x.EvalCycleId).Comment
+                                        </div>*@
+                                        <script>
+                                            rejected =1;
+                                        </script>
+                                    }
+                                }
+                                <br />
+                                @if ((goalviewmodel.Editable && (item.EmployeeId.HasValue && item.EmployeeId.Value!=new Guid())) || ViewBag.FixedGoals == true)
+                                {
+                                    <span class="goalactioncontainer">
+                                        <a href="javascript:void(0);" class="btn btn-success fa fa-edit" onclick="EditGoal('@item.gid')">
+                                            <label>Edit</label>
+                                        </a>
+                                        <a href="javascript:void(0);" class="btn btn-danger fa fa-times-circle" onclick="DeleteGoal('@item.gid')">
+                                            <label>Delete</label>
+                                        </a>
+                                    </span>
+                                }
+                            </div>
+
+                        </div>
+                        <br />
+
+                                counter++;
+                    }
+                }
+            </div>
+
+                tabcounter++;
+        }
+        }
+        @if (ViewBag.FixedGoals != true)
+        { 
+            <div id="_0" class="tab-pane fade  @(Model==null?"in active":"")">
+                @Html.Action("AllEvalCycles", "Evaluation", new { empid = empId })
+                <div id="historicaldatacontent">
+                </div>
+            </div>
+        }
+    </div>
+    <!-- Modal -->
+    <div id="myModal" class="modal fade rejectionmodal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content panel-default">
+                <div class="modal-header panel-heading">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="color:white;">Rejection Reason</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea id="rejectreason" name="rejectionreason" style="width:545px; height:179px;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-warning active" data-dismiss="modal" onclick="Reject()" value="Reject" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    function exportgoals(empid,evalid) {
+        window.location.href="@(Url.Content("~/evaluation/ExportSelfEvaluation"))?empid="+empid+"&evalcycleid="+evalid;
+    }
+   function evalcycleselected(selObj)
+    {
+       var evalcycleid= selObj.val();
+       if(evalcycleid=="0")
+       {
+           return;
+       }
+        getpastevaluations(evalcycleid);
+    }
+
+    function getpastevaluations(evalcycleid)
+    {
+        $.post("@Url.Content("~/evaluation/GetSelfEvaluation?gid=" + empId)&evalcycleid="+evalcycleid,function(r){
+            $("#historicaldatacontent").html(r);
+        });
+    }
+    function getCurrentlySelectedPETab()
+    {
+        currentlySelectedPEPane="0";
+        $("#goalstabs li").each(function(i,o){
+            if($(o).hasClass("active"))
+            {
+                currentlySelectedPEPane =  $(o).data("pecycleid");
+            }
+        });
+    }
+    function DeleteGoal(goalid) {
+
+        if (confirm("Are you sure you want to delete this goal?")) {
+            $.post('@Url.Content("~/goals/delete/")' + goalid, function (r) {
+
+                onbacktolist();
+                $("#goalslist").load('@Url.Content(getgoalsurl)'+'&hashvalue='+new Date().getTime()+'#goalslist', function (re) {
+                    window.scrollTo(0, $("#goalslist").offset().top)
+                });
+            });
+
+        }
+    }
+    function onbacktolist() {
+        window.scrollTo(1, $("#goalslist").offset().top);
+        $("#goaleditorcontainer").remove();
+        $("#goaleditor").hide();
+    }
+    function onupdategoal(obj) {
+        if (obj.saved) {
+            onbacktolist();
+            $("#goalslist").load('@Url.Content(getgoalsurl)'+'&hashvalue='+new Date().getTime()+'#goalslist', function (re) {
+                if(isManager==1)
+                {
+                    getCurrentlySelectedPETab();
+                    $("#_"+currentlySelectedPEPane).append("<h4>The goals have been sent back to the reportee so that he/she may review them and resubmit.</h4>");
+                }
+                window.scrollTo(1, $("#goalslist").offset().top);
+            });
+        }
+        else
+            alert(obj.message);
+    }
+    $(document).ready(function () {
+        if($.trim($("#currentstatus").text())=="")
+            $("#statusli").hide();
+
+        if ($("#goaleditor").length == 0) {
+            $("body").append("<div id='goaleditor'></div>");
+            $("#goaleditor").keypress(function (e) {
+                console.log(e.keyCode);
+                console.log(e.metaKey);
+                console.log(e.key);
+            });
+        }
+        getCurrentlySelectedPETab();
+        if(currentlySelectedPEPane!="0")
+        {
+            $.post("@Url.Content("~/goals/getrejectionmessage?evalcycleid=")"+currentlySelectedPEPane,function(resp){
+                if(resp==null || resp=="null" || resp.length==0)
+                    return;
+                $("#rejectionMessage").html("<h3>Rejection reason:</h3> <br>"+ resp).fadeIn();
+
+            });
+        }
+        starttour("goalsindex");
+    });
+    function EditGoal(goalid,evalcycleid) {
+        if (goalid == "") {
+            $.get('@Url.Content(creategoalsurl)'+'&evalcycleid='+evalcycleid+"&hashvalue="+new Date().getTime(), function (resp) {
+                $("body").append("<div id='goaleditorcontainer' style='z-index:10001;left:10%;position:absolute;top:50px;width:80%;display:none;'></div>");
+                $("#goaleditor").css("height", $(document).height());
+                $("#goaleditor").show();
+                $("#goaleditorcontainer").html(resp).show();
+                window.scrollTo(1, 1);
+
+            });
+        }
+        else {
+            $.get('@Url.Content("~/goals/edit/")' + goalid+'?evalcycleid='+evalcycleid+"&hashvalue="+new Date().getTime(), function (resp) {
+                $("body").append("<div id='goaleditorcontainer' style='z-index:10001;left:10%;position:absolute;top:50px;width:80%;display:none;'></div>");
+                $("#goaleditor").css("height", $(document).height());
+                $("#goaleditor").show();
+                $("#goaleditorcontainer").html(resp).show();
+                window.scrollTo(1, 1);
+
+
+            });
+        }
+    }
+
+    function PublishGoals(totalweightage) {
+        getCurrentlySelectedPETab();
+        //if(totalweightage<100)
+        //{
+        //    alert("A total of 100% should be allocated to your goals. Your current total goal weightage is "+ totalweightage+ "%");
+        //    return false;
+        //}
+        var urlToPostTo = "@Url.Content("~/goals/publish?reporteeid=")@empId&rejected="+rejected;
+        $.post(urlToPostTo, {"evalcycleid":currentlySelectedPEPane}, function (r) {
+            $("#goalslist").load('@Url.Content(getgoalsurl)#goalslist', function (re) {
+                window.scrollTo(1, $("#goalslist").offset().top)
+                $("#rejectreason").hide();
+            });
+        });
+    }
+
+    function Approve() {
+        getCurrentlySelectedPETab();
+        var urlToPostTo = "@Url.Content("~/goals/approve?reporteeid=")@empId&rejected="+rejected;
+        $.post(urlToPostTo, {"evalcycleid":currentlySelectedPEPane},function (r) {
+            $("#goalslist").load('@Url.Content(getgoalsurl)#goalslist', function (re) {
+                window.scrollTo(1, $("#goalslist").offset().top)
+            });
+        });
+    }
+
+    function Reject() {
+        getCurrentlySelectedPETab();
+        var urlToPostTo = "@Url.Content("~/goals/reject?reporteeid=")@empId&rejected="+rejected;
+        $.post(urlToPostTo,{rejectionreason:$("#rejectreason").val(),"evalcycleid":currentlySelectedPEPane} ,function (r) {
+            window.location.reload();
+        });
+    }
+</script>
+
+
+<style>
+    .u {
+    /*text-decoration:underline;*/
+    }
+    .rejectionmodal .modal-content {
+        border-radius: 0px !important;
+        border-width: 0px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    #rejectionMessage pre {
+        background-color: inherit;
+        border: none;
+        color: white;
+    }
+
+    #rejectionMessage h3 {
+        background-color: inherit;
+        border: none;
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 0px;
+    }
+
+
+    .rejectionmodal .close {
+        opacity: 0.8;
+    }
+
+    .widget.singlegoal {
+        float: none;
+        border-top: thin solid #f6f4ff;
+    }
+
+    .nav-tabs > li > a {
+        background: #eee;
+        border: #eee #eee #ddd;
+    }
+
+        .nav-tabs > li > a:hover {
+            background: #fff;
+            border: #eee #eee #ddd;
+        }
+
+    #goalslist {
+        background-color: white;
+    }
+
+    .goalsubheadings {
+        color: #434a54;
+        display: block;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 30px;
+        margin-top: 20px;
+        border-bottom: 1px solid #ddd;
+        /* Only if ur using widget panel for goals*/
+        width: 100px;
+        color: #999;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        line-height: 30px;
+        margin-top: 20px;
+        width: 146px;
+        margin-top: 0px;
+        border-bottom: none;
+        /*Till here*/
+    }
+
+    .widget.singlegoal .widget-title, .widget.singlegoal .widget-subtitle {
+        float: none;
+    }
+
+    .goal {
+        border-bottom: 0 none #e5e5e5;
+        border-left: 0 none #e5e5e5;
+        border-radius: 5px;
+        border-right: 0 none #e5e5e5;
+        border-style: solid none none;
+        border-width: 2px 0 0;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+        height: 100px;
+    }
+
+        .goal span {
+            line-height: 20px;
+            font-size: 12px;
+            color: #656d78;
+        }
+
+    .fa > label {
+        font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+        color: white;
+        display: inline-block;
+        padding-left: 10px;
+        font-weight: 400;
+    }
+
+    .goalactioncontainer {
+        display: block;
+        margin-bottom: 5px;
+        margin-top: 5px;
+    }
+
+    #goaleditor {
+        min-width: 100%;
+        min-height: 100%;
+        z-index: 10000;
+        background-color: black;
+        opacity: 0.5;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        display: none;
+    }
+
+    .fs-form-wrap {
+        background-color: white;
+        /*padding: 20px;*/
+        opacity: 1;
+    }
+
+    .tab-pane {
+        padding: 10px;
+    }
+
+    .btnaddgoal, .btnpublishgoals {
+        padding: 10px 20px;
+        font-size: 25px;
+        text-decoration: none;
+        color: #545f79;
+    }
+
+        .btnaddgoal:hover, .btnaddgoal > label:hover, .btnpublishgoals:hover, .btnpublishgoals > label:hover {
+            color: black;
+            text-shadow: 3px 3px 3px #AAA;
+        }
+
+
+        .btnaddgoal > label, .btnpublishgoals > label {
+            font-size: 20px;
+            color: gray;
+        }
+
+    .managercomment label, .managercomment {
+        font-style: italic;
+    }
+
+    .inner-wrap.removemargin {
+             margin-left: 0 !important;
+         }
+    .goaldesc {
+        width:300px;
+        display:inline-block;
+    }
+</style>

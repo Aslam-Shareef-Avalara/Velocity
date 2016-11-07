@@ -1,0 +1,79 @@
+﻿@model IEnumerable<DataService.InventoryManagement.Asset>
+
+@{
+    ViewBag.Title = "Index"; 
+  Layout = "~/Views/Shared/_InvLayoutPage.cshtml";
+}
+<style type='text/css'>
+    
+    td:nth-child(1){text-align: right;}
+    td:nth-child(2){text-align: right;}
+</style>
+<h2>Index</h2>
+<h4></h4>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.GRNId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAssetized)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AssetTag)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AssetizedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AssetizedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsIssued)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemMaster.Name)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GRNId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsAssetized)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AssetTag)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AssetizedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AssetizedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsIssued)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemMaster.Name)
+        </td>
+
+    </tr>
+}
+
+</table>

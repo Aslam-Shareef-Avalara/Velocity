@@ -1,0 +1,215 @@
+﻿@model string[]
+@*
+
+    The above model is an array of strings and should contain the following in the specified order:
+    1. goal Id
+    2. Goal rating or empty string
+    3. Event handler to save the grading 
+
+*@
+
+@{
+
+    string gid = Model[0].Replace("-", "_");
+}
+@functions{
+    public string translateRating(int rating)
+    {
+        string translatedRating = "";
+        switch (rating)
+        {
+            case 1: translatedRating = "Not a fit";
+                break;
+            case 2: translatedRating = "Underachieving";
+                break;
+            case 3: translatedRating = "Orange";
+                break;
+            case 4: translatedRating = "G'in the JD";
+                break;
+            case 5: translatedRating = "Crushed It!";
+                break;
+            default: translatedRating = "Unrated";
+                break;
+        }
+        return translatedRating;
+    }
+
+}
+<style>
+    .dropdowncontainer {
+        cursor: pointer;
+        color: gray;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+        .dropdowncontainer header {
+            margin: 0px;
+        }
+
+        .dropdowncontainer ul {
+            list-style: none;
+            text-align: left;
+            margin: 0px;
+            position: absolute;
+            z-index: 9999;
+        }
+
+        .dropdowncontainer .dropdownlist {
+            display: none;
+            background-color: white;
+            padding: 5px;
+            width: 400px;
+            top: -295px;
+            box-shadow: 2px 2px 5px gray;
+        }
+
+    .dropdownlist li {
+        float: left;
+        margin-bottom: 10px;
+        border-bottom: 1px inset gray;
+    }
+    /*.dropdownlist li:nth-child(even) {
+            background-color:white;
+            }*/
+    .dropdowncontainer .selectionelement {
+        width: 50px;
+        background-color: white;
+        padding: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 3px;
+        margin-top: 10px;
+        border: 1px solid gray;
+    }
+
+    .dropdowncontainer .menuimg {
+        float: left;
+        width: 30px;
+        margin-right: 10px;
+    }
+
+        .dropdowncontainer .menuimg img {
+            margin-top: 7px;
+            vertical-align: middle;
+        }
+
+    .dropdowncontainer .menudescription {
+        float: right;
+        width: 325px;
+        margin-left: 20px;
+    }
+
+    .dropdowncontainer .dropdownlist li:hover {
+        background-color: lightgray;
+    }
+
+    .dropdowncontainer .menudescription span {
+        color: #888;
+    }
+
+    .dropdowncontainer .menudescription h3 {
+        margin: 0px;
+    }
+
+    .graded {
+        background-color: orange !important;
+        color: black !important;
+        font-weight: 600 !important;
+        text-align: center !important;
+        color: black !important;
+        font-size: 15pt !important;
+    }
+</style>
+<script>
+    function opendropdown_@(gid)() {
+        $("#dropdownlist_@gid").css("display", "inline-block");
+
+    }
+    $(document).ready(function () {
+
+        
+
+        @if (!string.IsNullOrEmpty(Model[1]) && int.Parse(Model[1].Trim())>0)
+        {
+            <text>
+        $($("#dropdownlist_@gid").parent().children(".selectionelement")).html("@translateRating(int.Parse(Model[1].Trim()))");
+        $($("#dropdownlist_@gid").parent().children(".selectionelement")).addClass("graded");
+        </text>
+        }
+
+        $("#dropdownlist_@gid li").click(function () {
+            $("#dropdownlist_@gid").data("value", $(this).data("rating"));
+
+            $($("#dropdownlist_@gid").parent().children(".selectionelement")).html($("h3", $(this)).html());
+            $("#dropdownlist_@gid").hide();
+            $($("#dropdownlist_@gid").parent().children(".selectionelement")).addClass("graded");
+            @if(Model[2]!="")
+              {
+                  <text>
+
+            x = eval("@Html.Raw(Model[2])");
+            </text>
+              }
+            // savegrading("@Model[0]", null, $(this).data("rating"));
+        });
+
+    });
+
+</script>
+
+<div class="dropdowncontainer col-lg-6">
+    <ul class="dropdownlist" id="dropdownlist_@gid" data-value="@(string.IsNullOrEmpty(Model[1]) ? "" : Model[1])">
+        <li data-rating="1">
+
+            <div class="menuimg"><img src="https://cdn4.iconfinder.com/data/icons/business-4/500/bad_dead_emoticon_fail_sad-512.png" width="40"></div>
+            <div class="menudescription">
+                <h3>Not A Fit</h3>
+                <span>
+                    Not getting the job done and inhibiting results or performance of the company and others.
+                </span>
+            </div>
+        </li>
+        <li data-rating="2">
+            <div class="menuimg"><img src="https://cdn1.iconfinder.com/data/icons/the-competition/450/cry-512.png" width="40"></div>
+            <div class="menudescription">
+                <h3>Underachieving</h3>
+                <span>
+                    Performance fell short of expectations and needs to improve. Full results/goals were not achieved.
+                </span>
+            </div>
+        </li>
+        <li data-rating="3">
+            <div class="menuimg"><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/14892-200.png" width="40"></div>
+            <div class="menudescription">
+                <h3>Orange</h3>
+                <span>
+                    Accomplished goals and delivered work as expected. Solid Performance.
+                </span>
+            </div>
+        </li>
+        <li data-rating="4">
+            <div class="menuimg"><img src="https://s3.amazonaws.com/piktochartv2-dev/v2/uploads/7de1cf3f-a7d6-410f-8c7e-1cd702363e3f/55e1abeec6fe63d9104ae5a2e35ea5fd0e6adb90_original.png" width="40"></div>
+            <div class="menudescription">
+                <h3>G'in the JD!</h3>
+                <span>
+                    Getting the job done, the Avalara way – with high quality and superior results. High Performance.
+                </span>
+            </div>
+        </li>
+        <li data-rating="5">
+            <div class="menuimg"><img src="https://cdn3.iconfinder.com/data/icons/baseball-icons-1/383/Baseball_Hit-512.png" width="40"></div>
+            <div class="menudescription">
+                <h3>CRUSHED IT!</h3>
+                <span>
+                    Hit it out of the park – performance stands out at a level not achieved by others. Exceptional Performance.
+                </span>
+            </div>
+        </li>
+    </ul>
+    <span class="selectionelement" onclick="opendropdown_@(gid)()">
+        --- Click To Select Grade ---
+    </span>
+
+
+</div>

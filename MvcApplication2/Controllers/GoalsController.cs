@@ -464,7 +464,7 @@ namespace MvcApplication2.Controllers
             }
             else
             {
-                if (goalsviewmodel.EvaluationStatus < EvalCycleStatus.PUBLISHED)
+                if (goalsviewmodel!=null && goalsviewmodel.EvaluationStatus < EvalCycleStatus.PUBLISHED)
                     goalsviewmodel.EvaluationStatus = EvalCycleStatus.NO_ACTION_REQUIRED;
                 var reportee = employeeService.GetEmployee(idOfEmployeeForGoals.Value);
                 if (reportee != null)

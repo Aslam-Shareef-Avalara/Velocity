@@ -1,0 +1,73 @@
+﻿@model IEnumerable<DataService.InventoryManagement.VendorBankDetail>
+
+@{
+    ViewBag.Title = "Index"; 
+  Layout = "~/Views/Shared/_InvLayoutPage.cshtml";
+}
+<style type='text/css'>
+    
+    td:nth-child(1){text-align: right;}
+    td:nth-child(2){text-align: right;}
+</style>
+<h2>Index</h2>
+<h4></h4>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.BeneficiaryName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccountNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BankName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Branch)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MICR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IFSC)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vendor.Name)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BeneficiaryName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccountNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BankName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Branch)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MICR)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IFSC)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vendor.Name)
+        </td>
+
+    </tr>
+}
+
+</table>

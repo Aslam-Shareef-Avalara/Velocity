@@ -1,0 +1,128 @@
+﻿@using X.Scaffolding.Core
+
+@model List<DataService.EmployeeExtended>
+
+@{
+    ViewBag.Title = "Reviewees";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (Model.Count > 0)
+{
+    <div id="myteam" class="row">
+        <div class="large-12 columns " style="text-align:center;">
+            <div class=" panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title-box">
+                        <h3 class="panel-title">
+                           Reviewees:
+
+                        </h3>
+
+                    </div>
+
+
+                </div>
+
+                <div class="panel-body ">
+                    <ul id="teammembers" class="owl-carousel">
+                        @foreach (DataService.EmployeeExtended emp in Model)
+                        {
+                            
+                            if (emp.gid.ToString() == ((DataService.Employee)ViewBag.Me).gid.ToString())
+                            {
+                                continue;
+                            }
+                            <li class="badgeable" onmouseover="switchimage(this)" onmouseout="switchimage(this)">
+                                <span id="mainbadgecount_@emp.gid.ToString().ToLower()" class="custombadge"></span>
+
+                                <a href="@Url.Content("~/goals?")reporteeid=@emp.gid.ToString().ToLower()">
+                                    @*'@u.ToString().ToLower()'*@
+                                    @if (emp.ProfilePix == null || emp.ProfilePix.Count() == 0)
+                                    {
+                                        <img class="tooltips" title="" data-uid="@emp.gid.ToString().ToLower()" src="@Url.Content("~/images/follower-man-user-login-round-512.png")" style="width:100px" />
+                                    }
+                                    else
+                                    {
+
+                                        <img class="tooltips actualphoto" title="" data-uid="@emp.gid.ToString().ToLower()" src="@(@"data:image/png;base64," + Convert.ToBase64String(emp.ProfilePix))" style="width:100px;" />
+                                    }
+
+                                </a>
+                                <br />
+                                @emp.FirstName @emp.LastName
+                                <br />
+                                @if (emp.HasReportees) { 
+                                <a class="btn btn-sm  btn-default" href="~/employee?gid=@emp.gid.ToString().ToLower()">Reportees</a>
+                                }
+                                <a class="btn btn-sm  btn-default" href="@Url.Content("~/goals?")reporteeid=@emp.gid.ToString().ToLower()">Goals</a>
+                            </li>
+                        }
+
+                    </ul>
+                    <div style="width:100%; text-align:center; padding-top:5px;">You can click each team members photo/icon above to view his/her goals.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    var selectedmenuid = "reviewies";
+
+</script>
+
+<style>
+    #teammembers {
+        list-style: none;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+        #teammembers li {
+            display:inline-block;
+            padding: 20px;
+            margin-right: 25px;
+        }
+
+        #teammembers .owl-wrapper div.owl-item li.badgeable {
+            float: none;
+        }
+
+    #ActionItems ul li {
+        list-style: decimal;
+        color: gray;
+    }
+
+    #ActionItems {
+    }
+</style>
+
+<style>
+    .middlerow .columns .card-plain {
+        min-height: 245px !important;
+    }
+
+        .middlerow .columns .card-plain h4 {
+            text-align: center;
+        }
+
+    .chart {
+        text-align: center;
+    }
+
+    .knob-label {
+        color: #333;
+        font-size: 12px;
+        font-weight: 100;
+        margin-bottom: 0.3em;
+        text-align: center;
+    }
+
+
+    #ActionItems {
+        /*height: 191px !important;*/
+        overflow-y: auto;
+    }
+</style>

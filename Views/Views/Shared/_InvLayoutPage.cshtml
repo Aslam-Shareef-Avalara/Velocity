@@ -1,0 +1,715 @@
+﻿<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    @*Set the viewport width to device width for mobile *@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewBag.Title - Velocity</title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/content/templatemo_style.css">
+    @Styles.Render("~/Content/foundation/css")
+
+    @RenderSection("head", required: false)
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/knob/jquery.knob.js"></script>
+    <script src="~/Scripts/badger.min.js"></script>
+
+
+
+</head>
+<body>
+    <link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+    @*<link href="~/Content/component.css" rel="stylesheet" />*@
+    @*<link href="~/Content/normalize.css" rel="stylesheet" />*@
+    <link href="~/Content/badger.min.css" rel="stylesheet" />
+    <link href="~/Content/aqvatarius.css" rel="stylesheet" />
+    <link href="~/Content/intro/introjs.min.css" rel="stylesheet" />
+
+    @*<div class="row topmenu">
+
+            <div class="large-11 small-11 columns fi-torso" style="color: white;padding-bottom: 10px;text-align: right;">
+                Hello @ViewBag.Me.FirstName !
+            </div>
+        </div>*@
+    @functions{
+        public bool isProfileComplete()
+        {
+            if (ViewBag.Me == null)
+                return false;
+            DataService.Employee me = (DataService.Employee)ViewBag.Me;
+
+            return !(string.IsNullOrEmpty(me.Department) ||
+                        string.IsNullOrEmpty(me.FirstName) ||
+                        string.IsNullOrEmpty(me.LastName) ||
+                        string.IsNullOrEmpty(me.Mobile) ||
+                        !me.DoB.HasValue
+                        );
+
+
+        }
+    }
+
+
+
+    <div class="row maincontent" style="height: 1000px;">
+
+
+
+
+
+
+        <div class="off-canvas-wrap move-right" data-offcanvas>
+
+            <div class="inner-wrap">
+
+                <div class="large-1 small-3 columns  ">
+
+
+                    <a class="left-off-canvas-toggle" href="#"><i class="fi-list"></i></a>
+
+
+                    <nav class="navigation overflow" id="main-nav">
+                        <!-- Off Canvas Menu -->
+
+                        <aside class="left-off-canvas-menu" data-position='right' data-step="1" data-intro="These links help you to navigate around the site. ">
+
+
+
+                            <div class="icon-bar vertical four-up">
+
+                                <a id="penav_me" class="item" href="~/employee/aboutme">
+
+                                    <i class="fi-results-demographics"></i>
+
+                                    <label>Dashboard</label>
+
+                                </a>
+                                <br>
+                                <a id="penav_goals" class="item" href="~/goals/">
+
+                                    <i class="fi-target"></i>
+
+                                    <label>My Evaluations</label>
+
+                                </a>
+
+                                @if (Session[DataService.CONSTANTS.HAS_A_TEAM] != null && (bool)Session[DataService.CONSTANTS.HAS_A_TEAM] == true)
+                                {
+                                    <br>
+                                    <a id="penav_team" class="item" href="~/employee/">
+
+                                        <i class="fi-torsos-all"></i>
+
+                                        <label>Team</label>
+
+                                    </a>
+                                }
+                                @if (Session[DataService.CONSTANTS.HAS_REVIEWIES] != null && (bool)Session[DataService.CONSTANTS.HAS_REVIEWIES] == true)
+                                {
+                                    <br>
+                                    <a id="penav_reviewies" class="item" href="~/employee/Reviewees">
+
+                                        <i class="fi-magnifying-glass" style="font-size:25px!important;display:inline-block"></i>
+                                        <i class="fi-torso-business" style="font-size:25px!important;display:inline-block"></i>
+
+                                        <label>Reviewees</label>
+
+                                    </a>
+                                }
+                                <br>
+                                <a id="penav_profile" class="item" href="~/employee/edit" title="@(isProfileComplete() ? "" : "You profile is incomplete!")" alt="@(isProfileComplete() ? "" : "You profile is incomplete!")">
+
+                                    <i class="fi-torso @(isProfileComplete()?"":"newlink")"></i>
+
+                                    <label class="@(isProfileComplete()?"":"newlink")">Profile</label>
+
+                                </a>
+                                @if (User.IsInRole("HrAdmin") || User.IsInRole("Hr"))
+                                {
+                                    <br>
+                                    <a id="penav_hr" class="item" href="~/controlcenter/">
+
+                                        <i class="fi-sheriff-badge"></i>
+
+                                        <label>HR</label>
+
+                                    </a>
+                                }
+                                <br>
+                                <a id="penav_invmgmt" class="item" href="~/inventory">
+
+                                    <i class="fi-shopping-cart"></i>
+
+                                    <label>Inventory</label>
+
+                                </a>
+                                <br>
+                                <a id="penav_logout" class="item" href="~/account/logout">
+
+                                    <i class="fi-power"></i>
+
+                                    <label>Logout</label>
+
+                                </a>
+                                @*    <a class="item">
+
+                                        <i class="fi-home"></i>
+
+                                        <label>Mail</label>
+
+                                    </a>
+
+                                    <a class="item">
+
+                                        <i class="fi-home"></i>
+
+                                        <label>Like</label>
+
+                                    </a>*@
+
+                            </div>
+
+
+
+                        </aside>
+                    </nav>
+                </div>
+                <nav class="top-bar" data-topbar role="navigation">
+                    <section class="top-bar-section">
+                        <!-- Right Nav Section -->
+                        <ul>
+                            <li><a href="~/inventory/">Dashboard</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Inventory</a>
+                                <ul class="dropdown">
+                                    <li><a href="~/ItemMaster">Manage Inventory</a></li>
+                                    <li><a href="~/ItemMaster/Create">New Item</a></li>
+                                    <li><a href="~/ItemType">Inventory Type</a></li>
+                                    <li><a href="~/InventoryClass">Inventory Class</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="#">Vendors</a>
+                                <ul class="dropdown">
+                                    <li><a href="~/Vendor">Manage</a></li>
+                                    <li><a href="~/Vendor/Create">New Vendor</a></li>
+                                    <li><a href="~/VendorAddress/Create">Add Vendor Address</a></li>
+                                    <li><a href="~/VendorContact/Create">Add Vendor Contact</a></li>
+                                    <li><a href="~/VendorTaxDetail/Create">Add Vendor Tax Details</a></li>
+                                    <li><a href="~/VendorBankDetail/Create">Add Vendor Bank Details</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="#">Actions</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">New Invoice</a></li>
+                                    <li><a href="#">New Quote</a></li>
+                                    <li><a href="#">New GNR</a></li>
+                                    <li><a href="#">New PR</a></li>
+                                    <li><a href="#">New PO</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="#">Manage</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Invoice</a></li>
+                                    <li><a href="#">Quote</a></li>
+                                    <li><a href="#">GNR</a></li>
+                                    <li><a href="#">PR</a></li>
+                                    <li><a href="#">PO</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <!-- Left Nav Section -->
+
+                    </section>
+                </nav>
+                <div class="large-12  columns wrapper rightcontent">
+                    @RenderBody()
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    @if (Session["impersonator"] != null && ((DataService.Employee)Session["impersonator"]).gid.ToString() != ViewBag.Me.gid.ToString())
+    {
+        DataService.Employee target = (DataService.Employee)ViewBag.Me;
+        <div class="stopimpersonating ">
+            You are browsing as @target.FirstName @target.LastName.
+            <a class="btn btn-warning rounded" style="padding:5px;margin:5px;" href="@Url.Content("~/controlcenter/stopimpersonating")">Click to stop impersonating</a>
+        </div>
+    }
+
+
+    <footer class="row">
+        <div class="large-12 columns">
+            <hr />
+            <div class="row">
+                <div class="large-6 columns">
+                    <p>© Copyright no one at all. Go to town.</p>
+                </div>
+                <div class="large-6 columns">
+                    @*<ul class="inline-list right">
+                            <li><a href="#">Section 1</a></li>
+                            <li><a href="#">Section 2</a></li>
+                            <li><a href="#">Section 3</a></li>
+                            <li><a href="#">Section 4</a></li>
+                        </ul>
+                    *@
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <style>
+        .error {
+            color: red;
+            font-family: verdana;
+            font-size: 10pt;
+            font-weight: bolder;
+        }
+
+        #penav_me {
+            margin-top: 10px;
+        }
+
+        .stopimpersonating {
+            position: fixed;
+            left: 50%;
+            bottom: 0px;
+            background-color: rgba(253,253,90,1);
+            color: black;
+            padding: 3px;
+            padding-left: 15px;
+            padding-right: 15px;
+            border: thin solid gray;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            transform: translateX(-50%);
+        }
+
+            .stopimpersonating a {
+                color: white;
+            }
+
+        .icon-bar a.selected {
+            background-color: #f5f5f5;
+            color: black !important;
+            border-bottom-left-radius: 4px;
+            border-top-left-radius: 4px;
+        }
+
+        .icon-bar > .item:hover > i, .icon-bar > .item:hover > label {
+            color: #FFF;
+        }
+
+        .icon-bar > .item.selected:hover > i, .icon-bar > .item.selected:hover > label, .icon-bar a.selected > i, .icon-bar a.selected > label {
+            color: black;
+        }
+        /*.columns.sidebar {
+                float: left;
+                position: fixed;
+            }*/
+
+        .badgeable {
+            position: relative;
+        }
+
+        .maincontent {
+            padding-top: 10px;
+        }
+
+        /*.topmenu {
+                background-color: #EFC849;
+                position: fixed;
+                box-shadow: rgba(0,0,0,0.2) 5px 5px;
+                z-index: 12000;
+            }*/
+
+        .custombadge {
+            background: #ff0000 none repeat scroll 0 0;
+            border: 2px solid #fff;
+            border-radius: 11px;
+            color: #fff;
+            display: none;
+            font-weight: 600;
+            height: 22px;
+            padding: 1px;
+            position: absolute;
+            right: 4px;
+            text-align: center;
+            top: 0;
+            width: 22px;
+            z-index: 999;
+            box-shadow: 2px 1px lightgray;
+        }
+
+        .sidebar {
+            /*background-color: #EFC849;*/
+            color: black;
+            height: 100%;
+        }
+
+        /*.gn-menu-main,
+        .gn-menu-main ul {
+            margin: 0;
+            padding: 10px;
+            color: white;
+            list-style: none;
+            text-transform: none;
+            font-weight: 300;
+            font-family: 'Lato', Verdana, sans-serif;
+            line-height: 60px;
+        }*/
+
+        .gn-menu-main a {
+            display: block;
+            height: 100%;
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .gn-menu-main {
+            margin-right: 0px;
+        }
+
+        .vertical_nav {
+            width: 100% !important;
+            padding-left: 5px;
+            top: 5px;
+        }
+        /*.no-touch .gn-menu-main a:hover,
+        .no-touch .gn-menu li.gn-search-item:hover,
+        .no-touch .gn-menu li.gn-search-item:hover a {
+            color: black;
+            text-shadow: 5px 5px 2px #333;
+        }*/
+        h3.title {
+            color: gray;
+        }
+
+        .toggle_menu {
+            box-shadow: 0 4px #EFC849 inset, 0 6px white inset, 0 12px #EFC849 inset, 0 15px white inset, 0 21px #EFC849 inset, 0 24px white inset;
+            cursor: pointer;
+            display: block;
+            height: 20px;
+            position: absolute;
+            text-indent: -9999px;
+            top: 13px;
+            width: 20px;
+            z-index: 100;
+        }
+
+        .inner-wrap {
+            width: auto;
+        }
+
+        .move-right .inner-wrap {
+            -ms-transform: none;
+            -webkit-transform: none;
+            -moz-transform: none;
+            -ms-transform: none;
+            -o-transform: none;
+            transform: none;
+            margin-left: 114px;
+        }
+
+        .left-off-canvas-menu {
+            -ms-transform: none;
+            -webkit-transform: none;
+            -moz-transform: none;
+            -ms-transform: none;
+            -o-transform: none;
+            transform: none;
+            position: fixed;
+            width: 0;
+            height: 100%;
+            background: #374659 none repeat scroll 0 0;
+        }
+
+        .move-right .left-off-canvas-menu {
+            width: 86px;
+        }
+
+        .icon-bar {
+            background: #374659 none repeat scroll 0 0;
+        }
+
+        .move-right .exit-off-canvas {
+            display: none;
+        }
+
+        .left-off-canvas-toggle {
+            display: none;
+            margin-top: 1rem;
+            margin-left: 1rem;
+            font-size: 3rem;
+            color: #333;
+            /*transition: all .25s ease-in-out;*/
+        }
+
+            .left-off-canvas-toggle:focus {
+                color: #333;
+            }
+
+            .left-off-canvas-toggle:hover {
+                color: #8c8c8c;
+                /*transition: all .25s ease-in-out;*/
+            }
+
+        .ad-block {
+            margin-bottom: 2rem;
+        }
+
+        .icon-bar > * label {
+            font-size: 13px !important;
+            font-weight: 400;
+            line-height: 19px;
+        }
+
+        .icon-bar > * i {
+            font-size: 28px !important;
+            font-weight: 400;
+            line-height: 19px;
+        }
+
+        .left-off-canvas-menu {
+            box-shadow: none !important;
+        }
+
+        .introjs-button {
+            margin-right: 5px;
+        }
+
+        .introjs-prevbutton {
+            border-right: 1px solid #d4d4d4;
+        }
+
+        .icon-bar.vertical .item, .icon-bar.small-vertical .item {
+            padding-left: 6px !important;
+        }
+
+        .icon-bar a {
+            height: auto !important;
+        }
+
+        /* Chrome, Safari, Opera */
+        @@-webkit-keyframes example {
+            0% {
+                color: #999;
+            }
+
+            25% {
+                color: #55C7C7;
+            }
+
+            50% {
+                color: #00FFFF;
+            }
+
+            75% {
+                color: #55C7C7;
+            }
+
+            100% {
+                color: #85A6A6;
+            }
+        }
+
+
+        @@keyframes newlinkcolors {
+            0% {
+                color: #999;
+            }
+
+            25% {
+                color: #55C7C7;
+            }
+
+            50% {
+                color: #00FFFF;
+            }
+
+            75% {
+                color: #55C7C7;
+            }
+
+            100% {
+                color: #85A6A6;
+            }
+        }
+
+        .newlink {
+            color: #999;
+            -webkit-animation-name: newlinkcolors; /* Chrome, Safari, Opera */
+            -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+            -webkit-animation-iteration-count: infinite; /* Chrome, Safari, */
+            animation-name: newlinkcolors;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+        }
+    </style>
+    <style>
+        .introjs-tooltip {
+            /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,cccccc+100;Gren+3D */
+            background: rgb(238,238,238); /* Old browsers */
+            background: -moz-linear-gradient(top, rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+        }
+    </style>
+
+    @Scripts.Render("~/bundles/foundation")
+
+    @*<script src="~/Scripts/classie.js"></script>
+        <script src="~/Scripts/gnmenu.js"></script>
+    *@
+    @*<script src="~/Scripts/sidebarEffects.js"></script>*@
+
+    @*<link href="~/Content/normalize.css" rel="stylesheet" />*@
+    @*<link href="~/Content/demo.css" rel="stylesheet" />*@
+    @*<link href="~/Content/component.css" rel="stylesheet" />*@
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">*@
+    @*<link href="~/Content/vertical-responsive-menu.min.css" rel="stylesheet" />*@
+    @*<script src="~/Scripts/vertical-responsive-menu.min.js"></script>*@
+    <script>
+
+        $(document).foundation();
+        function sideNav() {
+
+            if ($(window).width() < 769) {
+
+                $('.off-canvas-wrap').removeClass('move-right');
+
+                $('.left-off-canvas-toggle').show();
+
+            } else {
+
+                $('.off-canvas-wrap').addClass('move-right');
+
+                $('.left-off-canvas-toggle').hide();
+
+            }
+
+        }
+
+        function starttour(pageid) {
+            @if (ViewBag.Me!=null && ((DataService.Employee)ViewBag.Me).FirstTime.HasValue && ((DataService.Employee)ViewBag.Me).FirstTime.Value == false)
+        {
+            @:return;
+                                                }
+            $.get("@Url.Content("~/home/getSessionValue?key=")" + pageid, function (r) {
+                if (r == "") {
+                    var introguide = introJs();
+                    introguide.start();
+                    $.post("@Url.Content("~/home/addtosession")", { "key": pageid, "value": "1" });
+                }
+            });
+
+
+
+        }
+        @*function markPageAsAssisted(pageid)
+    {
+        $.post("@Url.Content("~/home/addtosession")", { "key": "pageshown", "value": pageid });
+    }*@
+        function markasexpert() {
+            $.post("@Url.Content("~/home/markasexpert")");
+        }
+        (function () {
+
+            if (selectedmenuid == null || selectedmenuid == undefined || selectedmenuid == "undefined")
+                return;
+            $("#penav_" + selectedmenuid).addClass("selected");
+        })();
+        $(window).resize(function () {
+
+            sideNav();
+
+        });
+        $(function () {
+            @if (!Request.Url.ToString().ToLower().Contains("employee/aboutme"))
+            {
+               @: $("aside").removeAttr("data-step").removeAttr("data-intro");
+                                            }
+
+            // var startbtn   = $('#startdemotour');
+        });
+        $(document).ajaxError(function (event, xhr, settings) {
+            var isDirty = false;
+            var commonAlertText = "Oops! Looks like you have been inactive for quite some time. You will have to re-authenticate yourself. ";
+            var textAlert = "Any changes you made just now were not saved. Please copy the unsaved text to notepad and then refresh the page  else you will lose them.";
+            try {
+                $("textarea,input:text").each(function (i, o) {
+                    isDirty = $(o).is(":visible");
+                    if (isDirty)
+                        return false;
+                });
+                if (xhr.responseText.indexOf("You Logged out") > 0 || xhr.status == 403) {
+                    if (!isDirty) {
+                        window.location.href = "@Url.Content("~/account/login")";
+                    }
+                    else
+                        alert(commonAlertText + textAlert);
+                }
+            }
+            catch (x) { }
+        });
+
+
+        //var site = new Bamboo();
+        //new gnMenu(document.getElementById('gn-menu'));
+    </script>
+    <div id="downtimewarning">
+        @Html.Partial("MaintenenceWarning");
+    </div>
+    <script src="~/Scripts/intro.js"></script>
+    @*Use the Scripts section to define page specific scripts*@
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                $.post("@Url.Content("~/home/keepalive")", function (r) {
+                    if (r.isoffline)
+                        window.location.reload();
+                    if (r.scheduled) {
+                        $("#downtimewarning").load("@Url.Content("~/home/ScheduledDowntimeWarning")");
+                    }
+                });
+            }, 15000);
+            $('input').each(function (i, o) {
+                if ($(o).data("val-required") != null) {
+                    $(o).closest(".form-group").children("label").prepend("<i class='error'>* </i> ");
+                }
+            });
+
+
+
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("h2").each(function (i, o) {
+                if ($.trim($(o).html()) == "Create" || $.trim($(o).html()) == "Edit") {
+                    $(o).html($(o).html() + " @ViewBag.EntityName");
+                }
+            });
+        });
+    </script>
+
+
+
+</body>
+</html>

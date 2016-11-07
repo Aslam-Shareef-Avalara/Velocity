@@ -94,7 +94,7 @@ namespace MvcApplication2.Controllers
         {
 
 
-            string sql = "SELECT Em.EmpNo, Em.EmpFirstName, EM.EmpLastName, EM.Sex,EM.BirthDate,EM.JoinedOn,EM.InActiveFrom,EM.Email,EM.ReportTo,EM.Designation,EM.CostCode From C01PR0100 EM";
+            string sql = "SELECT Em.EmpNo, Em.EmpFirstName, EM.EmpLastName, EM.Sex,EM.BirthDate,EM.JoinedOn,EM.InActiveFrom,EM.Email,EM.ReportTo,EM.Designation,EM.CostCode From C01PR0100 EM where Em.EmpFirstName<>'Admin'";
             DataContext dc = new DataContext(ConfigurationManager.ConnectionStrings["ascent"].ConnectionString);
             Table<C01PR0100> ascentData = dc.GetTable<C01PR0100>();
             //SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ascent"].ConnectionString);
@@ -121,6 +121,7 @@ namespace MvcApplication2.Controllers
                             }
                             catch
                             {
+                                logger.Error("Error getting AD details for " + ascentRec.EmpFirstName + " - " + ascentRec.EmpLastName);
                                 continue;
                             }
 
@@ -133,7 +134,9 @@ namespace MvcApplication2.Controllers
                             employee.Email = ascentRec.Email;
                             employee.OrgEmpId = int.Parse(ascentRec.EmpNo).ToString();
                             db.Employees.Add(employee);
+                            logger.Info("Saving " + employee.FirstName + " - " + employee.LastName);
                             db.SaveChanges();
+                            logger.Info("SAVED " + employee.FirstName + " - " + employee.LastName);
                         }
                         catch (Exception x)
                         {
@@ -142,9 +145,14 @@ namespace MvcApplication2.Controllers
                         }
                         emp = db.Employees.FirstOrDefault(x => x.OrgEmpId == s);
                     }
+                    else
+                    {
+                        emp.FirstTime = false;
+                    }
                     emp.FirstName = ascentRec.EmpFirstName;
                     emp.LastName = ascentRec.EmpLastName;
                     emp.Gender = ascentRec.Sex;
+                    emp.OrgEmpId = int.Parse(ascentRec.EmpNo).ToString();
                     try
                     {
                         emp.DoB = DateTime.ParseExact(ascentRec.BirthDate, "yyyyMMdd", CultureInfo.CurrentCulture);
@@ -174,7 +182,7 @@ namespace MvcApplication2.Controllers
                     }
                     emp.Designation = ascentRec.Designation;
                     emp.Department = ascentRec.CostCode;
-                    emp.FirstTime = true;
+                    
                     
                     //TBD: When merging into inv tool, need to move this code to DepartmentId col
                     db.SaveChanges();
@@ -192,10 +200,12 @@ namespace MvcApplication2.Controllers
                                 ve.PropertyName, eve.Entry.CurrentValues.GetValue<object>(ve.PropertyName), ve.ErrorMessage) + "  **** "; 
                         }
                     }
+                    
                     LogError(e, validationerror);
                 }
                 catch (Exception x)
                 {
+                    logger.Info("UNABLE to save employee data UNKNOWN Exception");
                     LogError(x, x.Message);
                 }
             }
@@ -481,7 +491,7 @@ namespace MvcApplication2.Controllers
                     ViewBag.PEName = db.EvaluationCycles.FirstOrDefault(x => x.Id == evalcycleid).Title + " (Evaluation Phase)";
 
                 ViewBag.EvalCycleId = evalcycleid;
-
+                
                 pestatistics = db.Database.SqlQuery<PEStatistics>("select   count(EmployeeId)  as Count , status as GoalStatus from (select employeeid, gs.Status as status ,gs.id from Goals g  right   join goalStatus gs on g.status =gs.id  and Fixed=0 and evalcycleid= " + evalcycleid.ToString() + " where gs.Id>4 group by EmployeeId,gs.status, gs.id ) as a  group by status, Id order by Id").ToList();
             }
             List<PEStatistics> goalStats = null;

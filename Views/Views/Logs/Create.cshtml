@@ -1,0 +1,92 @@
+﻿@using X.Scaffolding.Core
+@model DataService.Log
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Date
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapDatePickerFor(model => model.Date)                 
+                @Html.ValidationMessageFor(model => model.Date)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Thread
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Thread)                 
+                @Html.ValidationMessageFor(model => model.Thread)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Level
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Level)                 
+                @Html.ValidationMessageFor(model => model.Level)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Logger
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Logger)                 
+                @Html.ValidationMessageFor(model => model.Logger)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Message
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Message)                 
+                @Html.ValidationMessageFor(model => model.Message)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Exception
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Exception)                 
+                @Html.ValidationMessageFor(model => model.Exception)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

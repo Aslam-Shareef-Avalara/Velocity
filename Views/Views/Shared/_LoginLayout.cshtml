@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    @*Set the viewport width to device width for mobile *@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewBag.Title - Velocity</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/content/templatemo_style.css">*@
+    @Styles.Render("~/Content/foundation/css")
+
+    @RenderSection("head", required: false)
+    @Scripts.Render("~/bundles/modernizr")
+    @*@Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/knob/jquery.knob.js"></script>
+    <script src="~/Scripts/badger.min.js"></script>*@
+
+
+
+</head>
+<body>
+    @*<link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>*@
+    @*<link href="~/Content/badger.min.css" rel="stylesheet" />*@
+  
+    @*<link href="~/Content/intro/introjs.min.css" rel="stylesheet" />*@
+    <div>
+        @RenderBody()
+    </div>
+    @*@Scripts.Render("~/bundles/foundation")*@
+    <script>
+        //$(document).foundation();
+    </script>
+    @*@RenderSection("scripts", required: false)*@
+    <link href="~/Content/aqvatarius.css" rel="stylesheet" />
+    </body>
+    </html>
