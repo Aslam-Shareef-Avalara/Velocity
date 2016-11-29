@@ -151,28 +151,30 @@
 
                         </div>
                     }
-                    <div class="widget widget-default widget-item-icon">
-                        <div class="widget-item-left">
-                            @if (Model.HrPerson.ProfilePix == null || Model.HrPerson.ProfilePix.Count() == 0)
-                            {
-                                <span class="fa fi-torso"></span>
-                            }
-                            else
-                            {
-                                <img style="width:75px;" alt="@Model.HrPerson.FirstName @Model.HrPerson.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.HrPerson.ProfilePix))" class="actualphoto">
-                            }
-                        </div>
-                        <div class="widget-data">
-                            <div class="widget-int num-count num-count-20px">@Model.HrPerson.FirstName</div>
-                            <div class="widget-title">HR Manager</div>
-                            <div class="widget-subtitle">
-                                <a href="mailto:@Model.HrPerson.Email">@Model.HrPerson.Email</a> |
-                                Office : @Model.HrPerson.Phone | <a href="sip:@Model.HrPerson.Email">Chat on Lync / Skype</a>
+                    @if (Model.HrPerson != null)
+                    {
+                        <div class="widget widget-default widget-item-icon">
+                            <div class="widget-item-left">
+                                @if (Model.HrPerson.ProfilePix == null || Model.HrPerson.ProfilePix.Count() == 0)
+                                {
+                                    <span class="fa fi-torso"></span>
+                                }
+                                else
+                                {
+                                    <img style="width: 75px;" alt="@Model.HrPerson.FirstName @Model.HrPerson.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.HrPerson.ProfilePix))" class="actualphoto">
+                                }
                             </div>
+                            <div class="widget-data">
+                                <div class="widget-int num-count num-count-20px">@Model.HrPerson.FirstName</div>
+                                <div class="widget-title">HR Manager</div>
+                                <div class="widget-subtitle">
+                                    <a href="mailto:@Model.HrPerson.Email">@Model.HrPerson.Email</a> |
+                                    Office : @Model.HrPerson.Phone | <a href="sip:@Model.HrPerson.Email">Chat on Lync / Skype</a>
+                                </div>
+                            </div>
+
                         </div>
-
-                    </div>
-
+                    }
                 </div>
             </div>
 

@@ -63,33 +63,51 @@ namespace MvcApplication2.Controllers
             EmployeeService empService = new EmployeeService(OrgId, AppName);
             Hashtable reporteeList = new Hashtable();
             MvcApplication2.ViewModel.AboutMe me = new ViewModel.AboutMe();
-            ActiveDirectoryHelper adHelper = new ActiveDirectoryHelper();
-            me.Myself = currentUser;
             try
             {
-                me.Coworkers = empService.GetCoworkers(currentUser.gid);
-            }
-            catch { me.Coworkers = new List<Employee>(); }
-            string hradmin = "";
-            //if (Roles.GetUsersInRole("HrAdmin") != null && Roles.GetUsersInRole("HrAdmin").Count() > 0)
-            //    hradmin= Roles.GetUsersInRole("HrAdmin").FirstOrDefault();
-            //else
-            me.HrPerson = adHelper.GetHRManager() ;
-            if (currentUser.Manager.HasValue)
-            {
-                me.Manager = empService.GetManager(currentUser.Manager.Value);// adHelper.GetMyManager();
-            }
-            else me.Manager = null;
-            me.Org = db.Organizations.Where(x => x.Id == OrgId).FirstOrDefault();
-            
-            var reportees = empService.GetReporteesOf(currentUser.gid);
-            foreach (var reportee in reportees)
-            {
-                reporteeList[reportee.gid] = reportee.FirstName + " " + reportee.LastName;
-            }
-            me.Reportees = reporteeList;
+                
+                ActiveDirectoryHelper adHelper = new ActiveDirectoryHelper();
+                me.Myself = currentUser;
+                try
+                {
+                    me.Coworkers = empService.GetCoworkers(currentUser.gid);
+                }
+                catch
+                {
+                    me.Coworkers = new List<Employee>();
+                }
+                string hradmin = "";
+                //if (Roles.GetUsersInRole("HrAdmin") != null && Roles.GetUsersInRole("HrAdmin").Count() > 0)
+                //    hradmin= Roles.GetUsersInRole("HrAdmin").FirstOrDefault();
+                //else
+                try
+                {
+                    me.HrPerson = adHelper.GetHRManager();
+                    if (currentUser.Manager.HasValue)
+                    {
+                        me.Manager = empService.GetManager(currentUser.Manager.Value); // adHelper.GetMyManager();
+                    }
+                    else me.Manager = null;
+                }
+                catch (Exception x)
+                {
+                    logger.Error("Error gettign manager : " + x.Message + x.StackTrace);
+                }
+                me.Org = db.Organizations.Where(x => x.Id == OrgId).FirstOrDefault();
 
-           
+                var reportees = empService.GetReporteesOf(currentUser.gid);
+                foreach (var reportee in reportees)
+                {
+                    reporteeList[reportee.gid] = reportee.FirstName + " " + reportee.LastName;
+                }
+                me.Reportees = reporteeList;
+
+            }
+            catch (Exception x)
+            {
+                logger.Error("Error in ABOUT ME : " + x.Message + x.StackTrace);
+                return View("Error", x.Message);
+            }
             return View("Me",me);
         }
 

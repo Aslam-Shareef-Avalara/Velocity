@@ -28,13 +28,15 @@ namespace DataService
         }
     }
 
-    public class EmployeeExtended : Employee {
+    public class EmployeeExtended : Employee
+    {
         public bool HasReportees = false;
         public Guid RoleId = new Guid();
         public string Role = "";
-        public Employee ManagerObj = new Employee() { FirstName="Not Assigned"};
-        public Employee ReviewerObj = new Employee() { FirstName = "Not Assigned" };
+        public Employee ManagerObj = new Employee() {FirstName = "Not Assigned"};
+        public Employee ReviewerObj = new Employee() {FirstName = "Not Assigned"};
         public string Organization = "";
+
         public EmployeeExtended(Employee e)
         {
             this.Active = e.Active;
@@ -55,7 +57,7 @@ namespace DataService
             this.OrgEmpId = e.OrgEmpId;
             this.OrgId = e.OrgId;
             this.Phone = e.Phone;
-            this.ProfilePix= e.ProfilePix;
+            this.ProfilePix = e.ProfilePix;
             this.UserId = e.UserId;
             this.LastVisit = e.LastVisit;
             using (PEntities dbx = new PEntities())
@@ -80,32 +82,52 @@ namespace DataService
         {
 
         }
+
         public void CreateEmployee(Employee employee, string username)
         {
             bool empExists = false;
-            using (PEntities dbx = new PEntities())
+            try
             {
-                if (empExists=dbx.Employees.Any(x => x.gid == employee.gid))
-                {
-                    employee = dbx.Employees.FirstOrDefault(x => x.gid == employee.gid);
-                     
-                }
+                using (PEntities dbx = new PEntities())
+            {
                 aspnet_Users user = dbx.aspnet_Users.Where(x => x.LoweredUserName == username.ToLower()).SingleOrDefault();
                 if (user == null) throw new Exception("user is not added to any role yet.");
-                if (employee.Manager.HasValue)
+                
+                if (employee == null || string.IsNullOrWhiteSpace(employee.FirstName))
                 {
-                    Guid mgrId = employee.Manager.Value;
-                    Employee mgr = dbx.Employees.SingleOrDefault(x => x.gid == mgrId);
-                    if (mgr == null)
-                        employee.Manager = null;
+                   logger.Error("Employee or Employee name is null");
                 }
+                else
+                {
+                    if (empExists = dbx.Employees.Any(x => x.gid == employee.gid))
+                    {
+                        employee = dbx.Employees.FirstOrDefault(x => x.gid == employee.gid);
+
+                    }
+                    if (employee.Manager.HasValue)
+                    {
+                        Guid mgrId = employee.Manager.Value;
+                        Employee mgr = dbx.Employees.SingleOrDefault(x => x.gid == mgrId);
+                        if (mgr == null)
+                            employee.Manager = null;
+                    }
+                }
+                
+             
                 employee.UserId = user.UserId;
                 if (!empExists)
                     dbx.Employees.Add(employee);
                 dbx.SaveChanges();
             }
-        }
+            }
+            catch (Exception x)
+            {
 
+                logger.Error(x.Message + " -- " + x.StackTrace + " -- Inner Exception -- " + x.InnerException!=null?(x.InnerException.ToString() + x.InnerException.Message + " "+x.InnerException.StackTrace):"None ", x);
+            }
+            
+        }
+        protected readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public Employee GetEmployee(Guid empId)
         {
             using (PEntities dbx = new PEntities())
