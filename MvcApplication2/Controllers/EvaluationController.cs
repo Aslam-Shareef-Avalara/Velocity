@@ -704,6 +704,16 @@ namespace MvcApplication2.Controllers
             string contenttype = "";
             switch (ext.ToLower())
             {
+                case ".zip":
+
+                    contenttype = "application/zip";
+
+                    break;
+                case ".rar":
+
+                    contenttype = "application/x-rar-compressed";
+
+                    break;
 
                 case ".doc":
 

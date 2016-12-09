@@ -53,6 +53,12 @@
         }
     }
 }
+<style>
+    .redbg {
+        background-color:red!important;
+        color:white!important;
+    }
+</style>
 <link href="~/Content/style.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.mousewheel.js"></script>
 <script src="~/Scripts/jquery.easing.1.3.js"></script>
@@ -150,7 +156,7 @@
                 @if (Model.IsEditable)
                 {
                     <span id="manageroverallrating_value">
-                        <select class="ratingdropdown" id="overall_manager_grading" data-value="@(Model.Rating.ManagerOverllRating.HasValue?Model.Rating.ManagerOverllRating.Value : 0)">
+                        <select class="ratingdropdown" id="overall_manager_grading" onchange="overall_manager_gradingChanged()" data-value="@(Model.Rating.ManagerOverllRating.HasValue?Model.Rating.ManagerOverllRating.Value : 0)">
                             <option>-- Select One --</option>
                             <option value="1">Not a fit</option>
                             <option value="2">Underachieving</option>
@@ -576,10 +582,19 @@
     function savetraining(empid)
     {
         var training_needs = "";
+        var i=0;
         $(".traininginput").each(function(i,o){
+            if($.trim($(o).val())=="")
+            {
+                i++;
+            }
             training_needs +=$(o).val() +"$$$";
         });
-
+        if(i>2)
+        {
+            // This can be used when there is a need to enforce the number of trainings 
+            //alert("You need to fill in at least three training needs");
+        }
         $.post("@Url.Content("~/evaluation/savetraining")",{"training":training_needs,"empid":empid}, function(r){
             if(r.status==true)
             {
@@ -688,7 +703,7 @@
         if(anythingChanged)
         {
             alert("Since there are some modifications, the review will be sent back to HR for approval when you click 'OK'.");
-            publishreview(empId);
+            saveoverallreviewcomment(empId);
             return false;
         }
 
@@ -727,6 +742,8 @@
         $("textarea.managercomments.commentrequired").each(function(i,o){
             if($.trim($(o).val())=="")
             {
+                var x = $(o).closest(".va-slice").children("h3.va-title");
+                x.addClass("redbg").removeClass("expandedpane");
                 alert("You missed filling in your evaluation for one or more of the goals/ traits! Please re-verify.");
                 continuePublishing = false;
                 return false;
@@ -760,6 +777,7 @@
 
     function SendToHR(empId)
     {
+        
         $.post("@Url.Content("~/evaluation/PublishReporteeEvaluation")?reporteeId="+empId,function(r){
             $("#publishmsg").show();
             if(r=="error")
@@ -1150,6 +1168,14 @@
     function showtraining()
     {
         $("#training_popup").modal("show");
+    }
+
+    function overall_manager_gradingChanged()
+    {
+        if($("#overall_manager_grading").val()!= $("#overall_manager_grading").data("value"))
+        {
+            anythingChanged=true;
+        }
     }
 </script>
 <style>
