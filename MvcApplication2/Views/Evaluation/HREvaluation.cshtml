@@ -146,7 +146,7 @@
                                     <div class="ratingcontainer pull-right">
                                         <div class="readonlyrating" id="rating_@g.gid">@translateRating(GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value : 0) </div>
                                     </div>
-                                    <div id="selfevaluation_@g.gid" class="selfeval tab-pane ">
+                                    <div id="selfevaluation_@g.gid" class="selfeval tab-pane " style="display:block;">
                                         <div class="scroll-pane" style="display:inline-block;width:100%;overflow-y:auto;">
                                             @{ var se = GetValidEmployeeEvalObj(g.gid);
                                              var attachments = Model.Attachments.Where(x => x.EvaluationGoalId == se.Id && x.EvaluationType == DataService.EvaluationType.SELF_EVALUATION).ToList();
@@ -164,27 +164,27 @@
                                                 </div>
                                             }
                                             <br />
-                                            <div class="q pull-left" id="employeecomment_@g.gid">
-                                                <span class="quote">“</span>@Html.Raw(empEval.Comment)
+                                            <div class="q pull-left" id="employeecomment_@g.gid" style="display:block;width:100%;">
+                                                <span class="quote">“</span><p>@Html.Raw(empEval.Comment)</p>
 
                                             </div>
+                                            <div id="reporteeattachments_@g.gid" class="pull-left clear-fix" style="display:none;padding-top:10px;width:100%">
 
-                                        </div>
-                                        <div id="reporteeattachments_@g.gid" class="pull-left clear-fix" style="display:none;padding-top:10px;width:100%">
-
-                                            @if (attachments != null && attachments.Count > 0)
-                                            {
-
-                                                <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
-
-                                                foreach (DataService.Attachment attachment in attachments)
+                                                @if (attachments != null && attachments.Count > 0)
                                                 {
-                                                    <span class="label label-default label-form">
-                                                        <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
-                                                    </span>
+
+                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
+
+                                                    foreach (DataService.Attachment attachment in attachments)
+                                                    {
+                                                        <span class="label label-default label-form">
+                                                            <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
+                                                        </span>
+                                                    }
                                                 }
-                                            }
+                                            </div>
                                         </div>
+
 
                                     </div>
                                 </div>
@@ -197,34 +197,45 @@
                                     </div>
                                     <div id="mgrevaluation_@g.gid" class="mgreval tab-pane ">
                                         <div class="scroll-pane" style="display:inline-block;width:100%;overflow-y:auto;">
-
-
+                                            @{
+                                                attachments = Model.Attachments.Where(x => x.EvaluationGoalId == mgrE.Id && x.EvaluationType == DataService.EvaluationType.MANAGER_EVALUATION).ToList();
+                                            }
+                                            @if (attachments != null && attachments.Count > 0)
+                                            {
+                                                <div class="pull-right" style="padding-left:15px">
+                                                    <span class="fi-checkbox fi-comment" style="font-size:20px;color:#374659;"></span>
+                                                    <a onclick="toggleMgrattachment(false,'@g.gid')">View Manager Comment (click)</a>
+                                                </div>
+                                                <div class="pull-right" style="padding-left:15px;">
+                                                    <span class="fi-checkbox fi-paperclip" style="font-size:20px;color:#374659;"></span>
+                                                    <a onclick="toggleMgrattachment(true,'@g.gid')">@attachments.Count attachment(s) (click)</a>
+                                                </div>
+                                            }
                                             <br />
-                                            <div class="q pull-left">
-                                                <span class="quote">“</span>@Html.Raw(mgrE.Comment)
+                                            <div class="q pull-left" id="mgrcomment_@g.gid" style="display:block;width:100%;">
+                                                <span class="quote">“</span><p>@Html.Raw(mgrE.Comment)</p>
 
+                                            </div>
+                                            <div id="mgrattachments_@g.gid" class="pull-left clear-fix" style="display:none;padding-top:10px;width:100%">
+
+                                                @if (attachments != null && attachments.Count > 0)
+                                                {
+
+                                                    <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
+
+                                                    foreach (DataService.Attachment attachment in attachments)
+                                                    {
+                                                        <span class="label label-default label-form">
+                                                            <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
+                                                        </span>
+                                                    }
+                                                }
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
-                                <div id="reporteeattachments" class="pull-left clear-fix" style="padding-top:10px;width:100%">
-                                    @{
-                        attachments = Model.Attachments.Where(x => x.EvaluationGoalId == mgrE.Id && x.EvaluationType == DataService.EvaluationType.MANAGER_EVALUATION).ToList();
-                                    }
-                                    @if (attachments != null && attachments.Count > 0)
-                                    {
-
-                                        <p style="margin-bottom:0px!important;margin-top:5px;">Attachments (click to view) :</p>
-
-                                        foreach (DataService.Attachment attachment in attachments)
-                                        {
-                                            <span class="label label-default label-form">
-                                                <a class="attachment" target="_blank" href="@Url.Content("~/")evaluation/download?fileid=@attachment.AttachmentId">@attachment.FileName</a>
-                                            </span>
-                                        }
-                                    }
-                                </div>
+                               
 
                             </div>
 
@@ -587,14 +598,33 @@
         if(showattachments)
         {
             $('#employeecomment_'+goalid).fadeOut();
-            $('#employeecomment_'+goalid).closest(".scroll-pane").css("height", "60px");
+            //$('#employeecomment_'+goalid).closest(".scroll-pane").css("height", "60px");
             $('#reporteeattachments_'+goalid).fadeIn();
         }
         else
         {
             $('#reporteeattachments_'+goalid).fadeOut();
-            $('#employeecomment_'+goalid).closest(".scroll-pane").css("height", "283px");
+           // $('#employeecomment_'+goalid).closest(".scroll-pane").css("height", "283px");
             $('#employeecomment_'+goalid).fadeIn();
+
+        }
+
+
+    }
+    function toggleMgrattachment(showattachments, goalid) {
+        if($('#mgrcomment_'+goalid).data("parentheight")=="undefined")
+            $('#mgrcomment_'+goalid).data("parentheight", $('#mgrcomment_'+goalid).closest(".scroll-pane").css("height"));
+        if(showattachments)
+        {
+            $('#mgrcomment_'+goalid).fadeOut();
+            //$('#employeecomment_'+goalid).closest(".scroll-pane").css("height", "60px");
+            $('#mgrattachments_'+goalid).fadeIn();
+        }
+        else
+        {
+            $('#mgrattachments_'+goalid).fadeOut();
+            // $('#employeecomment_'+goalid).closest(".scroll-pane").css("height", "283px");
+            $('#mgrcomment_'+goalid).fadeIn();
 
         }
 
