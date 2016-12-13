@@ -103,19 +103,27 @@ namespace MvcApplication2.Controllers
                                 { "action", RedirectAction }});
                     return;
                 }
+                else
+                {
+                    filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary {
+                                { "controller", "employee" },
+                                { "action", "aboutme" }});
+                    return;
+                }
                 // var result = new ViewResult { ViewName = View };
-                var vr = new ViewResult();
-                vr.ViewName = View;
-
-                ViewDataDictionary dict = new ViewDataDictionary();
-                dict.Add("Message", "Sorry you are not authorized to perform this action");
-
-                vr.ViewData = dict;
-
-                var result = vr;
-
-                filterContext.Result = result;
+                
             }
+            var vr = new ViewResult();
+            vr.ViewName = View;
+
+            ViewDataDictionary dict = new ViewDataDictionary();
+            dict.Add("Message", "Sorry you are not authorized to perform this action");
+
+            vr.ViewData = dict;
+
+            var result = vr;
+
+            filterContext.Result = result;
         }
     }
 }

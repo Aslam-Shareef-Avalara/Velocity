@@ -12,7 +12,26 @@
 <script type="text/javascript" src="@Url.Content("~/scripts/jquery.jscrollpane.min.js")"></script>
 
 <div id="mycoutercontainer" class="row">
-   
+    <div class="welcomeblock large-6 columns card-plain" style="text-align:center;border-top: 2px solid navy;">
+        @if (Model.Myself.ProfilePix == null || Model.Myself.ProfilePix.Count() == 0)
+        {
+
+            <img alt="@Model.Myself.FirstName @Model.Myself.LastName" style="width:75px" src="@Url.Content("~/images/follower-man-user-login-round-512.png")">
+            <br /><span class="alert-warning" style="padding:3px; padding-right:5px;padding-left:5px; border-radius:2px;"><span class="fi fi-alert" style="color:white;font-weight:600;font-size:20px;padding-right:5px;"></span>Looks like you dont have a photo in outlook!</span>
+        }
+        else
+        {
+            <img style="width:100px;margin-top:15px;" alt="@Model.Myself.FirstName @Model.Myself.LastName" src="@(@"data:image/png;base64," + Convert.ToBase64String(Model.Myself.ProfilePix))" class="actualphoto">
+        }
+        @*<img src="@Url.Content("~/images/follower-man-user-login-round-512.png")" />*@
+        <h1>Welcome, @Model.Myself.FirstName  </h1>
+        This portal is a place where everything related to your job is stored.<br>
+        <br>
+        Your contact info is all setup.<br>
+        <a href="mailto:@Model.Myself.Email">@Model.Myself.Email</a><br>
+        <span class="designation">@Model.Designation</span><br>
+        @Model.Myself.Phone
+    </div>
 
 
     @*This is the template*@
@@ -30,13 +49,13 @@
             </div>
         </div>*@
     <div class="large-6 columns " data-step="2" data-intro="This displays the current evaluation cycle status and how much of it has been completed by you." id="CurrentCycleStatus" style="display:none; height:270px;">
-        <div class=" panel panel-default" style="height: 270px;">
+        <div class=" panel panel-default panel-yellow" style="height: 275px;">
             <div class="panel-heading">
                 <div class="panel-title-box">
                     <h3 class="panel-title">Current Cycle Status:</h3>
                 </div>
             </div>
-            <div class="panel-body " style="height: 225px;">
+            <div class="panel-body " >
                 <div id="currentcyclestatus0" class="currentcyclestatus" style="display:none;">
                     <span id="cycletype0" class="widget-title">Checking PE Cycle Status</span>
                     <br><span id="percentcomplete0" class="medium-text-center" style="color:#3B455D">0%</span>
@@ -112,7 +131,7 @@
    
    
         <div class=" whotocontactblock large-6 columns ">
-            <div class=" panel panel-default">
+            <div class=" panel panel-default panel-green">
                 <div class="panel-heading">
                     <div class="panel-title-box">
                         <h3 class="panel-title">Your Contact Liaisons</h3>
@@ -181,7 +200,7 @@
         </div>
    
     <div class="large-6 columns " id="ActionItems" style="display:none;height: 466px;" data-step="3" data-intro="These are your action items. Some of the action items will have a checkbox against them. Click the checkbox once you are done with the task and do not need to be reminded of it.">
-        <div class=" panel panel-default">
+        <div class=" panel panel-default panel-blue">
             <div class=" panel-heading">
                 <div class="panel-title-box">
                     <h3 class="panel-title">Pending Tasks</h3>
@@ -689,9 +708,9 @@
         background-color:#f9f9f9;
     }
      #CurrentCycleStatus .panel {
-    padding:0px;
+    /*padding:0px;
     padding-left:5px;
-    padding-right:5px;
+    padding-right:5px;*/
     }
      /* Styles specific to this particular page */
 .scroll-pane,
@@ -726,4 +745,22 @@
         width:11px!important;
          border-radius: 5px;
     }
+
+    .panel-default.panel-yellow > .panel-heading {
+    background: #f0ad4e!important;
+    border-color: #f0ad4e !important;
+    color: white !important;
+}
+
+    .panel-default.panel-blue > .panel-heading {
+    background: #337ab7!important;
+    border-color: #337ab7!important;
+    color: #fff!important;
+}
+    .panel-default.panel-green > .panel-heading {
+    background: #5cb85c!important;
+    border-color: #5cb85c!important;
+    color: white;
+}
+
 </style>
