@@ -83,8 +83,7 @@ namespace DataService
         public virtual DbSet<EmployeeSkill> EmployeeSkills { get; set; }
         public virtual DbSet<EmploymentHistory> EmploymentHistories { get; set; }
         public virtual DbSet<BulkNotificationLog> BulkNotificationLogs { get; set; }
-
-  
+    
         public virtual ObjectResult<string> aspnet_AnyDataInTables(Nullable<int> tablesToCheck)
         {
             var tablesToCheckParameter = tablesToCheck.HasValue ?

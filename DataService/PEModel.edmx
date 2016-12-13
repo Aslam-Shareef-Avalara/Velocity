@@ -225,6 +225,7 @@
           <Property Name="EmpType" Type="nvarchar" MaxLength="120" />
           <Property Name="LastVisit" Type="datetime" />
           <Property Name="Reviewer" Type="uniqueidentifier" />
+          <Property Name="DepartmentId" Type="bigint" />
         </EntityType>
         <EntityType Name="EmployeeSkills">
           <Key>
@@ -398,7 +399,8 @@ warning 6002: The table/view 'PBlank.dbo.MessageResources' does not have a prima
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
           <Property Name="OrgId" Type="int" Nullable="false" />
           <Property Name="Address1" Type="nvarchar" MaxLength="200" />
           <Property Name="Address2" Type="nvarchar" MaxLength="200" />
@@ -679,15 +681,6 @@ warning 6002: The table/view 'PBlank.System.Activities.DurableInstancing.Service
           <Property Name="ServiceName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ServiceNamespace" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'PBlank.System.Activities.DurableInstancing.SqlWorkflowInstanceStoreVersionTable' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SqlWorkflowInstanceStoreVersionTable">
-          <Property Name="Major" Type="bigint" />
-          <Property Name="Minor" Type="bigint" />
-          <Property Name="Build" Type="bigint" />
-          <Property Name="Revision" Type="bigint" />
-          <Property Name="LastUpdated" Type="datetime" />
-        </EntityType>-->
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PBlank.dbo.vw_aspnet_Applications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_aspnet_Applications">
@@ -2238,6 +2231,7 @@ warning 6002: The table/view 'PBlank.System.Activities.DurableInstancing.Service
           <NavigationProperty Name="EmployeeSkills" Relationship="PModel.FK_EmployeeSkills_Employees" FromRole="Employee" ToRole="EmployeeSkill" />
           <NavigationProperty Name="EmploymentHistories" Relationship="PModel.FK_EmploymentHistory_Employees" FromRole="Employee" ToRole="EmploymentHistory" />
           <Property Name="Reviewer" Type="Guid" />
+          <Property Name="DepartmentId" Type="Int64" />
         </EntityType>
         <EntityType Name="EvaluationConclusion">
           <Key>
@@ -2362,6 +2356,7 @@ warning 6002: The table/view 'PBlank.System.Activities.DurableInstancing.Service
           <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Zip" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="RatingMaster">
           <Key>
@@ -3828,6 +3823,7 @@ warning 6002: The table/view 'PBlank.System.Activities.DurableInstancing.Service
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="PModel.Employee">
               <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
                 <ScalarProperty Name="Reviewer" ColumnName="Reviewer" />
                 <ScalarProperty Name="gid" ColumnName="gid" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -3966,6 +3962,7 @@ warning 6002: The table/view 'PBlank.System.Activities.DurableInstancing.Service
           <EntitySetMapping Name="OrgLocations">
             <EntityTypeMapping TypeName="PModel.OrgLocation">
               <MappingFragment StoreEntitySet="OrgLocations">
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="OrgId" ColumnName="OrgId" />
                 <ScalarProperty Name="Address1" ColumnName="Address1" />

@@ -1,4 +1,11 @@
 MvcApplication2/obj/*
+DataService/obj/*
+DataWorkFlow/obj/*
+MvcApplication2.Tests/obj/*
+MvcApplication2/bin/*
+DataService/bin/*
+DataWorkFlow/bin/*
+MvcApplication2.Tests/bin/*
 *.rar
 *.xls
 MvcApplication2/attachments/08ab9f5f-418b-49eb-bebe-27f42aa4a7c8_keto.jpg
