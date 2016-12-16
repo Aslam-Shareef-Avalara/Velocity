@@ -52,8 +52,15 @@ namespace MvcApplication2.Controllers
         {
             get {
 
-               
-                return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]; 
+                try
+                {
+                    return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID];
+                }
+                catch (Exception x)
+                {
+                    logger.Error("Error in get orgid " + System.Web.HttpContext.Current ?? "context is null " + System.Web.HttpContext.Current.Session ?? "Session is null " + System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] ?? "Session value is null");
+                    return 1;
+                }
             }
             set { System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = value; }
         }
