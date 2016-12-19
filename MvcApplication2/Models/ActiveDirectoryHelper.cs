@@ -296,9 +296,9 @@ namespace MvcApplication2.Models
                     {
                         _self.Manager = manager.gid;
                     }
-                    if (ctx.Session[CONSTANTS.SESSION_ORG_ID] == null)
+                    if (ctx.Session[CONSTANTS.SESSION_ORG_ID] == null || (int)ctx.Session[CONSTANTS.SESSION_ORG_ID]==0)
                     {
-                        var org = dbx.Organizations.Where(x => x.Name.Replace(".", "").Replace(",", "") == OrganizationName.Replace(".", "").Replace(",", "")).FirstOrDefault();
+                        var org = dbx.Organizations.FirstOrDefault();
                         if (org != null)
                         {
                             _self.OrgId = org.Id;

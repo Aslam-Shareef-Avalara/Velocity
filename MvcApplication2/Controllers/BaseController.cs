@@ -52,8 +52,17 @@ namespace MvcApplication2.Controllers
         {
             get {
 
-               
-                return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]; 
+                try
+                {
+                    if ((int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]==0)
+                        System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]=db.Organizations.FirstOrDefault().Id;
+                    
+                    return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID];
+                    
+                }
+                catch {
+                    return db.Organizations.FirstOrDefault().Id;
+                }
             }
             set { System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = value; }
         }

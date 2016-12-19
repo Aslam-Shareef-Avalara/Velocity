@@ -103,6 +103,12 @@ namespace MvcApplication2.Controllers
                                 { "action", RedirectAction }});
                     return;
                 }
+                else {
+                    filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary {
+                                { "controller", "employee" },
+                                { "action", "aboutme" }});
+                    return;
+                }
                 // var result = new ViewResult { ViewName = View };
                 var vr = new ViewResult();
                 vr.ViewName = View;
