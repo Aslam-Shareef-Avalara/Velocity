@@ -372,7 +372,15 @@ namespace MvcApplication2.Controllers
                     //    LogError(x, "While setting reporting structure : ");
                     //}
                 }//if emp==null or employee does not exist
-
+                else
+                {
+                    //This will happen if the employee is created but is not in any role yet/
+                    string[] currentUsersRoles = Roles.GetRolesForUser();
+                    if (currentUsersRoles == null || currentUsersRoles.Count() == 0)
+                    {
+                        Roles.AddUserToRole(User.Identity.Name, "Employee");
+                    }
+                }
                 Session[CONSTANTS.SESSION_CURRENT_USER] = emp;
                 Session[CONSTANTS.SESSION_ORG_ID] = emp.OrgId;
                 var temp = empService.GetReporteesOf(emp.gid);
