@@ -19,7 +19,7 @@ namespace MvcApplication2.Controllers
     {
         public PEntities db = new PEntities();
 
-        
+
         protected HttpContext ctx
         {
             get { return System.Web.HttpContext.Current; }
@@ -50,10 +50,30 @@ namespace MvcApplication2.Controllers
         }
         public int OrgId
         {
-            get {
+            get
+            {
+                try
+                {
+                    if ((int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == 0 && currentUser!=null)
+                    {
+                        System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = currentUser.OrgId;
+                    }
+                    return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID];
+                }
+                catch(Exception x)
+                {
 
-               
-                return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]; 
+                    logger.Error(string.Format("Error getting orgid because HttpContext.Current = {0} and session= {1} and value= {2}", System.Web.HttpContext.Current, System.Web.HttpContext.Current.Session, System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]));
+                    if (System.Web.HttpContext.Current!=null && 
+                        System.Web.HttpContext.Current.Session!=null && 
+                        (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == 0 && currentUser != null)
+                    {
+                        System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = currentUser.OrgId;
+                        return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID];
+                    }
+                    throw x;
+
+                }
             }
             set { System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = value; }
         }
@@ -113,7 +133,7 @@ namespace MvcApplication2.Controllers
         {
             get
             {
-                ViewBag.RemainingTime=null;
+                ViewBag.RemainingTime = null;
                 ViewBag.OnlineDate = null;
                 if (ctx.Application[CONSTANTS.SHUTDOWN_STARTTIME] != null)
                 {
@@ -148,7 +168,7 @@ namespace MvcApplication2.Controllers
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-           
+
             base.OnActionExecuted(filterContext);
         }
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -415,5 +435,5 @@ namespace MvcApplication2.Controllers
 
     }
 
-   
+
 }
