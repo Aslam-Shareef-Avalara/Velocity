@@ -62,7 +62,7 @@ namespace MvcApplication2.Controllers
         {
             EvaluationCycle evalcycle = CurrentEvalCycle;
             FeedbackModel model = new FeedbackModel();
-            EmployeeEvaluationService ees =   new EmployeeEvaluationService(OrgId, AppName);
+            EmployeeEvaluationService ees =   new EmployeeEvaluationService(OrgId, AppName,currentUser);
             
             if (evalcycle == null)
             {

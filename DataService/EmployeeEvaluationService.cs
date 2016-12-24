@@ -8,11 +8,11 @@ namespace DataService
 {
     public class EmployeeEvaluationService:BaseModel,IEmployeeEvaluationService
     {
-        private ManagerEvaluationService mgrEvalService = null;  
-        public EmployeeEvaluationService(int orgid, string appname)
-            : base(orgid,appname)
+        private ManagerEvaluationService mgrEvalService = null;
+        public EmployeeEvaluationService(int orgid, string appname, Employee emp)
+            : base(orgid,appname,emp)
         {
-            mgrEvalService = new ManagerEvaluationService(orgid, appname);
+            mgrEvalService = new ManagerEvaluationService(orgid, appname,emp);
         }
 
 
@@ -115,7 +115,7 @@ namespace DataService
                     badge = dbx.Badges.Where(x => x.BadgeType == BadgeType.EVALUATION_REJECTED && x.FromBadge == emp.Manager.Value && x.ToBadge == emp.gid).FirstOrDefault();
                     if (badge != null)
                     {
-                        Badges badgesService = new Badges(OrgId, AppName);
+                        Badges badgesService = new Badges(OrgId, AppName,CurrentUser);
                         badgesService.Delete(badge.Id);
                     }
                 }

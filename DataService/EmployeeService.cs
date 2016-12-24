@@ -55,6 +55,7 @@ namespace DataService
             this.OrgEmpId = e.OrgEmpId;
             this.OrgId = e.OrgId;
             this.Phone = e.Phone;
+            this.OrgLocationId = e.OrgLocationId;
             this.ProfilePix= e.ProfilePix;
             this.UserId = e.UserId;
             this.LastVisit = e.LastVisit;
@@ -75,8 +76,8 @@ namespace DataService
 
     public class EmployeeService : BaseModel, IEmployeeService
     {
-        public EmployeeService(int orgid, string appname)
-            : base(orgid, appname)
+        public EmployeeService(int orgid, string appname, Employee emp)
+            : base(orgid, appname,emp)
         {
 
         }

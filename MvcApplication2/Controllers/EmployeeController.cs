@@ -52,7 +52,7 @@ namespace MvcApplication2.Controllers
         }
         public ActionResult Reviewees()
         {
-            EmployeeService empService = new EmployeeService(OrgId, AppName);
+            EmployeeService empService = new EmployeeService(OrgId, AppName,currentUser);
             var reviewies = empService.GetReviewies(currentUser.gid);
             if (reviewies == null)
                 return View("Message", (object)"You do not have any reviewees");
@@ -60,7 +60,7 @@ namespace MvcApplication2.Controllers
         }
         public ActionResult AboutMe()
         {
-            EmployeeService empService = new EmployeeService(OrgId, AppName);
+            EmployeeService empService = new EmployeeService(OrgId, AppName,currentUser);
             Hashtable reporteeList = new Hashtable();
             MvcApplication2.ViewModel.AboutMe me = new ViewModel.AboutMe();
             ActiveDirectoryHelper adHelper = new ActiveDirectoryHelper();
@@ -80,7 +80,7 @@ namespace MvcApplication2.Controllers
                 me.Manager = empService.GetManager(currentUser.Manager.Value);// adHelper.GetMyManager();
             }
             else me.Manager = null;
-            me.Org = db.Organizations.Where(x => x.Id == OrgId).FirstOrDefault();
+            me.Org = db.Organizations.Where(x => x.Id == currentUser.OrgId).FirstOrDefault();
             
             var reportees = empService.GetReporteesOf(currentUser.gid);
             foreach (var reportee in reportees)
@@ -183,7 +183,7 @@ namespace MvcApplication2.Controllers
                 employeeid = currentUser.gid.ToString();
             }
             List<EvaluationCycleExtended> cyclestatuses = new List<EvaluationCycleExtended>();
-            Hashtable ht = new EmployeeService(OrgId, AppName as string).GetPECycleStatus(Guid.Parse(employeeid));
+            Hashtable ht = new EmployeeService(OrgId, AppName as string, currentUser).GetPECycleStatus(Guid.Parse(employeeid));
             if (ht.ContainsKey(CONSTANTS.GOAL_SETTING_CYCLE))
             {
                 
@@ -206,7 +206,7 @@ namespace MvcApplication2.Controllers
         {
             try
             {
-                Badges badgeSvc = new Badges(OrgId, AppName);
+                Badges badgeSvc = new Badges(OrgId, AppName,currentUser);
                 badgeSvc.DeleteBadges(new List<long> { id.Value });
                 return Json(new { deleted = 1, idofbadge = id },JsonRequestBehavior.AllowGet);
             }
@@ -218,9 +218,9 @@ namespace MvcApplication2.Controllers
 
         public JsonResult getmyteambadges()
         {
-            EmployeeService empService = new EmployeeService(OrgId,AppName);
+            EmployeeService empService = new EmployeeService(OrgId,AppName,currentUser);
             var reportees = empService.GetReportees(currentUser.gid);
-            Badges badgeSvc = new Badges(OrgId, AppName);
+            Badges badgeSvc = new Badges(OrgId, AppName,currentUser);
             List<dynamic> badges = new List<dynamic>();
             if (reportees != null && reportees.Count > 0)
             {
@@ -250,7 +250,7 @@ namespace MvcApplication2.Controllers
         public JsonResult getallbadges()
         {
 
-            Badges badgeSvc = new Badges(OrgId, AppName);
+            Badges badgeSvc = new Badges(OrgId, AppName,currentUser);
             var badges = badgeSvc.GetAllBadgesFor(currentUser.gid);
             if (badges != null && badges.Count > 0)
             {
@@ -312,7 +312,7 @@ namespace MvcApplication2.Controllers
                 //        username = ae.LoweredUserName;
                 //    }
                 //}
-                EmployeeService empService = new EmployeeService(OrgId, AppName);
+                EmployeeService empService = new EmployeeService(OrgId, AppName,currentUser);
                 var reportees = empService.GetReportees(g);
                 foreach (var reportee in reportees)
                 {
@@ -501,5 +501,13 @@ namespace MvcApplication2.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public void savelocation(int locationid)
+        {
+            var e = db.Employees.FirstOrDefault(x => x.gid == currentUser.gid);
+            e.OrgLocationId = locationid;
+            db.SaveChanges();
+        }
+
     }
 }

@@ -4,7 +4,7 @@
 @*<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
 <link href="~/Content/bootstrap-datepicker3.css" rel="stylesheet" />
 @functions{
-    
+
     public string formatDate(DateTime? datetime)
     {
         if (datetime.HasValue)
@@ -32,12 +32,24 @@
                 <div class="modal-body panel-body">
 
                     <fieldset>
-
-                        <h4 for="pename">PE Name</h4>
-                        <div class="floatleft input-group">
-                            <span class="input-group-addon"><span class="fa fi-pencil"></span></span>
-                            <input type="text" name="pename" id="pename" class="form-control" value="@Model.Title">
+                        <div>
+                            <label for="evaluationstart"> Location </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
+                                <select name="locationid" id="locationid" class="form-control " >
+                                    @foreach (DataService.OrgLocation o in (List<DataService.OrgLocation>)ViewBag.Locations)
+                                    { 
+                                        <option @(o.Id==Model.OrgId?"Selected":"") value="@o.Id">@o.LocationName</option>
+                                    }
+                                    </select>
+</div>
+                            <label for="pename">Title</label>
+                            <div class="floatleft input-group">
+                                <span class="input-group-addon"><span class="fa fi-pencil"></span></span>
+                                <input type="text" name="pename" id="pename" class="form-control" value="@Model.Title">
+                            </div>
                         </div>
+                        
 
                         <h4 for="description">Description</h4>
 
@@ -93,89 +105,90 @@
         </div>
     </div>
 </form>
-        <script>
-            var retVal = true;
-            function validatePEParams() {
-                retVal = true;
-                var peObj = {};
-                $("#btnCreatePE").attr("disabled", "disabled");
-                $("#pecycleform").find("input:text").each(function (i, o) {
-                    param = $(o).attr("id");
-                    eval("peObj." + param + " = '" + $(o).val() + "'");
-                });
-                
-                eval("peObj.evalcycleid = @Model.Id");
-                
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Content("~/controlcenter/validatepe")",
-                    async: false,
-                    data: peObj,
-                    success: function (r) {
-                        if (r.pecount > 0) {
-                            alert("This is a duplicate PE. Please set another date.");
-                            retVal = false;
-                        }
-                        if (r.pecount == -1) {
-                            alert("This PE's " + r.newphase + " overlaps with an existing cycle's " + r.existingphase);
-                            retVal = false;
-                        }
-                        if (r.pecount == -2) {
-                            alert(r.newphase);
-                            retVal = false;
-                        }
+<script>
+    var retVal = true;
+    function validatePEParams() {
+        retVal = true;
+        var peObj = {};
+        $("#btnCreatePE").attr("disabled", "disabled");
+        $("#pecycleform").find("input:text").each(function (i, o) {
+            param = $(o).attr("id");
+            eval("peObj." + param + " = '" + $(o).val() + "'");
+        });
 
-                    }
-                });
-             //   if (!retVal)
-                    $("#btnCreatePE").removeAttr("disabled");
-
-                return retVal;
+        eval("peObj.evalcycleid = @Model.Id");
+        peObj.locationid = $("#locationid").val();
+        
+        $.ajax({
+            type: "POST",
+            url: "@Url.Content("~/controlcenter/validatepe")",
+            async: false,
+            data: peObj,
+            success: function (r) {
+                if (r.pecount > 0) {
+                    alert("This is a duplicate PE. Please set another date.");
+                    retVal = false;
+                }
+                if (r.pecount == -1) {
+                    alert("This PE's " + r.newphase + " overlaps with an existing cycle's " + r.existingphase);
+                    retVal = false;
+                }
+                if (r.pecount == -2) {
+                    alert(r.newphase);
+                    retVal = false;
+                }
 
             }
+        });
+        //   if (!retVal)
+        $("#btnCreatePE").removeAttr("disabled");
 
-            function parseDate(input) {
-                var parts = input.split(" ")[0].split('-');
-                alert(input.split(" ")[0]);
-                // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-                return new Date(parts[2], parts[1] - 1, parts[0]); // Note: months are 0-based
-            }
+        return retVal;
 
-            $(document).ready(function () {
-                $("#pecycleform").on("submit", function (event) {
-                    event.preventDefault();
-                    $.post("@Url.Content("~/controlCenter/StartPECycle")", $("#pecycleform").serialize(), function () {
-                        $("#dialog-form").modal("hide");
-                    });
-                });
+    }
 
-                setTimeout(function () { $(".datepicker").datepicker("autoclose", true); }, 1000);
+    function parseDate(input) {
+        var parts = input.split(" ")[0].split('-');
+        alert(input.split(" ")[0]);
+        // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+        return new Date(parts[2], parts[1] - 1, parts[0]); // Note: months are 0-based
+    }
 
-                $("#goalstart").datepicker().on("changeDate", function (selected) {
-                    startDate = new Date(selected.date.valueOf());
-                    startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-                    $('#goalend').datepicker('setStartDate', startDate);
-                });
-
-                $("#evaluationstart").datepicker().on("changeDate", function (selected) {
-                    startDate = new Date(selected.date.valueOf());
-                    startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-                    $('#evaluationend').datepicker('setStartDate', startDate);
-                });
-
-                $(".datepicker").datepicker().on("show", function (e) {
-                    datetime = $(e.target).val();
-                    
-                  //  $(e.target).datepicker("update", new Date(parseDate(datetime)));
-                    //if ($.trim(e.target.val()) != "")
-                    //{
-                    //    console.log(this);
-                    //    this.setDate(new Date(e.target.prop("value")));
-                    //}
-                });
+    $(document).ready(function () {
+        $("#pecycleform").on("submit", function (event) {
+            event.preventDefault();
+            $.post("@Url.Content("~/controlCenter/StartPECycle")", $("#pecycleform").serialize(), function () {
+                $("#dialog-form").modal("hide");
             });
+        });
 
-        </script>
+        setTimeout(function () { $(".datepicker").datepicker("autoclose", true); }, 1000);
+
+        $("#goalstart").datepicker().on("changeDate", function (selected) {
+            startDate = new Date(selected.date.valueOf());
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            $('#goalend').datepicker('setStartDate', startDate);
+        });
+
+        $("#evaluationstart").datepicker().on("changeDate", function (selected) {
+            startDate = new Date(selected.date.valueOf());
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            $('#evaluationend').datepicker('setStartDate', startDate);
+        });
+
+        $(".datepicker").datepicker().on("show", function (e) {
+            datetime = $(e.target).val();
+
+            //  $(e.target).datepicker("update", new Date(parseDate(datetime)));
+            //if ($.trim(e.target.val()) != "")
+            //{
+            //    console.log(this);
+            //    this.setDate(new Date(e.target.prop("value")));
+            //}
+        });
+    });
+
+</script>
 <style>
     .modal_close {
         background: rgba(0, 0, 0, 0) url("../img/modal_close.png") repeat scroll 0 0;
@@ -187,7 +200,8 @@
         width: 14px;
         z-index: 2;
     }
-     .floatleft label, .floatleft div, .floatleft input {
+
+    .floatleft label, .floatleft div, .floatleft input {
         float: left;
     }
 
@@ -199,7 +213,8 @@
     .floatleft {
         clear: both;
     }
-     #dialog-form fieldset label {
+
+    #dialog-form fieldset label {
         font-size: 12px;
         font-weight: 400;
         line-height: 15px;
@@ -217,19 +232,22 @@
         letter-spacing: 1px;
         margin-bottom: 5px;
         margin-top: 10px;
-        clear:left;
+        clear: left;
     }
+
     #dialog-form {
-    padding-left:5px!important;
-    padding-top:5px!important;
-    padding-right:5px!important;
-    padding-bottom:5px!important;
-    color:white;
-    height:564px!important;
+        padding-left: 5px !important;
+        padding-top: 5px !important;
+        padding-right: 5px !important;
+        padding-bottom: 5px !important;
+        color: white;
+        /*height: 564px !important;*/
     }
+
     #signup-header * {
-        color:white;
+        color: white;
     }
+
     input [type='text'] {
         background: #f7f7f7 none repeat scroll 0 0;
         border-color: #ccc #e7e6e6 #e7e6e6 #ccc;
@@ -243,7 +261,8 @@
         padding: 8px;
         width: 244px;
     }
-     .form-control {
+
+    .form-control {
         background: #f9f9f9 none repeat scroll 0 0 !important;
         border: 1px solid #d5d5d5 !important;
         box-shadow: none !important;
@@ -251,7 +270,8 @@
         height: 30px !important;
         line-height: 18px !important;
     }
-      .panel-default .panel-footer {
+
+    .panel-default .panel-footer {
         -moz-border-bottom-colors: none;
         -moz-border-left-colors: none;
         -moz-border-right-colors: none;
@@ -269,14 +289,17 @@
         float: left;
         width: 100%;
     }
+
     .floatleft > div {
-    width: 50% !important;
-}
-    .floatleft .input-group {
-    clear:left;
-    width:100%;
+        width: 50% !important;
     }
+
+    .floatleft .input-group {
+        clear: left;
+        width: 100%;
+    }
+
     #dialog-form p, #dialog-form h2 {
-    margin-bottom:0px;
+        margin-bottom: 0px;
     }
 </style>

@@ -50,7 +50,6 @@ namespace DataService
         public virtual DbSet<GoalStatu> GoalStatus { get; set; }
         public virtual DbSet<ManagerEvaluation> ManagerEvaluations { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
-        public virtual DbSet<OrgLocation> OrgLocations { get; set; }
         public virtual DbSet<RatingMaster> RatingMasters { get; set; }
         public virtual DbSet<RejectedMessage> RejectedMessages { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
@@ -83,8 +82,8 @@ namespace DataService
         public virtual DbSet<EmployeeSkill> EmployeeSkills { get; set; }
         public virtual DbSet<EmploymentHistory> EmploymentHistories { get; set; }
         public virtual DbSet<BulkNotificationLog> BulkNotificationLogs { get; set; }
-
-  
+        public virtual DbSet<OrgLocation> OrgLocations { get; set; }
+    
         public virtual ObjectResult<string> aspnet_AnyDataInTables(Nullable<int> tablesToCheck)
         {
             var tablesToCheckParameter = tablesToCheck.HasValue ?

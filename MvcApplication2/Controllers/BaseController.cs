@@ -54,11 +54,20 @@ namespace MvcApplication2.Controllers
             {
                 try
                 {
-                    if ((int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == 0 && currentUser!=null)
+                    if (System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == null && currentUser != null)
                     {
-                        System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = currentUser.OrgId;
+                        System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = currentUser.OrgLocationId;
                     }
-                    return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID];
+                    else if (System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] != null && currentUser != null)
+                    {
+                        if ((int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == 0
+                           || currentUser.OrgLocationId != (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID])
+                        {
+                            System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = currentUser.OrgLocationId;
+                        }
+                    }
+                   
+                    return (int)(System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]??0);
                 }
                 catch(Exception x)
                 {
@@ -68,10 +77,10 @@ namespace MvcApplication2.Controllers
                         System.Web.HttpContext.Current.Session!=null && 
                         (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == 0 && currentUser != null)
                     {
-                        System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = currentUser.OrgId;
-                        return (int)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID];
+                        System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = currentUser.OrgLocationId;
+                        return (int)(System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] ?? 0);
                     }
-                    throw x;
+                    return 0;
 
                 }
             }
@@ -88,7 +97,7 @@ namespace MvcApplication2.Controllers
             get
             {
                 Employee CurrentUser = System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER] as Employee;
-                EmployeeService e = new EmployeeService((int)Session[CONSTANTS.SESSION_ORG_ID], System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] as string);
+                EmployeeService e = new EmployeeService((int)Session[CONSTANTS.SESSION_ORG_ID], System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] as string,currentUser);
                 try
                 {
                     EvaluationCycle prev = db.EvaluationCycles.Where(x => x.OrgId == OrgId).OrderByDescending(y => y.EvaluationEnd).Skip(1).Take(1).FirstOrDefault();
@@ -106,7 +115,7 @@ namespace MvcApplication2.Controllers
             get
             {
                 Employee CurrentUser = System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER] as Employee;
-                Hashtable ht = new EmployeeService((int)Session[CONSTANTS.SESSION_ORG_ID], System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] as string).GetPECycleStatus(CurrentUser.gid);
+                Hashtable ht = new EmployeeService((int)Session[CONSTANTS.SESSION_ORG_ID], System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] as string,currentUser).GetPECycleStatus(CurrentUser.gid);
                 if (ht.ContainsKey(CONSTANTS.EVALUATION_CYCLE))
                 {
                     return (EvaluationCycleExtended)ht[CONSTANTS.EVALUATION_CYCLE];
@@ -119,7 +128,7 @@ namespace MvcApplication2.Controllers
             get
             {
                 Employee CurrentUser = System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER] as Employee;
-                Hashtable ht = new EmployeeService((int)Session[CONSTANTS.SESSION_ORG_ID], System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] as string).GetPECycleStatus(CurrentUser.gid);
+                Hashtable ht = new EmployeeService((int)Session[CONSTANTS.SESSION_ORG_ID], System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] as string,currentUser).GetPECycleStatus(CurrentUser.gid);
                 if (ht.ContainsKey(CONSTANTS.GOAL_SETTING_CYCLE))
                 {
                     return (EvaluationCycleExtended)ht[CONSTANTS.GOAL_SETTING_CYCLE];
@@ -160,7 +169,7 @@ namespace MvcApplication2.Controllers
         //    get
         //    {
 
-        //        return  new BaseModel(OrgId, AppName).GetCurrentCycle(0);
+        //        return  new BaseModel(OrgId, AppName,CurrentUser).GetCurrentCycle(0);
         //    }
         //}
         //
@@ -241,6 +250,24 @@ namespace MvcApplication2.Controllers
                     filterContext.Cancel = true;
                 }
             }
+            try
+            {
+                if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.Application != null && currentUser!=null)
+                {
+                    if (System.Web.HttpContext.Current.Application["locationlist"] == null ||
+                        ((List<DataService.OrgLocation>)System.Web.HttpContext.Current.Application["locationlist"]).Count==0)
+                    {
+                        System.Web.HttpContext.Current.Application["locationlist"] = db.OrgLocations.Where(x => x.OrgId == currentUser.OrgId).ToList();
+                    }
+
+                    ViewBag.Locations = System.Web.HttpContext.Current.Application["locationlist"];
+                }
+            }
+            catch (Exception x)
+            {
+                logger.Error(x.ToString());
+            }
+
             base.OnResultExecuting(filterContext);
         }
 
@@ -295,11 +322,7 @@ namespace MvcApplication2.Controllers
                     }
                     catch { }
                 }
-                if (System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == null)
-                {
-
-                    System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = CurrentUser.OrgId;
-                }
+               
                 //try
                 //{
                 //    log.Info("Session[CONSTANTS.SESSION_ORG_ID] = " + Session[CONSTANTS.SESSION_ORG_ID]);
@@ -317,7 +340,7 @@ namespace MvcApplication2.Controllers
                 // {
                 //     log.Error(" When rgetting APPLICATION_NAME : " + x);
                 // }
-                IEmployeeService empService = new EmployeeService((int)Session[CONSTANTS.SESSION_ORG_ID], System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] as string);
+                IEmployeeService empService = new EmployeeService(OrgId, System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME] as string,currentUser);
                 string un = User.Identity.Name.ToLower();
                 if (un.Contains("@"))
                 {
@@ -325,6 +348,11 @@ namespace MvcApplication2.Controllers
                 }
 
                 var emp = empService.GetEmployeeUsingUsername(un);
+                if (System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] == null)
+                {
+
+                    System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID] = CurrentUser.OrgLocationId;
+                }
                 string roleToAdd = "Employee";
 
                 if (emp == null || !emp.UserId.HasValue)
@@ -382,7 +410,7 @@ namespace MvcApplication2.Controllers
                     }
                 }
                 Session[CONSTANTS.SESSION_CURRENT_USER] = emp;
-                Session[CONSTANTS.SESSION_ORG_ID] = emp.OrgId;
+                Session[CONSTANTS.SESSION_ORG_ID] = emp.OrgLocationId;
                 var temp = empService.GetReporteesOf(emp.gid);
                 Session[CONSTANTS.HAS_A_TEAM] = temp != null && temp.Count > 0;
                 var temp2 = empService.GetReviewies(emp.gid);

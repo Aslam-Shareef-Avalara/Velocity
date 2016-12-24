@@ -12,8 +12,8 @@ namespace DataService
     {
         private int p;
 
-        public GoalService(int orgid, string appname)
-            : base(orgid,appname)
+        public GoalService(int orgid, string appname, Employee emp)
+            : base(orgid,appname,emp)
         {
             // TODO: Complete member initialization
             

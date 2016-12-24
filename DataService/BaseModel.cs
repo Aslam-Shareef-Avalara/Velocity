@@ -89,9 +89,11 @@ namespace DataService
     {
         public int OrgId = 0;
         public string AppName = "";
+        public Employee CurrentUser = null;
         public Guid AppId = new Guid();
-        public BaseModel(int orgid, string appname)
+        public BaseModel(int orgid, string appname, Employee emp)
         {
+            CurrentUser = emp;
             OrgId = orgid;
             AppName = appname;
         }
@@ -179,7 +181,7 @@ namespace DataService
             {
                 var emp = dbx.Employees.FirstOrDefault(x=>x.gid==empId);
 
-                var pecycles = new HrEvaluationService(OrgId, AppName).GetActivePECycles().OrderBy(x => x.Id);
+                var pecycles = new HrEvaluationService(OrgId, AppName,CurrentUser).GetActivePECycles().OrderBy(x => x.Id);
 
                 if (pecycles != null)
                 {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApplication2", "MvcApplication2\MvcApplication2.csproj", "{2313514E-69B6-4309-9DA6-72CB5DEE1A21}"
 EndProject
@@ -15,19 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 4
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = DataService\\DataService.csproj
-		SccLocalPath1 = .
-		SccProjectFilePathRelativizedFromConnection1 = DataService\\
-		SccProjectUniqueName2 = DataWorkFlow\\DataWorkFlow.csproj
-		SccLocalPath2 = .
-		SccProjectFilePathRelativizedFromConnection2 = DataWorkFlow\\
-		SccProjectUniqueName3 = MvcApplication2\\MvcApplication2.csproj
-		SccLocalPath3 = .
-		SccProjectFilePathRelativizedFromConnection3 = MvcApplication2\\
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

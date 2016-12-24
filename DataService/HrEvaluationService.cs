@@ -10,8 +10,8 @@ namespace DataService
     public class HrEvaluationService : BaseModel, IHrEvaluationService
     {
 
-        public HrEvaluationService(int orgid, string appname)
-            : base(orgid, appname)
+        public HrEvaluationService(int orgid, string appname, Employee emp)
+            : base(orgid, appname,emp)
         {
 
         }
@@ -95,7 +95,7 @@ namespace DataService
         {
             using (PEntities dbx = new PEntities())
             {
-                var t = dbx.EvaluationCycles.Where(x => (x.GoalStartDate <= DateTime.Today && x.EvaluationEnd >= DateTime.Today) && OrgId == OrgId);
+                var t = dbx.EvaluationCycles.Where(x => (x.GoalStartDate <= DateTime.Today && x.EvaluationEnd >= DateTime.Today) && x.OrgId == OrgId);
 
                 if (t != null)
                     return t.ToList();
@@ -108,8 +108,16 @@ namespace DataService
         {
             using (PEntities dbx = new PEntities())
             {
-                var t = dbx.EvaluationCycles.Where(x =>x.OrgId == OrgId).OrderByDescending(x=>x.EvaluationEnd);
-
+                IEnumerable<EvaluationCycle> t = null;
+                if (CurrentUser == null || !CurrentUser.Department.ToLower().Contains("hr"))
+                {
+                    t = dbx.EvaluationCycles.Where(x => x.OrgId == OrgId).OrderByDescending(x => x.EvaluationEnd);
+                }
+                else
+                {
+                    
+                    t = dbx.EvaluationCycles.Join(dbx.OrgLocations, c => c.OrgId, o => o.Id, (c, o) => new {cy=c,og=o }).Where(x => x.og.OrgId == CurrentUser.OrgId).OrderByDescending(x => x.cy.EvaluationEnd).Select(v=>v.cy);
+                }
                 if (t != null)
                     return t.ToList();
             }
@@ -225,6 +233,7 @@ namespace DataService
                     e.GoalStartDate = evalCycle.GoalStartDate;
                     e.GoalEndDate = evalCycle.GoalEndDate;
                     e.EvaluationStart = evalCycle.EvaluationStart;
+                    e.OrgId = evalCycle.OrgId;
                     e.EvaluationEnd = evalCycle.EvaluationEnd;
                     dbx.SaveChanges();
                     return e;

@@ -27,20 +27,20 @@ namespace MvcApplication2.Controllers
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
 
-            employeeService = new EmployeeService(OrgId, AppName);
+            employeeService = new EmployeeService(OrgId, AppName,currentUser);
             base.Initialize(requestContext);
         }
 
         public ActionResult GetFixedGoals()
         {
-            GoalService goalService = new GoalService(OrgId, AppName);
+            GoalService goalService = new GoalService(OrgId, AppName,currentUser);
             ViewBag.EmployeeName = "Common";
             ViewBag.FixedGoals = true;
             ViewBag.ActionButtonToShow = "";
             ViewBag.AllowEdit = true;
             GoalsViewModel viewmodel = new GoalsViewModel();
             var goals = goalService.GetFixedGoals();
-            EmployeeService es = new EmployeeService(OrgId, AppName);
+            EmployeeService es = new EmployeeService(OrgId, AppName,currentUser);
             var reportees = es.GetReportees(currentUser.gid);
             if ((reportees == null || reportees.Count == 0) && !User.IsInRole("Hr") && !User.IsInRole("HrAdmin"))
             {
@@ -179,7 +179,7 @@ namespace MvcApplication2.Controllers
 
         private GoalsViewModel GetGoalsFor(Hashtable ht, string typeofevalcycle, Guid empid)
         {
-            GoalService g = new GoalService(OrgId, AppName);
+            GoalService g = new GoalService(OrgId, AppName,currentUser);
             GoalsViewModel goalsviewmodel = null;
             if (ht.ContainsKey(typeofevalcycle))
             {
@@ -263,7 +263,7 @@ namespace MvcApplication2.Controllers
                         
                     }
                     if (CurrentEvalCycle != null)
-                        goalsviewmodel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName).GetReviews(empid, CurrentEvalCycle.Id);
+                        goalsviewmodel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName,currentUser).GetReviews(empid, CurrentEvalCycle.Id);
 
                 }
                 goalsviewmodel.PECycle.Title += titleSuffix;
@@ -275,7 +275,7 @@ namespace MvcApplication2.Controllers
 
         private GoalsViewModel GetGoalsFor1(Hashtable ht, string typeofevalcycle, Guid empid)
         {
-            GoalService g = new GoalService((int)Session[CONSTANTS.SESSION_ORG_ID], AppName);
+            GoalService g = new GoalService((int)Session[CONSTANTS.SESSION_ORG_ID], AppName,currentUser);
 
             GoalsViewModel goalsviewmodel = null;
 
@@ -334,7 +334,7 @@ namespace MvcApplication2.Controllers
                             if (goal.Status >= GoalStatus.EMPLOYEE_GOAL_PUBLISHED && goal.Status < GoalStatus.MANAGER_GOAL_PUBLISHED)
                             {
                                 goalsviewmodel.PE_Cycle = DataService.PECycle.GOAL_SETTING;
-                                goalsviewmodel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName).GetReviews(empid, CurrentEvalCycle.Id);
+                                goalsviewmodel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName,currentUser).GetReviews(empid, CurrentEvalCycle.Id);
                                 titleSuffix = " (Rejected - Awaiting Your Approval)";
                                 goalsviewmodel = UIHintsForGoalCycle(goalsviewmodel, empid, ec);
                             }
@@ -379,7 +379,7 @@ namespace MvcApplication2.Controllers
                                 goalsviewmodel.PE_Cycle = DataService.PECycle.GOAL_SETTING;
                                 goalsviewmodel.Editable = goalsviewmodel.AllowAdd = true;
                                 goalsviewmodel.ButtonToShow = "Publish";
-                                goalsviewmodel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName).GetReviews(empid, CurrentEvalCycle.Id);
+                                goalsviewmodel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName,currentUser).GetReviews(empid, CurrentEvalCycle.Id);
                                 titleSuffix = " (Goals rejected by Manager)";
                                 ec.GoalSettingStatus = GoalCycleStatus.STARTED;
                             }
@@ -448,7 +448,7 @@ namespace MvcApplication2.Controllers
             ViewBag.Title = "Goals";
             List<GoalsViewModel> viewmodel = new List<GoalsViewModel>();
             Hashtable ht = employeeService.GetPECycleStatus(idOfEmployeeForGoals.Value);
-            GoalService g = new GoalService((int)Session[CONSTANTS.SESSION_ORG_ID], AppName);
+            GoalService g = new GoalService((int)Session[CONSTANTS.SESSION_ORG_ID], AppName,currentUser);
             GoalsViewModel goalsviewmodel = GetGoalsFor(ht, CONSTANTS.GOAL_SETTING_CYCLE, idOfEmployeeForGoals.Value);
             if (goalsviewmodel != null)
                 viewmodel.Add(goalsviewmodel);
@@ -595,7 +595,7 @@ namespace MvcApplication2.Controllers
             else
                 empid = currentUser.gid;
             ViewBag.EmployeeId = empid;
-            ViewBag.EvalCycleId = new GoalService((int)Session[CONSTANTS.SESSION_ORG_ID], AppName).GetGoalSettingCycle();
+            ViewBag.EvalCycleId = new GoalService((int)Session[CONSTANTS.SESSION_ORG_ID], AppName,currentUser).GetGoalSettingCycle();
             return View();
         }
         public class JsonFilter : ActionFilterAttribute
@@ -830,7 +830,7 @@ namespace MvcApplication2.Controllers
         private void CreateOrUpdateGoals(Goal[] goals, GoalSaveAction action, Guid? empid)
         {
             Guid newguid = new Guid();
-            GoalService gs = new GoalService(OrgId, AppName);
+            GoalService gs = new GoalService(OrgId, AppName,currentUser);
             long pecycle = 0;
             if (goals != null && goals.Count() > 0)
             {

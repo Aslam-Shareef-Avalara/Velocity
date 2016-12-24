@@ -5,6 +5,25 @@
 @{
     ViewBag.Title = "Edit Evaluation Cycles";
     Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+    
+    
+}
+@functions{
+
+    string GetLocationName(int id)
+    {
+        var locations = (List<DataService.OrgLocation>)System.Web.HttpContext.Current.Application["locationlist"];
+        try
+        {
+            return locations.FirstOrDefault(x => x.Id == id).LocationName;
+        }
+        catch (Exception)
+        {
+
+            return "Error getting location name.";
+        }
+        
+    }
 }
 <h2>@ViewBag.Title</h2>
 <p>
@@ -16,6 +35,7 @@
         <thead>
             <tr>
                 <th>Title</th>
+                <th>Location</th>
                 <th>Description</th>
                 <th>Goal Setting Start </th>
                 <th>Goal Setting  End</th>
@@ -30,6 +50,9 @@
                 <tr>
                     <td>
                         @item.Title
+                    </td>
+                    <td>
+                        @GetLocationName(item.OrgId)
                     </td>
                     <td>
                         @item.Description

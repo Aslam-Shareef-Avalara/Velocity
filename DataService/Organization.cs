@@ -17,7 +17,6 @@ namespace DataService
         public Organization()
         {
             this.Employees = new HashSet<Employee>();
-            this.EvaluationCycles = new HashSet<EvaluationCycle>();
             this.Goals = new HashSet<Goal>();
             this.RatingMasters = new HashSet<RatingMaster>();
         }
@@ -26,7 +25,6 @@ namespace DataService
         public string Name { get; set; }
     
         public virtual ICollection<Employee> Employees { get; set; }
-        public virtual ICollection<EvaluationCycle> EvaluationCycles { get; set; }
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<RatingMaster> RatingMasters { get; set; }
     }

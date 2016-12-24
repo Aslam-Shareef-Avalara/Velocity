@@ -76,7 +76,7 @@ namespace MvcApplication2.Controllers
 
         public void markasexpert()
         {
-            IEmployeeService employeeService = new EmployeeService(OrgId, AppName);
+            IEmployeeService employeeService = new EmployeeService(OrgId, AppName,currentUser);
             Employee emp =employeeService.MarkAsExpertUser(currentUser.gid);
             if (emp != null)
             {

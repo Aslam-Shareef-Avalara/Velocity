@@ -8,8 +8,8 @@ namespace DataService
 {
     public class ReportsService : BaseModel
     {
-        public ReportsService(int orgid, string appname)
-            : base(orgid, appname)
+        public ReportsService(int orgid, string appname, Employee emp)
+            : base(orgid, appname,emp)
         {
 
         }

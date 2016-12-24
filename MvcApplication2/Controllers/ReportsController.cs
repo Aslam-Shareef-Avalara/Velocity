@@ -17,7 +17,7 @@ namespace MvcApplication2.Controllers
         private const int pagesize = 25;
         public ReportsController()
         {
-            reportservice = new ReportsService(OrgId, AppName);
+            reportservice = new ReportsService(OrgId, AppName,currentUser);
         }
         //
         // GET: /Reports/

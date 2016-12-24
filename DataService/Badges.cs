@@ -8,8 +8,8 @@ namespace DataService
 {
     public class Badges:BaseModel
     {
-        public Badges(int orgid, string appname)
-            : base(orgid, appname)
+        public Badges(int orgid, string appname, Employee emp)
+            : base(orgid, appname,emp)
         {
 
         }
@@ -21,7 +21,7 @@ namespace DataService
                 var badges = dbx.Badges.Where(b => b.ToBadge == employeeId && !b.Viewed).ToList();
                 EvaluationCycle goalCycle = GetGoalCycle();
                 EvaluationCycle evalCycle = GetEvalCycle();
-                EmployeeEvaluationService e = new EmployeeEvaluationService(OrgId, AppName);
+                EmployeeEvaluationService e = new EmployeeEvaluationService(OrgId, AppName,CurrentUser);
                 if (badges == null)
                     badges = new List<Badge>();
 

@@ -23,6 +23,6 @@ namespace DataService
         public Nullable<System.DateTime> EvaluationStart { get; set; }
         public Nullable<System.DateTime> EvaluationEnd { get; set; }
     
-        public virtual Organization Organization { get; set; }
+        public virtual OrgLocation OrgLocation { get; set; }
     }
 }

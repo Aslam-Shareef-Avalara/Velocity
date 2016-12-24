@@ -43,6 +43,7 @@ namespace DataService
         public string EmpType { get; set; }
         public Nullable<System.DateTime> LastVisit { get; set; }
         public Nullable<System.Guid> Reviewer { get; set; }
+        public Nullable<int> OrgLocationId { get; set; }
     
         public virtual Organization Organization { get; set; }
         public virtual ICollection<EmployeeEducation> EmployeeEducations { get; set; }

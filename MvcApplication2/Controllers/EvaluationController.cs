@@ -19,8 +19,8 @@ namespace MvcApplication2.Controllers
         EvaluationViewModel evaluationViewModel = new EvaluationViewModel();
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
-            empEvalService = new EmployeeEvaluationService(OrgId, AppName);
-            goalservice = new GoalService(OrgId, AppName);
+            empEvalService = new EmployeeEvaluationService(OrgId, AppName,currentUser);
+            goalservice = new GoalService(OrgId, AppName,currentUser);
             base.Initialize(requestContext);
         }
 
@@ -51,7 +51,7 @@ namespace MvcApplication2.Controllers
             try
             {
 
-                new ManagerEvaluationService(OrgId, AppName).RejectEvaluations(resetStep, reportee_id, CurrentEvalCycle.Id);
+                new ManagerEvaluationService(OrgId, AppName,currentUser).RejectEvaluations(resetStep, reportee_id, CurrentEvalCycle.Id);
                 new Mail().SendEmail(Mail.ACTION_TYPE.EVALUATION_REJECTED_BY_MANAGER, reportee_id,currentUser.gid, CurrentEvalCycle.Id);
 
                 return Json(new { msg = "success" });
@@ -88,7 +88,7 @@ namespace MvcApplication2.Controllers
             Guid reportee_id = Guid.Parse(employeeid);
             try
             {
-                new HrEvaluationService(OrgId, AppName).RejectManagersEvaluation(reportee_id, evalcycleid, reason);
+                new HrEvaluationService(OrgId, AppName,currentUser).RejectManagersEvaluation(reportee_id, evalcycleid, reason);
                 new Mail().SendEmail(Mail.ACTION_TYPE.EVALUATION_REJECTED_BY_HR, reportee_id, currentUser.gid, evalcycleid);
                 return Json(new { msg = "success" });
             }
@@ -114,7 +114,7 @@ namespace MvcApplication2.Controllers
         {
             Guid empid = Guid.Parse(gid);
             ViewBag.AttachmentForUser = gid.Trim();
-            ManagerEvaluationService mgrService = new ManagerEvaluationService(OrgId, AppName);
+            ManagerEvaluationService mgrService = new ManagerEvaluationService(OrgId, AppName,currentUser);
             evaluationViewModel.Goals = goalservice.GetGoals(empid, evalcycleid).OrderBy(x => x.Fixed).ThenBy(y => y.ModifiedDate).ToList();
             evaluationViewModel.SelfEvaluations = empEvalService.GetSelfEvaluations(empid, evalcycleid);
             evaluationViewModel.ManagerEvaluations = mgrService.GetReviews(empid, evalcycleid);
@@ -178,7 +178,7 @@ namespace MvcApplication2.Controllers
 
                 empEvalService.DraftSelfEvaluation(selfeval, Guid.Parse(goalid), int.Parse(selfrating), currentUser.gid, CurrentEvalCycle.Id);
                 EvaluationViewModel viewmodel = new EvaluationViewModel();
-                viewmodel.Rating = new ManagerEvaluationService(OrgId, AppName).CalculateAvgRating(currentUser.gid, CurrentEvalCycle.Id);
+                viewmodel.Rating = new ManagerEvaluationService(OrgId, AppName,currentUser).CalculateAvgRating(currentUser.gid, CurrentEvalCycle.Id);
                 return Json(new { msg = "success", viewmodel = viewmodel });
             }
             catch (Exception x)
@@ -213,7 +213,7 @@ namespace MvcApplication2.Controllers
         {
             try
             {
-                ManagerEvaluationService mes = new ManagerEvaluationService(OrgId, AppName);
+                ManagerEvaluationService mes = new ManagerEvaluationService(OrgId, AppName,currentUser);
                 mes.SaveFinalReviewComment(overallcomment, empid, CurrentEvalCycle.Id);
                 var rating= db.EvaluationRatings.Where(x => x.EmpId == empid && x.EvalCycleId == CurrentEvalCycle.Id).FirstOrDefault();
                 rating.ManagerOverllRating = overallrating;
@@ -248,7 +248,7 @@ namespace MvcApplication2.Controllers
             //}
             try
             {
-                new ManagerEvaluationService(OrgId, AppName).Publish(reportee_id, CurrentEvalCycle.Id);
+                new ManagerEvaluationService(OrgId, AppName,currentUser).Publish(reportee_id, CurrentEvalCycle.Id);
                 new Mail().SendEmail(Mail.ACTION_TYPE.SUBMIT_FEEDBACK, reportee_id,currentUser.gid, CurrentEvalCycle.Id);
                 return Json(new { msg = "success" });
             }
@@ -273,8 +273,8 @@ namespace MvcApplication2.Controllers
             evaluationViewModel.EmployeeDetails = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
             evaluationViewModel.Goals = goalservice.GetGoals(reportee_id, CurrentEvalCycle.Id).OrderBy(x => x.Fixed).ThenBy(y => y.ModifiedDate).ToList();
             evaluationViewModel.SelfEvaluations = empEvalService.GetSelfEvaluations(reportee_id, CurrentEvalCycle.Id).Where(x=>x.Comment!=null && x.Comment.Length>0).ToList();
-            evaluationViewModel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName).GetReviews(reportee_id, CurrentEvalCycle.Id);
-            evaluationViewModel.Rating = new ManagerEvaluationService(OrgId, AppName).CalculateAvgRating(reportee_id, CurrentEvalCycle.Id);
+            evaluationViewModel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName,currentUser).GetReviews(reportee_id, CurrentEvalCycle.Id);
+            evaluationViewModel.Rating = new ManagerEvaluationService(OrgId, AppName,currentUser).CalculateAvgRating(reportee_id, CurrentEvalCycle.Id);
 
             //var goalsList = evaluationViewModel.Goals;
             //List<Guid> goalsToRemove = new List<Guid>();
@@ -393,12 +393,12 @@ namespace MvcApplication2.Controllers
                 //if (count == 0)
                 //    new Mail().SendEmail(Mail.ACTION_TYPE.SEND_EVALUATION_TO_HR, currentUser.gid, CurrentEvalCycle.Id);
 
-                ManagerEvaluationService mgrEvalService = new ManagerEvaluationService(OrgId, AppName);
+                ManagerEvaluationService mgrEvalService = new ManagerEvaluationService(OrgId, AppName,currentUser);
                
                 EvaluationViewModel viewmodel = new EvaluationViewModel();
                 mgrEvalService.DraftReview(Guid.Parse(goalid), currentUser.gid, reviewcomment, int.Parse(reviewrating), reportee_id, CurrentEvalCycle.Id);
 
-                viewmodel.Rating = viewmodel.Rating = new ManagerEvaluationService(OrgId, AppName).CalculateAvgRating(reportee_id, CurrentEvalCycle.Id);
+                viewmodel.Rating = viewmodel.Rating = new ManagerEvaluationService(OrgId, AppName,currentUser).CalculateAvgRating(reportee_id, CurrentEvalCycle.Id);
 
                 return Json(new { msg = "success", viewmodel = viewmodel });
             }
@@ -437,7 +437,7 @@ namespace MvcApplication2.Controllers
 
 
 
-                new ManagerEvaluationService(OrgId, AppName).PublishReview(reportee_id, CurrentEvalCycle.Id);
+                new ManagerEvaluationService(OrgId, AppName,currentUser).PublishReview(reportee_id, CurrentEvalCycle.Id);
                 return Json(new { msg = "success" });
             }
             catch (Exception x)
@@ -910,8 +910,8 @@ namespace MvcApplication2.Controllers
                 return View("Message", (object)"Oh snap! Sorry, you are not authorized to view this.");
             }
             evaluationViewModel.SelfEvaluations = empEvalService.GetSelfEvaluations(reportee_id, evalcycleid);
-            evaluationViewModel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName).GetReviews(reportee_id, evalcycleid);
-            evaluationViewModel.Rating = new ManagerEvaluationService(OrgId, AppName).CalculateAvgRating(reportee_id, evalcycleid);
+            evaluationViewModel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName,currentUser).GetReviews(reportee_id, evalcycleid);
+            evaluationViewModel.Rating = new ManagerEvaluationService(OrgId, AppName,currentUser).CalculateAvgRating(reportee_id, evalcycleid);
             ViewBag.Evalcycleid = evalcycleid;
             foreach (EmployeeEvaluation selfeval in evaluationViewModel.SelfEvaluations)
             {
@@ -955,7 +955,7 @@ namespace MvcApplication2.Controllers
             try
             {
                 Guid reportee_id = Guid.Parse(employeeid);
-                new HrEvaluationService(OrgId, AppName).PublishEvaluation(reportee_id, evalcycleid);
+                new HrEvaluationService(OrgId, AppName,currentUser).PublishEvaluation(reportee_id, evalcycleid);
                 new Mail().SendEmail(Mail.ACTION_TYPE.PUBLISH, reportee_id, currentUser.gid, evalcycleid);
                 return Json(new { msg = "success" });
             }
@@ -1005,7 +1005,7 @@ namespace MvcApplication2.Controllers
                 {
                     viewmodel.MgrEvals = empEvalService.GetManagersEvaluation(gid, evalcycleid);
                 }
-                viewmodel.GradingObject = new EmployeeEvaluationService(OrgId, AppName).GetOverallEvaluationRating(gid, evalcycleid);
+                viewmodel.GradingObject = new EmployeeEvaluationService(OrgId, AppName,currentUser).GetOverallEvaluationRating(gid, evalcycleid);
                 if (viewmodel.GradingObject == null)
                 {
                     viewmodel.GradingObject = new EvaluationRating();

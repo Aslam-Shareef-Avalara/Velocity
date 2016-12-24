@@ -403,8 +403,8 @@ namespace MvcApplication2.Controllers
         }
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
-            employeeService = new EmployeeService(OrgId, AppName);
-            hrService = new HrEvaluationService(OrgId, AppName);
+            employeeService = new EmployeeService(OrgId, AppName,currentUser);
+            hrService = new HrEvaluationService(OrgId, AppName,currentUser);
             base.Initialize(requestContext);
         }
 
@@ -508,10 +508,10 @@ namespace MvcApplication2.Controllers
             return View("index_2", viewmodel);
         }
 
-        public void StartPECycle(long evalcycleid, string pename, string description, string goalstart, string goalend, string evaluationstart, string evaluationend)
+        public void StartPECycle(long evalcycleid, string pename, string description, string goalstart, string goalend, string evaluationstart, string evaluationend, int locationid)
         {
-            IHrEvaluationService hrService = new HrEvaluationService(OrgId, AppName);
-            var e = new EvaluationCycle { OrgId = OrgId, Description = description, EvaluationEnd = DateTime.ParseExact(evaluationend, "MM/dd/yyyy", CultureInfo.InvariantCulture), EvaluationStart = DateTime.ParseExact(evaluationstart, "MM/dd/yyyy", CultureInfo.InvariantCulture), GoalEndDate = DateTime.ParseExact(goalend, "MM/dd/yyyy", CultureInfo.InvariantCulture), GoalStartDate = DateTime.ParseExact(goalstart, "MM/dd/yyyy", CultureInfo.InvariantCulture), Title = pename };
+            IHrEvaluationService hrService = new HrEvaluationService(OrgId, AppName,currentUser);
+            var e = new EvaluationCycle { OrgId = locationid, Description = description, EvaluationEnd = DateTime.ParseExact(evaluationend, "MM/dd/yyyy", CultureInfo.InvariantCulture), EvaluationStart = DateTime.ParseExact(evaluationstart, "MM/dd/yyyy", CultureInfo.InvariantCulture), GoalEndDate = DateTime.ParseExact(goalend, "MM/dd/yyyy", CultureInfo.InvariantCulture), GoalStartDate = DateTime.ParseExact(goalstart, "MM/dd/yyyy", CultureInfo.InvariantCulture), Title = pename };
             if (evalcycleid == 0)
                 hrService.StartPECycle(e);
             else
@@ -553,6 +553,7 @@ namespace MvcApplication2.Controllers
         public ActionResult EditPECycles()
         {
             List<EvaluationCycle> evalcycles = hrService.GetValidPECycles();
+          
             return View(evalcycles);
         }
 
@@ -565,6 +566,7 @@ namespace MvcApplication2.Controllers
                 evalcycle = db.EvaluationCycles.FirstOrDefault(x => x.Id == evalcycleid);
             }
             evalcycle = evalcycle ?? new EvaluationCycle();
+           
             return PartialView("CreateEditPECycle", evalcycle);
         }
 
@@ -601,6 +603,7 @@ namespace MvcApplication2.Controllers
             evaluationstart = DateTime.ParseExact(Request.Form["evaluationstart"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
             evaluationend = DateTime.ParseExact(Request.Form["evaluationend"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
             long evalid = long.Parse(Request.Form["evalcycleid"]);
+            int locationid = int.Parse(Request.Form["locationid"]);
             int Pecount = 0;
             string Newphase = "", Existingphase = "";
 
@@ -610,12 +613,12 @@ namespace MvcApplication2.Controllers
                 Pecount = 1;
 
             }
-            if (db.EvaluationCycles.Any(x => x.Id != evalid && ((x.GoalStartDate <= goalstart && x.GoalEndDate >= goalstart) || (x.GoalStartDate <= goalend && x.GoalEndDate >= goalend))))
+            if (db.EvaluationCycles.Any(x => x.Id != evalid && x.OrgId == locationid && ((x.GoalStartDate <= goalstart && x.GoalEndDate >= goalstart) || (x.GoalStartDate <= goalend && x.GoalEndDate >= goalend) || (x.GoalStartDate >= goalstart && x.GoalEndDate <= goalend))))
             {
                 Existingphase = Newphase = "Goal Setting";
                 Pecount = -1;
             }
-            else if (db.EvaluationCycles.Any(x => x.Id != evalid && ((x.EvaluationStart <= evaluationstart && x.EvaluationEnd >= evaluationstart) || (x.EvaluationStart <= evaluationend && x.EvaluationEnd >= evaluationend))))
+            else if (db.EvaluationCycles.Any(x => x.Id != evalid && x.OrgId == locationid && ((x.EvaluationStart <= evaluationstart && x.EvaluationEnd >= evaluationstart) || (x.EvaluationStart <= evaluationend && x.EvaluationEnd >= evaluationend) || (x.EvaluationStart >= evaluationstart && x.EvaluationEnd <= evaluationend))))
             {
                 Existingphase = Newphase = "Evaluation";
                 Pecount = -1;
@@ -633,9 +636,10 @@ namespace MvcApplication2.Controllers
 
             return Json(new { pecount = Pecount, newphase = Newphase, existingphase = Existingphase });
         }
+       
         public ActionResult ReCalculateRatings()
         {
-            ManagerEvaluationService mgrSvc = new ManagerEvaluationService(OrgId, AppName);
+            ManagerEvaluationService mgrSvc = new ManagerEvaluationService(OrgId, AppName,currentUser);
             List<Employee> employees = db.Employees.Where(x => x.Active && x.OrgId == OrgId).ToList();
             if (employees != null)
             {

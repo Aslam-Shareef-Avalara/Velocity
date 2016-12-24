@@ -14,7 +14,12 @@ namespace DataService
     
     public partial class OrgLocation
     {
-        public System.Guid Id { get; set; }
+        public OrgLocation()
+        {
+            this.EvaluationCycles = new HashSet<EvaluationCycle>();
+        }
+    
+        public int Id { get; set; }
         public int OrgId { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
@@ -22,5 +27,8 @@ namespace DataService
         public string State { get; set; }
         public string Country { get; set; }
         public string Zip { get; set; }
+        public string LocationName { get; set; }
+    
+        public virtual ICollection<EvaluationCycle> EvaluationCycles { get; set; }
     }
 }

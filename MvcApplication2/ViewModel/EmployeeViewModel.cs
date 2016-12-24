@@ -12,7 +12,7 @@ namespace MvcApplication2.ViewModel
         {
 
         }
-        private EmployeeService empService = new EmployeeService(Convert.ToInt32(System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]),System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME].ToString());
+        private EmployeeService empService = new EmployeeService(Convert.ToInt32(System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_ORG_ID]), System.Web.HttpContext.Current.Session[CONSTANTS.APPLICATION_NAME].ToString(), (Employee)System.Web.HttpContext.Current.Session[CONSTANTS.SESSION_CURRENT_USER]);
         public string ManagerName {
             get {
                 return empService.GetEmployee(Manager.Value).FirstName + " " + empService.GetEmployee(Manager.Value).LastName;

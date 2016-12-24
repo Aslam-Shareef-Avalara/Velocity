@@ -28,7 +28,6 @@
         <EntityTypeShape EntityType="PModel.GoalStatu" Width="1.5" PointX="5.75" PointY="19.25" IsExpanded="true" />
         <EntityTypeShape EntityType="PModel.ManagerEvaluation" Width="1.5" PointX="8" PointY="20.875" IsExpanded="true" />
         <EntityTypeShape EntityType="PModel.Organization" Width="1.5" PointX="12.75" PointY="8.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="PModel.OrgLocation" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PModel.RatingMaster" Width="1.5" PointX="15" PointY="15.375" IsExpanded="true" />
         <EntityTypeShape EntityType="PModel.RejectedMessage" Width="1.5" PointX="11.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PModel.Role" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
@@ -68,7 +67,6 @@
         <AssociationConnector Association="PModel.FK__aspnet_Pr__UserI__6CD828CA" ManuallyRouted="false" />
         <AssociationConnector Association="PModel.FK_EmployeeEvaluation_GoalStatus" ManuallyRouted="false" />
         <AssociationConnector Association="PModel.FK_Employees_Organizations" ManuallyRouted="false" />
-        <AssociationConnector Association="PModel.FK_EvaluationCycles_Organizations" ManuallyRouted="false" />
         <AssociationConnector Association="PModel.FK_Goals_Organization" ManuallyRouted="false" />
         <AssociationConnector Association="PModel.FK_ManagerEvaluation_GoalStatus" ManuallyRouted="false" />
         <AssociationConnector Association="PModel.FK_RatingMaster_Organizations" ManuallyRouted="false" />
@@ -80,6 +78,8 @@
         <AssociationConnector Association="PModel.FK_EmployeeSkills_Employees" />
         <AssociationConnector Association="PModel.FK_EmploymentHistory_Employees" />
         <EntityTypeShape EntityType="PModel.BulkNotificationLog" Width="1.5" PointX="0.75" PointY="23.75" />
+        <EntityTypeShape EntityType="PModel.OrgLocation" Width="1.5" PointX="3.375" PointY="23.75" />
+        <AssociationConnector Association="PModel.FK_EvaluationCycles_Organizations1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

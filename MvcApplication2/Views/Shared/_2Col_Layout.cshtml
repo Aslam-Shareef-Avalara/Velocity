@@ -55,7 +55,50 @@
         }
     }
 
+    @if (User.Identity != null && User.Identity.IsAuthenticated &&
+        ViewBag.Me != null && ViewBag.OrgId == 0)
+    {
+        <!-- Modal -->
+        <div id="getlocationmodal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-sm">
 
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Set your base location</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please select your base location : </p>
+                        <select name="poplocationid" id="poplocationid" class="form-control ">
+                            @foreach (DataService.OrgLocation o in (List<DataService.OrgLocation>)ViewBag.Locations)
+                            {
+                                <option value="@o.Id">@o.LocationName</option>
+                            }
+                        </select>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="savelocation()" class="btn btn-default" @*data-dismiss="modal"*@>Save</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#getlocationmodal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                })
+            });
+            function savelocation()
+            {
+                $.post("@Url.Content("~/employee/savelocation")", { "locationid": $("#poplocationid").val() }, function () {
+                    window.location.reload();
+                });
+            }
+        </script>
+    }
 
     <div class="row maincontent" style="height: 1000px;">
 
