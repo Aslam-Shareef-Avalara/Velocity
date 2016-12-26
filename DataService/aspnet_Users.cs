@@ -14,6 +14,7 @@ namespace DataService
     
     public partial class aspnet_Users
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public aspnet_Users()
         {
             this.aspnet_PersonalizationPerUser = new HashSet<aspnet_PersonalizationPerUser>();
@@ -30,8 +31,10 @@ namespace DataService
     
         public virtual aspnet_Applications aspnet_Applications { get; set; }
         public virtual aspnet_Membership aspnet_Membership { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<aspnet_PersonalizationPerUser> aspnet_PersonalizationPerUser { get; set; }
         public virtual aspnet_Profile aspnet_Profile { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<aspnet_Roles> aspnet_Roles { get; set; }
     }
 }

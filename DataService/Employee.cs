@@ -14,6 +14,7 @@ namespace DataService
     
     public partial class Employee
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Employee()
         {
             this.EmployeeEducations = new HashSet<EmployeeEducation>();
@@ -45,9 +46,12 @@ namespace DataService
         public Nullable<System.Guid> Reviewer { get; set; }
         public Nullable<int> OrgLocationId { get; set; }
     
-        public virtual Organization Organization { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EmployeeEducation> EmployeeEducations { get; set; }
+        public virtual Organization Organization { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EmployeeSkill> EmployeeSkills { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EmploymentHistory> EmploymentHistories { get; set; }
     }
 }

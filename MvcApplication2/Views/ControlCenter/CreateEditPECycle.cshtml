@@ -32,67 +32,77 @@
                 <div class="modal-body panel-body">
 
                     <fieldset>
-                        <div>
-                            <label for="evaluationstart"> Location </label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
-                                <select name="locationid" id="locationid" class="form-control " >
-                                    @foreach (DataService.OrgLocation o in (List<DataService.OrgLocation>)ViewBag.Locations)
-                                    { 
-                                        <option @(o.Id==Model.OrgId?"Selected":"") value="@o.Id">@o.LocationName</option>
-                                    }
-                                    </select>
-</div>
-                            <label for="pename">Title</label>
-                            <div class="floatleft input-group">
-                                <span class="input-group-addon"><span class="fa fi-pencil"></span></span>
-                                <input type="text" name="pename" id="pename" class="form-control" value="@Model.Title">
-                            </div>
-                        </div>
                         
+                            <h4 for="evaluationstart"> Location :</h4>
+                        <div class="input-group" style="margin-bottom: 0px; margin-top: 10px; margin-left: 10px; display: inline-block; bottom: 0px;">
 
-                        <h4 for="description">Description</h4>
+                            @*<select name="locationid" id="locationid" class="form-control " >*@
+                            @foreach (DataService.OrgLocation o in (List<DataService.OrgLocation>)ViewBag.Locations)
+                            {
+                                if (o.Id == Model.OrgId)
+                                {
+                                    <h5 style="margin:0px;">@o.LocationName</h5>
+                                    <input type="hidden" value="@o.Id" name="locationid" id="locationid" />
+                                    break;
+                                }
+                                @*<span @(o.Id==Model.OrgId?"Selected":"") value="@o.Id">@o.LocationName</span>*@
+                            }
+                            @*</select>*@
+                        </div>
 
-                        <div class=" floatleft input-group">
-                            <span class="input-group-addon"><span class="fa fi-pencil"></span></span>
-                            <input type="text" name="description" id="description" class="form-control" value="@Model.Description">
-                        </div>
-                        <h4>Goal Setting </h4>
-                        <div class="floatleft">
-                            <div>
-                                <label for="goalstart">Starts On</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
-                                    <input type="text" name="goalstart" id="goalstart" data-provide="datepicker" class="form-control" data-autoclose=true data-date="@formatDate(Model.GoalStartDate)" value="@formatDate(Model.GoalStartDate)">
+
+                            
+                                
+                                    <h4 for="pename">Title</h4>
+                                    <div class="floatleft input-group">
+                                        <span class="input-group-addon"><span class="fa fi-pencil"></span></span>
+                                        <input type="text" name="pename" id="pename" class="form-control" value="@Model.Title">
+                                    </div>
+                                
+
+
+                                <h4 for="description">Description</h4>
+
+                                <div class=" floatleft input-group">
+                                    <span class="input-group-addon"><span class="fa fi-pencil"></span></span>
+                                    <input type="text" name="description" id="description" class="form-control" value="@Model.Description">
                                 </div>
-                            </div>
-                            <div>
-                                <label for="goalend">Ends On </label>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
-                                    <input type="text" name="goalend" id="goalend" data-provide="datepicker" class="form-control datepicker" value="@formatDate(Model.GoalEndDate)">
+                                <h4>Goal Setting </h4>
+                                <div class="floatleft">
+                                    <div>
+                                        <label for="goalstart">Starts On</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
+                                            <input type="text" name="goalstart" id="goalstart" data-provide="datepicker" class="form-control" data-autoclose=true data-date="@formatDate(Model.GoalStartDate)" value="@formatDate(Model.GoalStartDate)">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="goalend">Ends On </label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
+                                            <input type="text" name="goalend" id="goalend" data-provide="datepicker" class="form-control datepicker" value="@formatDate(Model.GoalEndDate)">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <h4>Evaluation:</h4>
-                        <div class="floatleft">
-                            <div>
-                                <label for="evaluationstart"> Starts On </label>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
-                                    <input type="text" name="evaluationstart" id="evaluationstart" data-provide="datepicker" class="form-control datepicker" value="@formatDate(Model.EvaluationStart)">
+                                <h4>Evaluation:</h4>
+                                <div class="floatleft">
+                                    <div>
+                                        <label for="evaluationstart"> Starts On </label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
+                                            <input type="text" name="evaluationstart" id="evaluationstart" data-provide="datepicker" class="form-control datepicker" value="@formatDate(Model.EvaluationStart)">
+                                        </div>
+                                    </div><div>
+                                        <label for="evaluationend">Ends On </label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
+                                            <input type="text" name="evaluationend" id="evaluationend" data-provide="datepicker" class="form-control datepicker" value="@formatDate(Model.EvaluationEnd)">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div><div>
-                                <label for="evaluationend">Ends On </label>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><span class="fa fi-calendar"></span></span>
-                                    <input type="text" name="evaluationend" id="evaluationend" data-provide="datepicker" class="form-control datepicker" value="@formatDate(Model.EvaluationEnd)">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Allow form submission with keyboard without duplicating the dialog button -->
-                        <input type="hidden" name="evalcycleid" value="@Model.Id" />
-                    </fieldset>
+                                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                                <input type="hidden" name="evalcycleid" value="@Model.Id" />
+</fieldset>
 
 
                 </div>
@@ -159,6 +169,7 @@
             event.preventDefault();
             $.post("@Url.Content("~/controlCenter/StartPECycle")", $("#pecycleform").serialize(), function () {
                 $("#dialog-form").modal("hide");
+                window.location.reload();
             });
         });
 

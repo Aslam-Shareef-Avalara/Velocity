@@ -14,12 +14,15 @@ namespace DataService
     
     public partial class OrgLocation
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OrgLocation()
         {
             this.EvaluationCycles = new HashSet<EvaluationCycle>();
+            this.Goals = new HashSet<Goal>();
         }
     
         public int Id { get; set; }
+        public string LocationName { get; set; }
         public int OrgId { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
@@ -27,8 +30,10 @@ namespace DataService
         public string State { get; set; }
         public string Country { get; set; }
         public string Zip { get; set; }
-        public string LocationName { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EvaluationCycle> EvaluationCycles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Goal> Goals { get; set; }
     }
 }

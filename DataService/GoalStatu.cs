@@ -14,6 +14,7 @@ namespace DataService
     
     public partial class GoalStatu
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GoalStatu()
         {
             this.EmployeeEvaluations = new HashSet<EmployeeEvaluation>();
@@ -23,7 +24,9 @@ namespace DataService
         public int Id { get; set; }
         public string Status { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EmployeeEvaluation> EmployeeEvaluations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ManagerEvaluation> ManagerEvaluations { get; set; }
     }
 }

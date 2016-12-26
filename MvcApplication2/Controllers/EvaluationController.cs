@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace MvcApplication2.Controllers
 {
@@ -895,13 +896,21 @@ namespace MvcApplication2.Controllers
             {
                 currentEmployeeGoalStatus = tempgoal.Status.Value;
             }
-
+            var aspnetUser  = db.aspnet_Users.FirstOrDefault(x=>x.UserId==evaluationViewModel.EmployeeDetails.UserId);
             if (currentUser.Email.ToLower().Trim() != "nitasha.dusi@avalara.com"  &&
                     (
                         (
+                            // if the current user is trying to view his/her eval before HR approval
                             reportee_id == currentUser.gid && currentEmployeeGoalStatus != GoalStatus.PUBLISHED &&
                             (User.IsInRole("Hr") || User.IsInRole("HrAdmin"))
                         ) ||
+                (
+                    // if the current user and employee are both HR AND the current user is NOT manager of employee then error out
+                     Roles.GetRolesForUser(aspnetUser.UserName).Any(x=>x.ToUpperInvariant().Contains("HR")) 
+                     &&  (User.IsInRole("Hr") || User.IsInRole("HrAdmin"))
+                     && (evaluationViewModel.EmployeeDetails.Manager.HasValue?evaluationViewModel.EmployeeDetails.Manager.Value:Guid.Empty)!=currentUser.gid
+                )
+                        ||
                         reportee_id == currentUser.Manager
                     )
                 )

@@ -86,10 +86,15 @@ namespace DataService
             bool empExists = false;
             using (PEntities dbx = new PEntities())
             {
-                if (empExists=dbx.Employees.Any(x => x.gid == employee.gid))
+
+                if (empExists = dbx.Employees.Any(x => x.gid == employee.gid))
                 {
                     employee = dbx.Employees.FirstOrDefault(x => x.gid == employee.gid);
-                     
+
+                }
+                else {
+
+                    employee.OrgId = 1;// dbx.OrgLocations.Where(x=>x.OrgId==employee.OrgId)
                 }
                 aspnet_Users user = dbx.aspnet_Users.Where(x => x.LoweredUserName == username.ToLower()).SingleOrDefault();
                 if (user == null) throw new Exception("user is not added to any role yet.");
@@ -100,6 +105,7 @@ namespace DataService
                     if (mgr == null)
                         employee.Manager = null;
                 }
+
                 employee.UserId = user.UserId;
                 if (!empExists)
                     dbx.Employees.Add(employee);

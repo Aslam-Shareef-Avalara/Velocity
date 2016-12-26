@@ -302,12 +302,15 @@ namespace MvcApplication2.Controllers
                         default: evalcycleid = CurrentGoalCycle != null ? CurrentGoalCycle.Id : 0;
                             break;
                     }
-                    if (goalStatus != GoalStatus.EMPLOYEE_GOAL_SAVED)
-                        employees = db.Goals.Where(x => x.Status < goalStatus && x.Status >= goalStatus - 2 && x.OrgId == OrgId && x.Evalcycleid == evalcycleid).Select(f => f.EmployeeId).Distinct();
-                    else
+                    if (evalcycleid > 0)
                     {
-                        //this is for sendng goal setting reminder to all those employees who have not even saved a single goal yet
-                        employees = db.Employees.Where(y => y.Active && db.Goals.Any(x => x.Evalcycleid == evalcycleid && x.EmployeeId == y.gid && x.OrgId == OrgId && x.Fixed == false) == false).Select(f => (Guid?)f.gid).Distinct();
+                        if (goalStatus != GoalStatus.EMPLOYEE_GOAL_SAVED)
+                            employees = db.Goals.Where(x => x.Status < goalStatus && x.Status >= goalStatus - 2 && x.OrgId == OrgId && x.Evalcycleid == evalcycleid).Select(f => f.EmployeeId).Distinct();
+                        else
+                        {
+                            //this is for sendng goal setting reminder to all those employees who have not even saved a single goal yet
+                            employees = db.Employees.Where(y => y.Active && db.Goals.Any(x => x.Evalcycleid == evalcycleid && x.EmployeeId == y.gid && x.OrgId == OrgId && x.Fixed == false) == false).Select(f => (Guid?)f.gid).Distinct();
+                        }
                     }
 
                 }

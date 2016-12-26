@@ -27,6 +27,6 @@ namespace DataService
         public Nullable<int> Status { get; set; }
         public Nullable<bool> Rejected { get; set; }
     
-        public virtual Organization Organization { get; set; }
+        public virtual OrgLocation OrgLocation { get; set; }
     }
 }

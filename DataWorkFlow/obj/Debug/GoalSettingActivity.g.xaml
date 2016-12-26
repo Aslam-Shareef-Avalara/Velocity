@@ -60,7 +60,7 @@
       </Flowchart.StartNode>
       <x:Reference>__ReferenceID0</x:Reference>
       <x:Reference>__ReferenceID1</x:Reference>
-      <sads:DebugSymbol.Symbol>9xCganoXiFg822gNDShml+IgckM6XFVzZXJzXEFzbGFtLlNoYXJlZWZcRG9jdW1lbnRzXFZpc3VhbCBTdHVkaW8gMjAxM1xQcm9qZWN0c1xNdmNBcHBsaWNhdGlvbjJcRGF0YVdvcmtGbG93XEdvYWxTZXR0aW5nQWN0aXZpdHkueGFtbAgwA1EPAgEBMjMyNgIBCDULNVECAQI7CTu7AQIBFj4NSSkCAQk7czt9AgEXQRNBWwIBEEYTRlYCAQo=</sads:DebugSymbol.Symbol>
+      <sads:DebugSymbol.Symbol>9xCganoXiFg822gNDShml+IgckM6XFVzZXJzXGFzbGFtLnNoYXJlZWZcRG9jdW1lbnRzXFZpc3VhbCBTdHVkaW8gMjAxM1xQcm9qZWN0c1xNdmNBcHBsaWNhdGlvbjJcRGF0YVdvcmtGbG93XEdvYWxTZXR0aW5nQWN0aXZpdHkueGFtbAgwA1EPAgEBMjMyNgIBCDULNVECAQI7CTu7AQIBFj4NSSkCAQk7czt9AgEXQRNBWwIBEEYTRlYCAQo=</sads:DebugSymbol.Symbol>
     </Flowchart>
   </local:GoalSettingActivity.Implementation>
 </local:GoalSettingActivity>

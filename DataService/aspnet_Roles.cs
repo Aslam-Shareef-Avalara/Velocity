@@ -14,6 +14,7 @@ namespace DataService
     
     public partial class aspnet_Roles
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public aspnet_Roles()
         {
             this.aspnet_Users = new HashSet<aspnet_Users>();
@@ -26,6 +27,7 @@ namespace DataService
         public string Description { get; set; }
     
         public virtual aspnet_Applications aspnet_Applications { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<aspnet_Users> aspnet_Users { get; set; }
     }
 }

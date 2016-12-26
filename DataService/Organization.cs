@@ -14,18 +14,19 @@ namespace DataService
     
     public partial class Organization
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Organization()
         {
             this.Employees = new HashSet<Employee>();
-            this.Goals = new HashSet<Goal>();
             this.RatingMasters = new HashSet<RatingMaster>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Employee> Employees { get; set; }
-        public virtual ICollection<Goal> Goals { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RatingMaster> RatingMasters { get; set; }
     }
 }

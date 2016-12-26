@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="PModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+<Schema Namespace="PEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityType Name="aspnet_Applications">
     <Key>
       <PropertyRef Name="ApplicationId" />
@@ -162,6 +162,41 @@
     <Property Name="ReminderType" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="SentOn" Type="datetime" Nullable="false" />
     <Property Name="NumberOfNotifications" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'MultiLocationVelocity.dbo.Country' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'MultiLocationVelocity.dbo.Department' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="OrgId" />
+    </Key>
+    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="OrgId" Type="int" Nullable="false" />
+    <Property Name="DepartmentHead" Type="uniqueidentifier" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'MultiLocationVelocity.dbo.Departments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Departments">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="OrgId" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="OrgId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="EmployeeEducation">
     <Key>
@@ -450,233 +485,6 @@ warning 6002: The table/view 'MultiLocationVelocity.dbo.WFQueue' does not have a
     <Property Name="WFParam3" Type="nvarchar" MaxLength="150" />
   </EntityType>
   <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.DefinitionIdentityTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="DefinitionIdentityTable">
-    <Key>
-      <PropertyRef Name="SurrogateIdentityId" />
-      <PropertyRef Name="DefinitionIdentityHash" />
-      <PropertyRef Name="DefinitionIdentityAnyRevisionHash" />
-    </Key>
-    <Property Name="SurrogateIdentityId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="DefinitionIdentityHash" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="DefinitionIdentityAnyRevisionHash" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Name" Type="nvarchar(max)" />
-    <Property Name="Package" Type="nvarchar(max)" />
-    <Property Name="Build" Type="bigint" />
-    <Property Name="Major" Type="bigint" />
-    <Property Name="Minor" Type="bigint" />
-    <Property Name="Revision" Type="bigint" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.IdentityOwnerTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="IdentityOwnerTable">
-    <Key>
-      <PropertyRef Name="SurrogateIdentityId" />
-      <PropertyRef Name="SurrogateLockOwnerId" />
-    </Key>
-    <Property Name="SurrogateIdentityId" Type="bigint" Nullable="false" />
-    <Property Name="SurrogateLockOwnerId" Type="bigint" Nullable="false" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.InstanceMetadataChangesTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="InstanceMetadataChangesTable">
-    <Key>
-      <PropertyRef Name="SurrogateInstanceId" />
-      <PropertyRef Name="ChangeTime" />
-      <PropertyRef Name="EncodingOption" />
-      <PropertyRef Name="Change" />
-    </Key>
-    <Property Name="SurrogateInstanceId" Type="bigint" Nullable="false" />
-    <Property Name="ChangeTime" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="EncodingOption" Type="tinyint" Nullable="false" />
-    <Property Name="Change" Type="varbinary(max)" Nullable="false" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value1' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value2' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value3' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value4' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value5' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value6' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value7' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value8' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value9' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value10' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value11' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value12' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value13' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value14' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value15' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value16' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value17' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value18' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value19' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value20' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value21' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value22' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value23' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value24' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value25' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value26' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value27' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value28' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value29' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value30' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value31' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value32' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' was excluded.
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedPropertiesTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="InstancePromotedPropertiesTable">
-    <Key>
-      <PropertyRef Name="SurrogateInstanceId" />
-      <PropertyRef Name="PromotionName" />
-    </Key>
-    <Property Name="SurrogateInstanceId" Type="bigint" Nullable="false" />
-    <Property Name="PromotionName" Type="nvarchar" MaxLength="400" Nullable="false" />
-    <Property Name="Value33" Type="varbinary(max)" />
-    <Property Name="Value34" Type="varbinary(max)" />
-    <Property Name="Value35" Type="varbinary(max)" />
-    <Property Name="Value36" Type="varbinary(max)" />
-    <Property Name="Value37" Type="varbinary(max)" />
-    <Property Name="Value38" Type="varbinary(max)" />
-    <Property Name="Value39" Type="varbinary(max)" />
-    <Property Name="Value40" Type="varbinary(max)" />
-    <Property Name="Value41" Type="varbinary(max)" />
-    <Property Name="Value42" Type="varbinary(max)" />
-    <Property Name="Value43" Type="varbinary(max)" />
-    <Property Name="Value44" Type="varbinary(max)" />
-    <Property Name="Value45" Type="varbinary(max)" />
-    <Property Name="Value46" Type="varbinary(max)" />
-    <Property Name="Value47" Type="varbinary(max)" />
-    <Property Name="Value48" Type="varbinary(max)" />
-    <Property Name="Value49" Type="varbinary(max)" />
-    <Property Name="Value50" Type="varbinary(max)" />
-    <Property Name="Value51" Type="varbinary(max)" />
-    <Property Name="Value52" Type="varbinary(max)" />
-    <Property Name="Value53" Type="varbinary(max)" />
-    <Property Name="Value54" Type="varbinary(max)" />
-    <Property Name="Value55" Type="varbinary(max)" />
-    <Property Name="Value56" Type="varbinary(max)" />
-    <Property Name="Value57" Type="varbinary(max)" />
-    <Property Name="Value58" Type="varbinary(max)" />
-    <Property Name="Value59" Type="varbinary(max)" />
-    <Property Name="Value60" Type="varbinary(max)" />
-    <Property Name="Value61" Type="varbinary(max)" />
-    <Property Name="Value62" Type="varbinary(max)" />
-    <Property Name="Value63" Type="varbinary(max)" />
-    <Property Name="Value64" Type="varbinary(max)" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancesTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="InstancesTable">
-    <Key>
-      <PropertyRef Name="Id" />
-      <PropertyRef Name="SurrogateInstanceId" />
-      <PropertyRef Name="Version" />
-      <PropertyRef Name="CreationTime" />
-      <PropertyRef Name="SurrogateIdentityId" />
-    </Key>
-    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="SurrogateInstanceId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="SurrogateLockOwnerId" Type="bigint" />
-    <Property Name="PrimitiveDataProperties" Type="varbinary(max)" />
-    <Property Name="ComplexDataProperties" Type="varbinary(max)" />
-    <Property Name="WriteOnlyPrimitiveDataProperties" Type="varbinary(max)" />
-    <Property Name="WriteOnlyComplexDataProperties" Type="varbinary(max)" />
-    <Property Name="MetadataProperties" Type="varbinary(max)" />
-    <Property Name="DataEncodingOption" Type="tinyint" />
-    <Property Name="MetadataEncodingOption" Type="tinyint" />
-    <Property Name="Version" Type="bigint" Nullable="false" />
-    <Property Name="PendingTimer" Type="datetime" />
-    <Property Name="CreationTime" Type="datetime" Nullable="false" />
-    <Property Name="LastUpdated" Type="datetime" />
-    <Property Name="WorkflowHostType" Type="uniqueidentifier" />
-    <Property Name="ServiceDeploymentId" Type="bigint" />
-    <Property Name="SuspensionExceptionName" Type="nvarchar" MaxLength="450" />
-    <Property Name="SuspensionReason" Type="nvarchar(max)" />
-    <Property Name="BlockingBookmarks" Type="nvarchar(max)" />
-    <Property Name="LastMachineRunOn" Type="nvarchar" MaxLength="450" />
-    <Property Name="ExecutionStatus" Type="nvarchar" MaxLength="450" />
-    <Property Name="IsInitialized" Type="bit" />
-    <Property Name="IsSuspended" Type="bit" />
-    <Property Name="IsReadyToRun" Type="bit" />
-    <Property Name="IsCompleted" Type="bit" />
-    <Property Name="SurrogateIdentityId" Type="bigint" Nullable="false" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.KeysTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="KeysTable">
-    <Key>
-      <PropertyRef Name="Id" />
-      <PropertyRef Name="SurrogateKeyId" />
-    </Key>
-    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="SurrogateKeyId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="SurrogateInstanceId" Type="bigint" />
-    <Property Name="EncodingOption" Type="tinyint" />
-    <Property Name="Properties" Type="varbinary(max)" />
-    <Property Name="IsAssociated" Type="bit" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.LockOwnersTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="LockOwnersTable">
-    <Key>
-      <PropertyRef Name="Id" />
-      <PropertyRef Name="SurrogateLockOwnerId" />
-      <PropertyRef Name="LockExpiration" />
-      <PropertyRef Name="MachineName" />
-      <PropertyRef Name="EnqueueCommand" />
-      <PropertyRef Name="DeletesInstanceOnCompletion" />
-      <PropertyRef Name="WorkflowIdentityFilter" />
-    </Key>
-    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="SurrogateLockOwnerId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="LockExpiration" Type="datetime" Nullable="false" />
-    <Property Name="WorkflowHostType" Type="uniqueidentifier" />
-    <Property Name="MachineName" Type="nvarchar" MaxLength="128" Nullable="false" />
-    <Property Name="EnqueueCommand" Type="bit" Nullable="false" />
-    <Property Name="DeletesInstanceOnCompletion" Type="bit" Nullable="false" />
-    <Property Name="PrimitiveLockOwnerData" Type="varbinary(max)" />
-    <Property Name="ComplexLockOwnerData" Type="varbinary(max)" />
-    <Property Name="WriteOnlyPrimitiveLockOwnerData" Type="varbinary(max)" />
-    <Property Name="WriteOnlyComplexLockOwnerData" Type="varbinary(max)" />
-    <Property Name="EncodingOption" Type="tinyint" />
-    <Property Name="WorkflowIdentityFilter" Type="tinyint" Nullable="false" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.RunnableInstancesTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="RunnableInstancesTable">
-    <Key>
-      <PropertyRef Name="SurrogateInstanceId" />
-      <PropertyRef Name="RunnableTime" />
-      <PropertyRef Name="SurrogateIdentityId" />
-    </Key>
-    <Property Name="SurrogateInstanceId" Type="bigint" Nullable="false" />
-    <Property Name="WorkflowHostType" Type="uniqueidentifier" />
-    <Property Name="ServiceDeploymentId" Type="bigint" />
-    <Property Name="RunnableTime" Type="datetime" Nullable="false" />
-    <Property Name="SurrogateIdentityId" Type="bigint" Nullable="false" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.ServiceDeploymentsTable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="ServiceDeploymentsTable">
-    <Key>
-      <PropertyRef Name="Id" />
-      <PropertyRef Name="ServiceDeploymentHash" />
-      <PropertyRef Name="SiteName" />
-      <PropertyRef Name="RelativeServicePath" />
-      <PropertyRef Name="RelativeApplicationPath" />
-      <PropertyRef Name="ServiceName" />
-      <PropertyRef Name="ServiceNamespace" />
-    </Key>
-    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="ServiceDeploymentHash" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="SiteName" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="RelativeServicePath" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="RelativeApplicationPath" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="ServiceName" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="ServiceNamespace" Type="nvarchar(max)" Nullable="false" />
-  </EntityType>
-  <!--Errors Found During Generation:
 warning 6002: The table/view 'MultiLocationVelocity.dbo.vw_aspnet_Applications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="vw_aspnet_Applications">
     <Key>
@@ -824,132 +632,6 @@ warning 6002: The table/view 'MultiLocationVelocity.dbo.vw_aspnet_WebPartState_U
     <Property Name="UserId" Type="uniqueidentifier" />
     <Property Name="DataSize" Type="int" />
     <Property Name="LastUpdatedDate" Type="datetime" Nullable="false" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value1' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value2' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value3' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value4' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value5' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value6' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value7' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value8' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value9' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value10' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value11' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value12' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value13' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value14' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value15' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value16' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value17' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value18' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value19' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value20' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value21' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value22' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value23' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value24' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value25' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value26' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value27' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value28' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value29' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value30' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value31' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6005: The data type 'sql_variant' is currently not supported for the target Entity Framework version; the column 'Value32' in the table 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' was excluded.
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.InstancePromotedProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="InstancePromotedProperties">
-    <Key>
-      <PropertyRef Name="InstanceId" />
-      <PropertyRef Name="PromotionName" />
-    </Key>
-    <Property Name="InstanceId" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="EncodingOption" Type="tinyint" />
-    <Property Name="PromotionName" Type="nvarchar" MaxLength="400" Nullable="false" />
-    <Property Name="Value33" Type="varbinary(max)" />
-    <Property Name="Value34" Type="varbinary(max)" />
-    <Property Name="Value35" Type="varbinary(max)" />
-    <Property Name="Value36" Type="varbinary(max)" />
-    <Property Name="Value37" Type="varbinary(max)" />
-    <Property Name="Value38" Type="varbinary(max)" />
-    <Property Name="Value39" Type="varbinary(max)" />
-    <Property Name="Value40" Type="varbinary(max)" />
-    <Property Name="Value41" Type="varbinary(max)" />
-    <Property Name="Value42" Type="varbinary(max)" />
-    <Property Name="Value43" Type="varbinary(max)" />
-    <Property Name="Value44" Type="varbinary(max)" />
-    <Property Name="Value45" Type="varbinary(max)" />
-    <Property Name="Value46" Type="varbinary(max)" />
-    <Property Name="Value47" Type="varbinary(max)" />
-    <Property Name="Value48" Type="varbinary(max)" />
-    <Property Name="Value49" Type="varbinary(max)" />
-    <Property Name="Value50" Type="varbinary(max)" />
-    <Property Name="Value51" Type="varbinary(max)" />
-    <Property Name="Value52" Type="varbinary(max)" />
-    <Property Name="Value53" Type="varbinary(max)" />
-    <Property Name="Value54" Type="varbinary(max)" />
-    <Property Name="Value55" Type="varbinary(max)" />
-    <Property Name="Value56" Type="varbinary(max)" />
-    <Property Name="Value57" Type="varbinary(max)" />
-    <Property Name="Value58" Type="varbinary(max)" />
-    <Property Name="Value59" Type="varbinary(max)" />
-    <Property Name="Value60" Type="varbinary(max)" />
-    <Property Name="Value61" Type="varbinary(max)" />
-    <Property Name="Value62" Type="varbinary(max)" />
-    <Property Name="Value63" Type="varbinary(max)" />
-    <Property Name="Value64" Type="varbinary(max)" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.Instances' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="Instances">
-    <Key>
-      <PropertyRef Name="InstanceId" />
-      <PropertyRef Name="CreationTime" />
-    </Key>
-    <Property Name="InstanceId" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="PendingTimer" Type="datetime" />
-    <Property Name="CreationTime" Type="datetime" Nullable="false" />
-    <Property Name="LastUpdatedTime" Type="datetime" />
-    <Property Name="ServiceDeploymentId" Type="bigint" />
-    <Property Name="SuspensionExceptionName" Type="nvarchar" MaxLength="450" />
-    <Property Name="SuspensionReason" Type="nvarchar(max)" />
-    <Property Name="ActiveBookmarks" Type="nvarchar(max)" />
-    <Property Name="CurrentMachine" Type="nvarchar" MaxLength="128" />
-    <Property Name="LastMachine" Type="nvarchar" MaxLength="450" />
-    <Property Name="ExecutionStatus" Type="nvarchar" MaxLength="450" />
-    <Property Name="IsInitialized" Type="bit" />
-    <Property Name="IsSuspended" Type="bit" />
-    <Property Name="IsCompleted" Type="bit" />
-    <Property Name="EncodingOption" Type="tinyint" />
-    <Property Name="ReadWritePrimitiveDataProperties" Type="varbinary(max)" />
-    <Property Name="WriteOnlyPrimitiveDataProperties" Type="varbinary(max)" />
-    <Property Name="ReadWriteComplexDataProperties" Type="varbinary(max)" />
-    <Property Name="WriteOnlyComplexDataProperties" Type="varbinary(max)" />
-    <Property Name="IdentityName" Type="nvarchar(max)" />
-    <Property Name="IdentityPackage" Type="nvarchar(max)" />
-    <Property Name="Build" Type="bigint" />
-    <Property Name="Major" Type="bigint" />
-    <Property Name="Minor" Type="bigint" />
-    <Property Name="Revision" Type="bigint" />
-  </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableInstancing.ServiceDeployments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="ServiceDeployments">
-    <Key>
-      <PropertyRef Name="ServiceDeploymentId" />
-      <PropertyRef Name="SiteName" />
-      <PropertyRef Name="RelativeServicePath" />
-      <PropertyRef Name="RelativeApplicationPath" />
-      <PropertyRef Name="ServiceName" />
-      <PropertyRef Name="ServiceNamespace" />
-    </Key>
-    <Property Name="ServiceDeploymentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="SiteName" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="RelativeServicePath" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="RelativeApplicationPath" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="ServiceName" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="ServiceNamespace" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <Association Name="FK__aspnet_Me__Appli__18EBB532">
     <End Role="aspnet_Applications" Type="Self.aspnet_Applications" Multiplicity="1" />
@@ -1163,11 +845,11 @@ warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableIns
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Goals_Organization">
-    <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
+  <Association Name="FK_Goals_OrgLocations">
+    <End Role="OrgLocations" Type="Self.OrgLocations" Multiplicity="1" />
     <End Role="Goals" Type="Self.Goals" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Organizations">
+      <Principal Role="OrgLocations">
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="Goals">
@@ -1543,7 +1225,7 @@ warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableIns
     <Parameter Name="EvaluationCycleId" Type="bigint" Mode="In" />
     <Parameter Name="Weightage" Type="int" Mode="In" />
   </Function>
-  <EntityContainer Name="PModelStoreContainer">
+  <EntityContainer Name="PEModelStoreContainer">
     <EntitySet Name="aspnet_Applications" EntityType="Self.aspnet_Applications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="aspnet_Membership" EntityType="Self.aspnet_Membership" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="aspnet_Paths" EntityType="Self.aspnet_Paths" Schema="dbo" store:Type="Tables" />
@@ -1576,6 +1258,27 @@ warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableIns
     <EntitySet Name="RatingMaster" EntityType="Self.RatingMaster" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="RejectedMessages" EntityType="Self.RejectedMessages" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Country" EntityType="Self.Country" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Country].[Id] AS [Id], 
+    [Country].[Name] AS [Name]
+    FROM [dbo].[Country] AS [Country]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Department" EntityType="Self.Department" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Department].[Id] AS [Id], 
+    [Department].[Name] AS [Name], 
+    [Department].[OrgId] AS [OrgId], 
+    [Department].[DepartmentHead] AS [DepartmentHead]
+    FROM [dbo].[Department] AS [Department]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Departments" EntityType="Self.Departments" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Departments].[Id] AS [Id], 
+    [Departments].[Name] AS [Name], 
+    [Departments].[OrgId] AS [OrgId]
+    FROM [dbo].[Departments] AS [Departments]</DefiningQuery>
+    </EntitySet>
     <EntitySet Name="FeedbackAnswerOptions" EntityType="Self.FeedbackAnswerOptions" store:Type="Tables" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [FeedbackAnswerOptions].[Id] AS [Id], 
@@ -1613,148 +1316,6 @@ warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableIns
     [WFQueue].[WFParam2] AS [WFParam2], 
     [WFQueue].[WFParam3] AS [WFParam3]
     FROM [dbo].[WFQueue] AS [WFQueue]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="DefinitionIdentityTable" EntityType="Self.DefinitionIdentityTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [DefinitionIdentityTable].[SurrogateIdentityId] AS [SurrogateIdentityId], 
-    [DefinitionIdentityTable].[DefinitionIdentityHash] AS [DefinitionIdentityHash], 
-    [DefinitionIdentityTable].[DefinitionIdentityAnyRevisionHash] AS [DefinitionIdentityAnyRevisionHash], 
-    [DefinitionIdentityTable].[Name] AS [Name], 
-    [DefinitionIdentityTable].[Package] AS [Package], 
-    [DefinitionIdentityTable].[Build] AS [Build], 
-    [DefinitionIdentityTable].[Major] AS [Major], 
-    [DefinitionIdentityTable].[Minor] AS [Minor], 
-    [DefinitionIdentityTable].[Revision] AS [Revision]
-    FROM [System.Activities.DurableInstancing].[DefinitionIdentityTable] AS [DefinitionIdentityTable]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="IdentityOwnerTable" EntityType="Self.IdentityOwnerTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [IdentityOwnerTable].[SurrogateIdentityId] AS [SurrogateIdentityId], 
-    [IdentityOwnerTable].[SurrogateLockOwnerId] AS [SurrogateLockOwnerId]
-    FROM [System.Activities.DurableInstancing].[IdentityOwnerTable] AS [IdentityOwnerTable]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="InstanceMetadataChangesTable" EntityType="Self.InstanceMetadataChangesTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [InstanceMetadataChangesTable].[SurrogateInstanceId] AS [SurrogateInstanceId], 
-    [InstanceMetadataChangesTable].[ChangeTime] AS [ChangeTime], 
-    [InstanceMetadataChangesTable].[EncodingOption] AS [EncodingOption], 
-    [InstanceMetadataChangesTable].[Change] AS [Change]
-    FROM [System.Activities.DurableInstancing].[InstanceMetadataChangesTable] AS [InstanceMetadataChangesTable]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="InstancePromotedPropertiesTable" EntityType="Self.InstancePromotedPropertiesTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [InstancePromotedPropertiesTable].[SurrogateInstanceId] AS [SurrogateInstanceId], 
-    [InstancePromotedPropertiesTable].[PromotionName] AS [PromotionName], 
-    [InstancePromotedPropertiesTable].[Value33] AS [Value33], 
-    [InstancePromotedPropertiesTable].[Value34] AS [Value34], 
-    [InstancePromotedPropertiesTable].[Value35] AS [Value35], 
-    [InstancePromotedPropertiesTable].[Value36] AS [Value36], 
-    [InstancePromotedPropertiesTable].[Value37] AS [Value37], 
-    [InstancePromotedPropertiesTable].[Value38] AS [Value38], 
-    [InstancePromotedPropertiesTable].[Value39] AS [Value39], 
-    [InstancePromotedPropertiesTable].[Value40] AS [Value40], 
-    [InstancePromotedPropertiesTable].[Value41] AS [Value41], 
-    [InstancePromotedPropertiesTable].[Value42] AS [Value42], 
-    [InstancePromotedPropertiesTable].[Value43] AS [Value43], 
-    [InstancePromotedPropertiesTable].[Value44] AS [Value44], 
-    [InstancePromotedPropertiesTable].[Value45] AS [Value45], 
-    [InstancePromotedPropertiesTable].[Value46] AS [Value46], 
-    [InstancePromotedPropertiesTable].[Value47] AS [Value47], 
-    [InstancePromotedPropertiesTable].[Value48] AS [Value48], 
-    [InstancePromotedPropertiesTable].[Value49] AS [Value49], 
-    [InstancePromotedPropertiesTable].[Value50] AS [Value50], 
-    [InstancePromotedPropertiesTable].[Value51] AS [Value51], 
-    [InstancePromotedPropertiesTable].[Value52] AS [Value52], 
-    [InstancePromotedPropertiesTable].[Value53] AS [Value53], 
-    [InstancePromotedPropertiesTable].[Value54] AS [Value54], 
-    [InstancePromotedPropertiesTable].[Value55] AS [Value55], 
-    [InstancePromotedPropertiesTable].[Value56] AS [Value56], 
-    [InstancePromotedPropertiesTable].[Value57] AS [Value57], 
-    [InstancePromotedPropertiesTable].[Value58] AS [Value58], 
-    [InstancePromotedPropertiesTable].[Value59] AS [Value59], 
-    [InstancePromotedPropertiesTable].[Value60] AS [Value60], 
-    [InstancePromotedPropertiesTable].[Value61] AS [Value61], 
-    [InstancePromotedPropertiesTable].[Value62] AS [Value62], 
-    [InstancePromotedPropertiesTable].[Value63] AS [Value63], 
-    [InstancePromotedPropertiesTable].[Value64] AS [Value64]
-    FROM [System.Activities.DurableInstancing].[InstancePromotedPropertiesTable] AS [InstancePromotedPropertiesTable]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="InstancesTable" EntityType="Self.InstancesTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [InstancesTable].[Id] AS [Id], 
-    [InstancesTable].[SurrogateInstanceId] AS [SurrogateInstanceId], 
-    [InstancesTable].[SurrogateLockOwnerId] AS [SurrogateLockOwnerId], 
-    [InstancesTable].[PrimitiveDataProperties] AS [PrimitiveDataProperties], 
-    [InstancesTable].[ComplexDataProperties] AS [ComplexDataProperties], 
-    [InstancesTable].[WriteOnlyPrimitiveDataProperties] AS [WriteOnlyPrimitiveDataProperties], 
-    [InstancesTable].[WriteOnlyComplexDataProperties] AS [WriteOnlyComplexDataProperties], 
-    [InstancesTable].[MetadataProperties] AS [MetadataProperties], 
-    [InstancesTable].[DataEncodingOption] AS [DataEncodingOption], 
-    [InstancesTable].[MetadataEncodingOption] AS [MetadataEncodingOption], 
-    [InstancesTable].[Version] AS [Version], 
-    [InstancesTable].[PendingTimer] AS [PendingTimer], 
-    [InstancesTable].[CreationTime] AS [CreationTime], 
-    [InstancesTable].[LastUpdated] AS [LastUpdated], 
-    [InstancesTable].[WorkflowHostType] AS [WorkflowHostType], 
-    [InstancesTable].[ServiceDeploymentId] AS [ServiceDeploymentId], 
-    [InstancesTable].[SuspensionExceptionName] AS [SuspensionExceptionName], 
-    [InstancesTable].[SuspensionReason] AS [SuspensionReason], 
-    [InstancesTable].[BlockingBookmarks] AS [BlockingBookmarks], 
-    [InstancesTable].[LastMachineRunOn] AS [LastMachineRunOn], 
-    [InstancesTable].[ExecutionStatus] AS [ExecutionStatus], 
-    [InstancesTable].[IsInitialized] AS [IsInitialized], 
-    [InstancesTable].[IsSuspended] AS [IsSuspended], 
-    [InstancesTable].[IsReadyToRun] AS [IsReadyToRun], 
-    [InstancesTable].[IsCompleted] AS [IsCompleted], 
-    [InstancesTable].[SurrogateIdentityId] AS [SurrogateIdentityId]
-    FROM [System.Activities.DurableInstancing].[InstancesTable] AS [InstancesTable]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="KeysTable" EntityType="Self.KeysTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [KeysTable].[Id] AS [Id], 
-    [KeysTable].[SurrogateKeyId] AS [SurrogateKeyId], 
-    [KeysTable].[SurrogateInstanceId] AS [SurrogateInstanceId], 
-    [KeysTable].[EncodingOption] AS [EncodingOption], 
-    [KeysTable].[Properties] AS [Properties], 
-    [KeysTable].[IsAssociated] AS [IsAssociated]
-    FROM [System.Activities.DurableInstancing].[KeysTable] AS [KeysTable]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="LockOwnersTable" EntityType="Self.LockOwnersTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [LockOwnersTable].[Id] AS [Id], 
-    [LockOwnersTable].[SurrogateLockOwnerId] AS [SurrogateLockOwnerId], 
-    [LockOwnersTable].[LockExpiration] AS [LockExpiration], 
-    [LockOwnersTable].[WorkflowHostType] AS [WorkflowHostType], 
-    [LockOwnersTable].[MachineName] AS [MachineName], 
-    [LockOwnersTable].[EnqueueCommand] AS [EnqueueCommand], 
-    [LockOwnersTable].[DeletesInstanceOnCompletion] AS [DeletesInstanceOnCompletion], 
-    [LockOwnersTable].[PrimitiveLockOwnerData] AS [PrimitiveLockOwnerData], 
-    [LockOwnersTable].[ComplexLockOwnerData] AS [ComplexLockOwnerData], 
-    [LockOwnersTable].[WriteOnlyPrimitiveLockOwnerData] AS [WriteOnlyPrimitiveLockOwnerData], 
-    [LockOwnersTable].[WriteOnlyComplexLockOwnerData] AS [WriteOnlyComplexLockOwnerData], 
-    [LockOwnersTable].[EncodingOption] AS [EncodingOption], 
-    [LockOwnersTable].[WorkflowIdentityFilter] AS [WorkflowIdentityFilter]
-    FROM [System.Activities.DurableInstancing].[LockOwnersTable] AS [LockOwnersTable]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="RunnableInstancesTable" EntityType="Self.RunnableInstancesTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [RunnableInstancesTable].[SurrogateInstanceId] AS [SurrogateInstanceId], 
-    [RunnableInstancesTable].[WorkflowHostType] AS [WorkflowHostType], 
-    [RunnableInstancesTable].[ServiceDeploymentId] AS [ServiceDeploymentId], 
-    [RunnableInstancesTable].[RunnableTime] AS [RunnableTime], 
-    [RunnableInstancesTable].[SurrogateIdentityId] AS [SurrogateIdentityId]
-    FROM [System.Activities.DurableInstancing].[RunnableInstancesTable] AS [RunnableInstancesTable]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="ServiceDeploymentsTable" EntityType="Self.ServiceDeploymentsTable" store:Type="Tables" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [ServiceDeploymentsTable].[Id] AS [Id], 
-    [ServiceDeploymentsTable].[ServiceDeploymentHash] AS [ServiceDeploymentHash], 
-    [ServiceDeploymentsTable].[SiteName] AS [SiteName], 
-    [ServiceDeploymentsTable].[RelativeServicePath] AS [RelativeServicePath], 
-    [ServiceDeploymentsTable].[RelativeApplicationPath] AS [RelativeApplicationPath], 
-    [ServiceDeploymentsTable].[ServiceName] AS [ServiceName], 
-    [ServiceDeploymentsTable].[ServiceNamespace] AS [ServiceNamespace]
-    FROM [System.Activities.DurableInstancing].[ServiceDeploymentsTable] AS [ServiceDeploymentsTable]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vw_aspnet_Applications" EntityType="Self.vw_aspnet_Applications" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
@@ -1847,84 +1408,6 @@ warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableIns
     [vw_aspnet_WebPartState_User].[LastUpdatedDate] AS [LastUpdatedDate]
     FROM [dbo].[vw_aspnet_WebPartState_User] AS [vw_aspnet_WebPartState_User]</DefiningQuery>
     </EntitySet>
-    <EntitySet Name="InstancePromotedProperties" EntityType="Self.InstancePromotedProperties" store:Type="Views" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [InstancePromotedProperties].[InstanceId] AS [InstanceId], 
-    [InstancePromotedProperties].[EncodingOption] AS [EncodingOption], 
-    [InstancePromotedProperties].[PromotionName] AS [PromotionName], 
-    [InstancePromotedProperties].[Value33] AS [Value33], 
-    [InstancePromotedProperties].[Value34] AS [Value34], 
-    [InstancePromotedProperties].[Value35] AS [Value35], 
-    [InstancePromotedProperties].[Value36] AS [Value36], 
-    [InstancePromotedProperties].[Value37] AS [Value37], 
-    [InstancePromotedProperties].[Value38] AS [Value38], 
-    [InstancePromotedProperties].[Value39] AS [Value39], 
-    [InstancePromotedProperties].[Value40] AS [Value40], 
-    [InstancePromotedProperties].[Value41] AS [Value41], 
-    [InstancePromotedProperties].[Value42] AS [Value42], 
-    [InstancePromotedProperties].[Value43] AS [Value43], 
-    [InstancePromotedProperties].[Value44] AS [Value44], 
-    [InstancePromotedProperties].[Value45] AS [Value45], 
-    [InstancePromotedProperties].[Value46] AS [Value46], 
-    [InstancePromotedProperties].[Value47] AS [Value47], 
-    [InstancePromotedProperties].[Value48] AS [Value48], 
-    [InstancePromotedProperties].[Value49] AS [Value49], 
-    [InstancePromotedProperties].[Value50] AS [Value50], 
-    [InstancePromotedProperties].[Value51] AS [Value51], 
-    [InstancePromotedProperties].[Value52] AS [Value52], 
-    [InstancePromotedProperties].[Value53] AS [Value53], 
-    [InstancePromotedProperties].[Value54] AS [Value54], 
-    [InstancePromotedProperties].[Value55] AS [Value55], 
-    [InstancePromotedProperties].[Value56] AS [Value56], 
-    [InstancePromotedProperties].[Value57] AS [Value57], 
-    [InstancePromotedProperties].[Value58] AS [Value58], 
-    [InstancePromotedProperties].[Value59] AS [Value59], 
-    [InstancePromotedProperties].[Value60] AS [Value60], 
-    [InstancePromotedProperties].[Value61] AS [Value61], 
-    [InstancePromotedProperties].[Value62] AS [Value62], 
-    [InstancePromotedProperties].[Value63] AS [Value63], 
-    [InstancePromotedProperties].[Value64] AS [Value64]
-    FROM [System.Activities.DurableInstancing].[InstancePromotedProperties] AS [InstancePromotedProperties]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="Instances" EntityType="Self.Instances" store:Type="Views" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [Instances].[InstanceId] AS [InstanceId], 
-    [Instances].[PendingTimer] AS [PendingTimer], 
-    [Instances].[CreationTime] AS [CreationTime], 
-    [Instances].[LastUpdatedTime] AS [LastUpdatedTime], 
-    [Instances].[ServiceDeploymentId] AS [ServiceDeploymentId], 
-    [Instances].[SuspensionExceptionName] AS [SuspensionExceptionName], 
-    [Instances].[SuspensionReason] AS [SuspensionReason], 
-    [Instances].[ActiveBookmarks] AS [ActiveBookmarks], 
-    [Instances].[CurrentMachine] AS [CurrentMachine], 
-    [Instances].[LastMachine] AS [LastMachine], 
-    [Instances].[ExecutionStatus] AS [ExecutionStatus], 
-    [Instances].[IsInitialized] AS [IsInitialized], 
-    [Instances].[IsSuspended] AS [IsSuspended], 
-    [Instances].[IsCompleted] AS [IsCompleted], 
-    [Instances].[EncodingOption] AS [EncodingOption], 
-    [Instances].[ReadWritePrimitiveDataProperties] AS [ReadWritePrimitiveDataProperties], 
-    [Instances].[WriteOnlyPrimitiveDataProperties] AS [WriteOnlyPrimitiveDataProperties], 
-    [Instances].[ReadWriteComplexDataProperties] AS [ReadWriteComplexDataProperties], 
-    [Instances].[WriteOnlyComplexDataProperties] AS [WriteOnlyComplexDataProperties], 
-    [Instances].[IdentityName] AS [IdentityName], 
-    [Instances].[IdentityPackage] AS [IdentityPackage], 
-    [Instances].[Build] AS [Build], 
-    [Instances].[Major] AS [Major], 
-    [Instances].[Minor] AS [Minor], 
-    [Instances].[Revision] AS [Revision]
-    FROM [System.Activities.DurableInstancing].[Instances] AS [Instances]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="ServiceDeployments" EntityType="Self.ServiceDeployments" store:Type="Views" store:Schema="System.Activities.DurableInstancing">
-      <DefiningQuery>SELECT 
-    [ServiceDeployments].[ServiceDeploymentId] AS [ServiceDeploymentId], 
-    [ServiceDeployments].[SiteName] AS [SiteName], 
-    [ServiceDeployments].[RelativeServicePath] AS [RelativeServicePath], 
-    [ServiceDeployments].[RelativeApplicationPath] AS [RelativeApplicationPath], 
-    [ServiceDeployments].[ServiceName] AS [ServiceName], 
-    [ServiceDeployments].[ServiceNamespace] AS [ServiceNamespace]
-    FROM [System.Activities.DurableInstancing].[ServiceDeployments] AS [ServiceDeployments]</DefiningQuery>
-    </EntitySet>
     <AssociationSet Name="FK__aspnet_Me__Appli__18EBB532" Association="Self.FK__aspnet_Me__Appli__18EBB532">
       <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
       <End Role="aspnet_Membership" EntitySet="aspnet_Membership" />
@@ -1993,8 +1476,8 @@ warning 6002: The table/view 'MultiLocationVelocity.System.Activities.DurableIns
       <End Role="OrgLocations" EntitySet="OrgLocations" />
       <End Role="EvaluationCycles" EntitySet="EvaluationCycles" />
     </AssociationSet>
-    <AssociationSet Name="FK_Goals_Organization" Association="Self.FK_Goals_Organization">
-      <End Role="Organizations" EntitySet="Organizations" />
+    <AssociationSet Name="FK_Goals_OrgLocations" Association="Self.FK_Goals_OrgLocations">
+      <End Role="OrgLocations" EntitySet="OrgLocations" />
       <End Role="Goals" EntitySet="Goals" />
     </AssociationSet>
     <AssociationSet Name="FK_ManagerEvaluation_GoalStatus" Association="Self.FK_ManagerEvaluation_GoalStatus">

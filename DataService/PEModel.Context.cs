@@ -39,8 +39,12 @@ namespace DataService
         public virtual DbSet<aspnet_WebEvent_Events> aspnet_WebEvent_Events { get; set; }
         public virtual DbSet<Attachment> Attachments { get; set; }
         public virtual DbSet<Badge> Badges { get; set; }
+        public virtual DbSet<BulkNotificationLog> BulkNotificationLogs { get; set; }
+        public virtual DbSet<EmployeeEducation> EmployeeEducations { get; set; }
         public virtual DbSet<EmployeeEvaluation> EmployeeEvaluations { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<EmployeeSkill> EmployeeSkills { get; set; }
+        public virtual DbSet<EmploymentHistory> EmploymentHistories { get; set; }
         public virtual DbSet<EvaluationConclusion> EvaluationConclusions { get; set; }
         public virtual DbSet<EvaluationCycle> EvaluationCycles { get; set; }
         public virtual DbSet<EvaluationRating> EvaluationRatings { get; set; }
@@ -50,22 +54,16 @@ namespace DataService
         public virtual DbSet<GoalStatu> GoalStatus { get; set; }
         public virtual DbSet<ManagerEvaluation> ManagerEvaluations { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
+        public virtual DbSet<OrgLocation> OrgLocations { get; set; }
         public virtual DbSet<RatingMaster> RatingMasters { get; set; }
         public virtual DbSet<RejectedMessage> RejectedMessages { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Department1> Departments1 { get; set; }
         public virtual DbSet<FeedbackAnswerOption> FeedbackAnswerOptions { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<MessageResource> MessageResources { get; set; }
         public virtual DbSet<WFQueue> WFQueues { get; set; }
-        public virtual DbSet<DefinitionIdentityTable> DefinitionIdentityTables { get; set; }
-        public virtual DbSet<IdentityOwnerTable> IdentityOwnerTables { get; set; }
-        public virtual DbSet<InstanceMetadataChangesTable> InstanceMetadataChangesTables { get; set; }
-        public virtual DbSet<InstancePromotedPropertiesTable> InstancePromotedPropertiesTables { get; set; }
-        public virtual DbSet<InstancesTable> InstancesTables { get; set; }
-        public virtual DbSet<KeysTable> KeysTables { get; set; }
-        public virtual DbSet<LockOwnersTable> LockOwnersTables { get; set; }
-        public virtual DbSet<RunnableInstancesTable> RunnableInstancesTables { get; set; }
-        public virtual DbSet<ServiceDeploymentsTable> ServiceDeploymentsTables { get; set; }
         public virtual DbSet<vw_aspnet_Applications> vw_aspnet_Applications { get; set; }
         public virtual DbSet<vw_aspnet_MembershipUsers> vw_aspnet_MembershipUsers { get; set; }
         public virtual DbSet<vw_aspnet_Profiles> vw_aspnet_Profiles { get; set; }
@@ -75,14 +73,6 @@ namespace DataService
         public virtual DbSet<vw_aspnet_WebPartState_Paths> vw_aspnet_WebPartState_Paths { get; set; }
         public virtual DbSet<vw_aspnet_WebPartState_Shared> vw_aspnet_WebPartState_Shared { get; set; }
         public virtual DbSet<vw_aspnet_WebPartState_User> vw_aspnet_WebPartState_User { get; set; }
-        public virtual DbSet<InstancePromotedProperty> InstancePromotedProperties { get; set; }
-        public virtual DbSet<Instance> Instances { get; set; }
-        public virtual DbSet<ServiceDeployment> ServiceDeployments { get; set; }
-        public virtual DbSet<EmployeeEducation> EmployeeEducations { get; set; }
-        public virtual DbSet<EmployeeSkill> EmployeeSkills { get; set; }
-        public virtual DbSet<EmploymentHistory> EmploymentHistories { get; set; }
-        public virtual DbSet<BulkNotificationLog> BulkNotificationLogs { get; set; }
-        public virtual DbSet<OrgLocation> OrgLocations { get; set; }
     
         public virtual ObjectResult<string> aspnet_AnyDataInTables(Nullable<int> tablesToCheck)
         {

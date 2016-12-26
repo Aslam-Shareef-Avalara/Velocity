@@ -71,7 +71,14 @@
                     </td>
 
                     <td>
-                        <a href="javascript:void(0)" class="btn btn-xs btn-info edit" onclick="createeditpe(@item.Id)" >Edit</a>
+                        @if(item.OrgId==ViewBag.OrgId)
+                        { 
+                            <a href="javascript:void(0)" class="btn btn-xs btn-info edit" onclick="createeditpe(@item.Id)" >Edit</a>
+                        }
+                        else
+                        { 
+                            <span style="cursor:not-allowed; width: 25px; height: 25px;background-repeat:no-repeat; background-image: url('../Images/stop-icon-13411.png');display:block;">&nbsp;</span>
+                        }
                     </td>
                 </tr>
             }

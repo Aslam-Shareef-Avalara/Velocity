@@ -12,13 +12,11 @@ namespace DataService
     using System;
     using System.Collections.Generic;
     
-    public partial class ServiceDeployment
+    public partial class Department
     {
-        public long ServiceDeploymentId { get; set; }
-        public string SiteName { get; set; }
-        public string RelativeServicePath { get; set; }
-        public string RelativeApplicationPath { get; set; }
-        public string ServiceName { get; set; }
-        public string ServiceNamespace { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public int OrgId { get; set; }
+        public Nullable<System.Guid> DepartmentHead { get; set; }
     }
 }

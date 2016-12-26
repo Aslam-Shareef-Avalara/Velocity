@@ -118,7 +118,10 @@
     <Compile Include="BulkNotificationLog.cs">
       <DependentUpon>PEModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="DefinitionIdentityTable.cs">
+    <Compile Include="Department.cs">
+      <DependentUpon>PEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Department1.cs">
       <DependentUpon>PEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Employee.cs">
@@ -165,27 +168,9 @@
       <DependentUpon>PEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="HrEvaluationService.cs" />
-    <Compile Include="IdentityOwnerTable.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="IEmployeeService.cs" />
     <Compile Include="IEvaluationService.cs" />
     <Compile Include="IGoalService.cs" />
-    <Compile Include="Instance.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InstanceMetadataChangesTable.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InstancePromotedPropertiesTable.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InstancePromotedProperty.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InstancesTable.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="InventoryManagement\Asset.cs">
       <DependentUpon>InvMgmtModel.tt</DependentUpon>
     </Compile>
@@ -264,12 +249,6 @@
     <Compile Include="InventoryManagement\VendorTaxDetail.cs">
       <DependentUpon>InvMgmtModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="KeysTable.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="LockOwnersTable.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Log.cs">
       <DependentUpon>PEModel.tt</DependentUpon>
     </Compile>
@@ -310,15 +289,6 @@
     </Compile>
     <Compile Include="ReportsService.cs" />
     <Compile Include="Role.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="RunnableInstancesTable.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServiceDeployment.cs">
-      <DependentUpon>PEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ServiceDeploymentsTable.cs">
       <DependentUpon>PEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="vw_aspnet_Applications.cs">
@@ -381,22 +351,24 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>PEModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="PEModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PEModel.edmx</DependentUpon>
-      <LastGenOutput>PEModel.Context.cs</LastGenOutput>
-    </None>
     <None Include="PEModel.edmx.diagram">
       <DependentUpon>PEModel.edmx</DependentUpon>
-    </None>
-    <None Include="PEModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PEModel.edmx</DependentUpon>
-      <LastGenOutput>PEModel.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PEModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PEModel.edmx</DependentUpon>
+      <LastGenOutput>PEModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="PEModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PEModel.edmx</DependentUpon>
+      <LastGenOutput>PEModel.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
