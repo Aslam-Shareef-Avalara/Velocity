@@ -218,6 +218,7 @@
     <Compile Include="Controllers\OrgLocationsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\StateController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\VendorAddressController.cs" />
     <Compile Include="Controllers\VendorBankDetailController.cs" />
     <Compile Include="Controllers\VendorContactController.cs" />
@@ -1171,6 +1172,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="attachments\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
