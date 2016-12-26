@@ -215,6 +215,7 @@
     <Compile Include="Controllers\ItemMasterController.cs" />
     <Compile Include="Controllers\ItemTypeController.cs" />
     <Compile Include="Controllers\LegalEntityController.cs" />
+    <Compile Include="Controllers\OrgLocationsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\StateController.cs" />
     <Compile Include="Controllers\VendorAddressController.cs" />
@@ -1160,6 +1161,11 @@
     <Content Include="Views\Inventory\Index.cshtml" />
     <Content Include="Views\Shared\_InvLayoutPage.cshtml" />
     <Content Include="Views\Shared\GradeDropDown.cshtml" />
+    <Content Include="Views\OrgLocations\Create.cshtml" />
+    <Content Include="Views\OrgLocations\Delete.cshtml" />
+    <Content Include="Views\OrgLocations\Details.cshtml" />
+    <Content Include="Views\OrgLocations\Edit.cshtml" />
+    <Content Include="Views\OrgLocations\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

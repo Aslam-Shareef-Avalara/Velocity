@@ -1,0 +1,112 @@
+﻿@using X.Scaffolding.Core
+@model DataService.OrgLocation
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            LocationName
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.LocationName)                 
+                @Html.ValidationMessageFor(model => model.LocationName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            OrgId
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.OrgId)                 
+                @Html.ValidationMessageFor(model => model.OrgId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Address1
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Address1)                 
+                @Html.ValidationMessageFor(model => model.Address1)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Address2
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Address2)                 
+                @Html.ValidationMessageFor(model => model.Address2)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            City
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.City)                 
+                @Html.ValidationMessageFor(model => model.City)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            State
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.State)                 
+                @Html.ValidationMessageFor(model => model.State)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Country
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Country)                 
+                @Html.ValidationMessageFor(model => model.Country)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Zip
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Zip)                 
+                @Html.ValidationMessageFor(model => model.Zip)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
