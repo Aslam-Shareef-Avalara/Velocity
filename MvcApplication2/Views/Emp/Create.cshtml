@@ -1,0 +1,244 @@
+﻿@using X.Scaffolding.Core
+@model DataService.Employee
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            FirstName
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.FirstName)                 
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            LastName
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.LastName)                 
+                @Html.ValidationMessageFor(model => model.LastName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Department
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Department)                 
+                @Html.ValidationMessageFor(model => model.Department)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Manager
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Manager)                 
+                @Html.ValidationMessageFor(model => model.Manager)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Email
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapEmailEditorFor(model => model.Email)                 
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Phone
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapPhoneEditorFor(model => model.Phone)                 
+                @Html.ValidationMessageFor(model => model.Phone)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            OrgId (OrgId)
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapDropDownList("OrgId", String.Empty)                 
+                @Html.ValidationMessageFor(model => model.OrgId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Active
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Active)                 
+                @Html.ValidationMessageFor(model => model.Active)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            UserId
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.UserId)                 
+                @Html.ValidationMessageFor(model => model.UserId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Designation
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Designation)                 
+                @Html.ValidationMessageFor(model => model.Designation)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            DoJ
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.DoJ)                 
+                @Html.ValidationMessageFor(model => model.DoJ)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            ProfilePix
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.ProfilePix)                 
+                @Html.ValidationMessageFor(model => model.ProfilePix)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            OrgEmpId
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.OrgEmpId)                 
+                @Html.ValidationMessageFor(model => model.OrgEmpId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            LocationId
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.LocationId)                 
+                @Html.ValidationMessageFor(model => model.LocationId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Mobile
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Mobile)                 
+                @Html.ValidationMessageFor(model => model.Mobile)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            FirstTime
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.FirstTime)                 
+                @Html.ValidationMessageFor(model => model.FirstTime)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            DoB
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.DoB)                 
+                @Html.ValidationMessageFor(model => model.DoB)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Gender
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Gender)                 
+                @Html.ValidationMessageFor(model => model.Gender)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            EmpType
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.EmpType)                 
+                @Html.ValidationMessageFor(model => model.EmpType)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            LastVisit
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.LastVisit)                 
+                @Html.ValidationMessageFor(model => model.LastVisit)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+            Reviewer
+            </label>
+            <div class="col-md-10">
+                @Html.BootstrapTextBoxFor(model => model.Reviewer)                 
+                @Html.ValidationMessageFor(model => model.Reviewer)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

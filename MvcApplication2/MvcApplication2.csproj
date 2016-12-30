@@ -79,9 +79,9 @@
       <HintPath>..\packages\Microsoft.Data.OData.5.6.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -206,6 +206,7 @@
     <Compile Include="Controllers\ControlCenterController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
+    <Compile Include="Controllers\EmpController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FeedbackController.cs" />
@@ -270,6 +271,8 @@
     <Content Include="Images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Images\underachiever.png" />
     <Content Include="Images\_500hold-it-right-there.jpg" />
+    <Content Include="img\home_support.svg" />
+    <Content Include="img\icon.svg" />
     <Content Include="Scripts\morris.min.js" />
     <Content Include="Scripts\Raphael.js" />
     <Content Include="Views\Shared\offline.cshtml" />
@@ -1035,10 +1038,6 @@
     <Content Include="Views\Employee\MyTeam.cshtml" />
     <Content Include="Views\Shared\AuthorizeFailed.cshtml" />
     <Content Include="Views\ControlCenter\Index.cshtml" />
-    <Content Include="Views\Employee\Create.cshtml" />
-    <Content Include="Views\Employee\Delete.cshtml" />
-    <Content Include="Views\Employee\Details.cshtml" />
-    <Content Include="Views\Employee\Edit.cshtml" />
     <Content Include="Views\Employee\Index.cshtml" />
     <Content Include="Views\Goals\Create.cshtml" />
     <Content Include="Views\Goals\Delete.cshtml" />
@@ -1167,6 +1166,16 @@
     <Content Include="Views\OrgLocations\Details.cshtml" />
     <Content Include="Views\OrgLocations\Edit.cshtml" />
     <Content Include="Views\OrgLocations\Index.cshtml" />
+    <Content Include="Views\Emp\Create.cshtml" />
+    <Content Include="Views\Emp\Delete.cshtml" />
+    <Content Include="Views\Emp\Details.cshtml" />
+    <Content Include="Views\Emp\Edit.cshtml" />
+    <Content Include="Views\Emp\Index.cshtml" />
+    <Content Include="Views\Employee\Create.cshtml" />
+    <Content Include="Views\Employee\Delete.cshtml" />
+    <Content Include="Views\Employee\Details.cshtml" />
+    <Content Include="Views\Employee\Edit.cshtml" />
+    <Content Include="Views\Evaluation\ActiveFeedback.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

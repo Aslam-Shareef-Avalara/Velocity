@@ -99,29 +99,33 @@ namespace MvcApplication2.Controllers
                 ViewBag.Salutation = "Your";
             else
                 ViewBag.Salutation = db.Employees.FirstOrDefault(x => x.gid == reporteeID).FirstName + "'s";
-            
-            ViewBag.PerformanceData = db.EvaluationRatings.Join(db.EvaluationCycles, e => e.EvalCycleId, g => g.Id, (e, g) => new { e, g }).Where(x => x.e.EmpId == reporteeID && x.g.EvaluationEnd < DateTime.Today).OrderBy(x => x.g.EvaluationEnd).Select(x => new PerformanceChartModel { Rating = x.e.ManagerOverllRating.Value, PETitle = x.g.Title }).ToList();
+            if (db.EvaluationRatings.Join(db.EvaluationCycles, e => e.EvalCycleId, g => g.Id, (e, g) => new { e, g }).Any(x => x.e.EmpId == reporteeID && x.g.EvaluationEnd < DateTime.Today && x.e.ManagerOverllRating.HasValue))
+                ViewBag.PerformanceData = db.EvaluationRatings.Join(db.EvaluationCycles, e => e.EvalCycleId, g => g.Id, (e, g) => new { e, g }).Where(x => x.e.EmpId == reporteeID && x.g.EvaluationEnd < DateTime.Today).OrderBy(x => x.g.EvaluationEnd).Select(x => new PerformanceChartModel { Rating = x.e.ManagerOverllRating.Value, PETitle = x.g.Title }).ToList();
+            else ViewBag.PerformanceData = new List<PerformanceChartModel>();
             try
             {
-                var SuccessPerformanceData = db.ManagerEvaluations
-                    .Join(db.Goals, _me => _me.GoalId, g => g.gid, (_me, g) => new { _me, g })
-                    .Join(db.EvaluationCycles, mg => mg._me.EvalCycleId, ec => ec.Id, (mg, ec) => new { mg, ec })
-                    .Where(x => x.mg.g.OrgId == OrgId && x.mg.g.Fixed == true && x.mg._me.EmployeeId == reporteeID && x.ec.EvaluationEnd < DateTime.Today)
-                    .OrderBy(x => x.mg.g.Title).ThenBy(x => x.ec.EvaluationEnd)
-                    .Select(x => new PerformanceChartModel
-                    {
-                        Rating = x.mg._me.GoalRating.HasValue ? (decimal)x.mg._me.GoalRating : 0,
-                        PETitle = x.ec.Title,
-                        TextData1 = x.mg.g.Title,
-                        Date1 = x.ec.EvaluationEnd.Value
-                    });
-                var listOfSuccessTraits = SuccessPerformanceData.Select(x => x.TextData1).Distinct();
-                Hashtable ht = new Hashtable();
-                foreach (string trait in listOfSuccessTraits)
+                if (ViewBag.PerformanceData.Count > 0)
                 {
-                    ht[trait] = SuccessPerformanceData.Where(x => x.TextData1 == trait).OrderBy(x => x.Date1).ToList();
+                    var SuccessPerformanceData = db.ManagerEvaluations
+                        .Join(db.Goals, _me => _me.GoalId, g => g.gid, (_me, g) => new { _me, g })
+                        .Join(db.EvaluationCycles, mg => mg._me.EvalCycleId, ec => ec.Id, (mg, ec) => new { mg, ec })
+                        .Where(x => x.mg.g.OrgId == OrgId && x.mg.g.Fixed == true && x.mg._me.EmployeeId == reporteeID && x.ec.EvaluationEnd < DateTime.Today)
+                        .OrderBy(x => x.mg.g.Title).ThenBy(x => x.ec.EvaluationEnd)
+                        .Select(x => new PerformanceChartModel
+                        {
+                            Rating = x.mg._me.GoalRating.HasValue ? (decimal)x.mg._me.GoalRating : 0,
+                            PETitle = x.ec.Title,
+                            TextData1 = x.mg.g.Title,
+                            Date1 = x.ec.EvaluationEnd.Value
+                        });
+                    var listOfSuccessTraits = SuccessPerformanceData.Select(x => x.TextData1).Distinct();
+                    Hashtable ht = new Hashtable();
+                    foreach (string trait in listOfSuccessTraits)
+                    {
+                        ht[trait] = SuccessPerformanceData.Where(x => x.TextData1 == trait).OrderBy(x => x.Date1).ToList();
+                    }
+                    ViewBag.SuccessTraitsData = ht;
                 }
-                ViewBag.SuccessTraitsData = ht;
             }
             catch (Exception x) { logger.Error("When getting success trait data" + x.Message + x.StackTrace, x); }
             return View("PerformanceGraphs");
@@ -450,6 +454,8 @@ namespace MvcApplication2.Controllers
             emp.Department = e.Department;
             if (!string.IsNullOrEmpty(e.Designation))
                 emp.Designation = e.Designation;
+            if (!e.Reviewer.HasValue)
+                emp.Reviewer= e.Reviewer;
             if(e.DoB.HasValue)
                 emp.DoB = e.DoB;
             if (e.DoJ.HasValue)

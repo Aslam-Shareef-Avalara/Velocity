@@ -1,0 +1,97 @@
+﻿@using X.Scaffolding.Core
+@using PagedList.Mvc;
+@model PagedList.IPagedList<DataService.Employee>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success create" })
+</p>
+<table class="table table-hover">
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Manager</th>
+        <th>Email</th>
+        <th>Active</th>
+        <th>Designation</th>
+        <th>Emp Id</th>
+        <th>Location</th>
+        <th>Last Visit</th>
+        <th>Reviewer</th>
+        <th class="controls-head"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr id="_@item.gid">
+            <td style="background-color:#eee;">
+                @if (item.ProfilePix == null || item.ProfilePix.Count() == 0)
+                {
+
+                    <img alt="@item.FirstName @item.LastName" style="width:70px" src="@Url.Content("~/images/follower-man-user-login-round-512.png")">
+                }
+                else
+                {
+                    <img style="width:70px;" src="@(@"data:image/png;base64," + Convert.ToBase64String(item.ProfilePix))" class="actualphoto">
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                <a href="#_@item.Manager"> @Html.DisplayFor(modelItem => item.EmpType.Split(new string[] { "#" }, StringSplitOptions.None)[0])</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Designation)
+            </td>
+
+
+            <td>
+                @Html.DisplayFor(modelItem => item.OrgEmpId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpType.Split(new string[] { "#" }, StringSplitOptions.None)[1])
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastVisit)
+            </td>
+            <td>
+                <a href="#_@item.Reviewer"> @Html.DisplayFor(modelItem => item.EmpType.Split(new string[] { "#" }, StringSplitOptions.None)[2])</a>
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.gid }, new { @class = "btn btn-xs btn-info edit" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.gid }, new { @class = "btn btn-xs btn-danger delete" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<style>
+    td {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+</style>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

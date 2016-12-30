@@ -22,5 +22,6 @@ namespace DataService
         public Nullable<bool> HrApprovalStage1 { get; set; }
         public Nullable<bool> HrApprovalStage2 { get; set; }
         public string OverAllReviewComment { get; set; }
+        public string OnGoingFeedBack { get; set; }
     }
 }

@@ -511,10 +511,10 @@ namespace MvcApplication2.Controllers
             return View("index_2", viewmodel);
         }
 
-        public void StartPECycle(long evalcycleid, string pename, string description, string goalstart, string goalend, string evaluationstart, string evaluationend, int locationid)
+        public void StartPECycle(long evalcycleid, string pename, string description, string goalstart, string goalend, string evaluationstart, string evaluationend)
         {
             IHrEvaluationService hrService = new HrEvaluationService(OrgId, AppName,currentUser);
-            var e = new EvaluationCycle { OrgId = locationid, Description = description, EvaluationEnd = DateTime.ParseExact(evaluationend, "MM/dd/yyyy", CultureInfo.InvariantCulture), EvaluationStart = DateTime.ParseExact(evaluationstart, "MM/dd/yyyy", CultureInfo.InvariantCulture), GoalEndDate = DateTime.ParseExact(goalend, "MM/dd/yyyy", CultureInfo.InvariantCulture), GoalStartDate = DateTime.ParseExact(goalstart, "MM/dd/yyyy", CultureInfo.InvariantCulture), Title = pename };
+            var e = new EvaluationCycle { OrgId = OrgId, Description = description, EvaluationEnd = DateTime.ParseExact(evaluationend, "MM/dd/yyyy", CultureInfo.InvariantCulture), EvaluationStart = DateTime.ParseExact(evaluationstart, "MM/dd/yyyy", CultureInfo.InvariantCulture), GoalEndDate = DateTime.ParseExact(goalend, "MM/dd/yyyy", CultureInfo.InvariantCulture), GoalStartDate = DateTime.ParseExact(goalstart, "MM/dd/yyyy", CultureInfo.InvariantCulture), Title = pename };
             if (evalcycleid == 0)
                 hrService.StartPECycle(e);
             else
@@ -606,7 +606,7 @@ namespace MvcApplication2.Controllers
             evaluationstart = DateTime.ParseExact(Request.Form["evaluationstart"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
             evaluationend = DateTime.ParseExact(Request.Form["evaluationend"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
             long evalid = long.Parse(Request.Form["evalcycleid"]);
-            int locationid = int.Parse(Request.Form["locationid"]);
+            int locationid = OrgId;
             int Pecount = 0;
             string Newphase = "", Existingphase = "";
 

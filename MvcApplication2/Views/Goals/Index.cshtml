@@ -17,14 +17,14 @@
 }
 @{
 
-    var empId =(string.IsNullOrEmpty(Convert.ToString(ViewBag.ReporteeId))?ViewBag.Me.gid.ToString():ViewBag.ReporteeId.ToString());
-    var getgoalsurl="~/goals/index/?reporteeid="+empId;
-    var delgoalsurl ="~/goals/delete/";
+    var empId = (string.IsNullOrEmpty(Convert.ToString(ViewBag.ReporteeId)) ? ViewBag.Me.gid.ToString() : ViewBag.ReporteeId.ToString());
+    var getgoalsurl = "~/goals/index/?reporteeid=" + empId;
+    var delgoalsurl = "~/goals/delete/";
     var creategoalsurl = "~/goals/creategoal/?reporteeid=" + empId;
 
-    if(ViewBag.FixedGoals == true)
+    if (ViewBag.FixedGoals == true)
     {
-        getgoalsurl="~/goals/getfixedgoals?x=1";
+        getgoalsurl = "~/goals/getfixedgoals?x=1";
         creategoalsurl = "~/controlcenter/CreateFixedGoals/?";
     }
 }
@@ -43,19 +43,19 @@
                 $("#statusli").fadeIn();
             }
         });
-        
-        
-            
+
+
+
     }
 </script>
 <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
 <div id="goalslist" style="padding:10px;">
     <h3 class="title" id="GoalViewTitle">@ViewBag.EmployeeName Goals</h3>
-    
+
     @Html.Action("PerformanceData", "Employee", new { reporteeID = Guid.Parse(empId) })
     @if (ViewBag.EmployeeName != null && ViewBag.EmployeeName.ToLower() == "your")
     {
-        
+
         <div id="rejectionMessage" style="display:none;" class="alert alert-warning">
 
         </div>
@@ -74,15 +74,16 @@
         {
             foreach (MvcApplication2.ViewModel.GoalsViewModel goalviewmodel in Model)
             {
-                <li  @(tabcounter == 1 ? "class=active" : "") data-pecycleid="@goalviewmodel.PECycle.Id"><a onclick="displaystatus('@goalviewmodel.CurrentStatus')" href="#_@goalviewmodel.PECycle.Id" data-toggle="tab">@goalviewmodel.PECycle.Title</a></li>
+                <li @(tabcounter == 1 ? "class=active" : "") data-pecycleid="@goalviewmodel.PECycle.Id"><a onclick="displaystatus('@goalviewmodel.CurrentStatus')" href="#_@goalviewmodel.PECycle.Id" data-toggle="tab">@goalviewmodel.PECycle.Title</a></li>
                 tabcounter++;
             }
         }
         @if (ViewBag.FixedGoals != true)
         {
             <li onclick="displaystatus('')" @(Model == null ? "class=active" : "") data-status="" data-pecycleid="0"><a data-toggle="tab" href="#_0">Past Evaluations</a></li>
+            <li onclick="loadactivefeedback(@ViewBag.CurrentCycle.Id)" @(Model == null ? "class=active" : "") data-status="" data-pecycleid="@ViewBag.CurrentCycle.Id"><a data-toggle="tab" href="#_FB">Active Feedback</a></li>
         }
-        @if (Model!=null && Model.Count>0)
+        @if (Model != null && Model.Count > 0)
         {
             <li id="statusli" class="pull-right" style="@(string.IsNullOrEmpty(Model[0].CurrentStatus)?"display:none;":"") border-color: azure; background-color:lightblue; border-radius:5px;border-width:thin;border-style:solid;padding:5px;">
                 <label style="display:inline-block; letter-spacing:1px; ">Status : </label>&nbsp;<span id="currentstatus" style="color:black!important;">@Model[0].CurrentStatus</span>
@@ -91,48 +92,48 @@
     </ul>
     @{tabcounter = 1;}
     <div class="tab-content">
-        @if (Model!=null)
+        @if (Model != null)
         {
-        foreach (MvcApplication2.ViewModel.GoalsViewModel goalviewmodel in Model)
-        {
+            foreach (MvcApplication2.ViewModel.GoalsViewModel goalviewmodel in Model)
+            {
 
 
-            <script>
+                <script>
                 var totalweightage_@goalviewmodel.PECycle.Id = @goalviewmodel.TotalWeightage;
-            </script>
-            <div id="_@goalviewmodel.PECycle.Id" class="tab-pane fade @(tabcounter==1?"in active":"")">
-                <h5 style="color:#808080">@goalviewmodel.PECycle.Description</h5>
-                <div><img src="~/images/i-icon-new.png" /> <a href="#" style="color:blue;text-decoration:underline;" onclick="exportgoals('@goalviewmodel.EmployeeId', @goalviewmodel.PECycle.Id)">Click here</a> to export goals / Evaluations</div>
-                <br />
-                @if (goalviewmodel.PE_Cycle == DataService.PECycle.GOAL_SETTING)
+                </script>
+                <div id="_@goalviewmodel.PECycle.Id" class="tab-pane fade @(tabcounter==1?"in active":"")">
+                    <h5 style="color:#808080">@goalviewmodel.PECycle.Description</h5>
+                    <div><img src="~/images/i-icon-new.png" /> <a href="#" style="color:blue;text-decoration:underline;" onclick="exportgoals('@goalviewmodel.EmployeeId', @goalviewmodel.PECycle.Id)">Click here</a> to export goals / Evaluations</div>
+                    <br />
+                    @if (goalviewmodel.PE_Cycle == DataService.PECycle.GOAL_SETTING)
                 {
                 <div style="display: inline-block; height: auto; width: 100%;">
                     @if (goalviewmodel.Editable)
                      {
-                        <a href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use- this button to ADD a new goal." class=" fa fa-plus-circle btnaddgoal" onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
-                            <label>Add</label>
-                        </a>
+                    <a href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use- this button to ADD a new goal." class=" fa fa-plus-circle btnaddgoal" onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
+                        <label>Add</label>
+                    </a>
                      }
                     @if (goalviewmodel.ButtonToShow == "Publish")
                     {
-                        <a style="float: right;" href="javascript:void(0);" title="Click to submit to manager for approval" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them." class="fa fi-web  btnpublishgoals" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
-                            <label>Submit to manager</label>
-                        </a>
-                        @*<input type="submit" value="Submit to Manager" onclick="SetAction('publish');" />*@
+                    <a style="float: right;" href="javascript:void(0);" title="Click to submit to manager for approval" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them." class="fa fi-web  btnpublishgoals" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
+                        <label>Submit to manager</label>
+                    </a>
+                    @*<input type="submit" value="Submit to Manager" onclick="SetAction('publish');" />*@
                     }
                     else if (goalviewmodel.ButtonToShow == "Approve")
                     {
-                        <a style="float: right;" href="javascript:void(0);" class="fa fa-thumbs-o-up  btnpublishgoals"
-                           data-step="4" data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button."
-                           onclick="Approve()">
-                            <label>Approve</label>
-                        </a>
-                        <a style="float: right;" href="javascript:void(0);" data-toggle="modal"
-                           data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
-                           data-target="#myModal" class="fa fa-thumbs-o-down  btnpublishgoals">
-                            <label>Reject</label>
-                        </a>
-                        @*<input type="submit" value="Approve" onclick="SetAction('approve')" />*@
+                    <a style="float: right;" href="javascript:void(0);" class="fa fa-thumbs-o-up  btnpublishgoals"
+                       data-step="4" data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button."
+                       onclick="Approve()">
+                        <label>Approve</label>
+                    </a>
+                    <a style="float: right;" href="javascript:void(0);" data-toggle="modal"
+                       data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
+                       data-target="#myModal" class="fa fa-thumbs-o-down  btnpublishgoals">
+                        <label>Reject</label>
+                    </a>
+                    @*<input type="submit" value="Approve" onclick="SetAction('approve')" />*@
                     }
 
                 </div>
@@ -155,27 +156,27 @@
                                     DataService.ManagerEvaluation mgreval = goalviewmodel.ManagerEvaluations.FirstOrDefault(x=>x.GoalId==item.gid && item.Evalcycleid==x.EvalCycleId);
                                     if (mgreval!=null && !string.IsNullOrWhiteSpace(mgreval.Comment))
                                     {
-                                @*<div class="widget-subtitle managercomment">
-                                    <label class="goalsubheadings">Manager Comment</label> :  @goalviewmodel.ManagerEvaluations.First(x => x.GoalId == item.gid && item.Evalcycleid == x.EvalCycleId).Comment
-                                </div>*@
-                                <script>
+                        @*<div class="widget-subtitle managercomment">
+                                <label class="goalsubheadings">Manager Comment</label> :  @goalviewmodel.ManagerEvaluations.First(x => x.GoalId == item.gid && item.Evalcycleid == x.EvalCycleId).Comment
+                            </div>*@
+                        <script>
                                         rejected =1;
-                                </script>
+                        </script>
                                     }
                                 }
                         <br />
                         @if ((goalviewmodel.Editable && (item.EmployeeId.HasValue && item.EmployeeId.Value!=new Guid())) || ViewBag.FixedGoals == true)
                                 {
-                             
-                                <span class="goalactioncontainer">
-                                    <a href="javascript:void(0);" class="btn btn-success fa fa-edit" onclick="EditGoal('@item.gid')">
-                                        <label>Edit </label>
-                                    </a>
-                                    
-                                    <a href="javascript:void(0);" class="btn btn-danger fa fa-times-circle" onclick="DeleteGoal('@item.gid')">
-                                        <label>Delete</label>
-                                    </a>
-                                </span>
+
+                        <span class="goalactioncontainer">
+                            <a href="javascript:void(0);" class="btn btn-success fa fa-edit" onclick="EditGoal('@item.gid')">
+                                <label>Edit </label>
+                            </a>
+
+                            <a href="javascript:void(0);" class="btn btn-danger fa fa-times-circle" onclick="DeleteGoal('@item.gid')">
+                                <label>Delete</label>
+                            </a>
+                        </span>
                                 }
                     </div>
 
@@ -189,11 +190,12 @@
                 {
                     if (goalviewmodel.EvaluationStatus != DataService.EvalCycleStatus.NO_ACTION_REQUIRED && goalviewmodel.Goals.Any(x => !x.Fixed))
                     {
-                        <p>This cycle is now in evaluation phase. Please <a class="btn btn-sm btn-success do-btn-round-outline" href="~/evaluation/@(goalviewmodel.EmployeeId == ViewBag.Me.gid ? "SelfEvaluation" : "ReporteeEvaluation?reporteeId="+goalviewmodel.EmployeeId) ">click here</a> to edit/view evaluations.
+                <p>
+                    This cycle is now in evaluation phase. Please <a class="btn btn-sm btn-success do-btn-round-outline" href="~/evaluation/@(goalviewmodel.EmployeeId == ViewBag.Me.gid ? "SelfEvaluation" : "ReporteeEvaluation?reporteeId="+goalviewmodel.EmployeeId) ">click here</a> to edit/view evaluations.
 
-                        </p>
+                </p>
                     }
-                    @*else if(goalviewmodel.EmployeeId!=ViewBag.Me.gid)
+                @*else if(goalviewmodel.EmployeeId!=ViewBag.Me.gid)
                     {
                         <p>The reportee has not submitted his/her goals or self-evaluation yet.</p>
                     }
@@ -202,93 +204,97 @@
                         <p>Awaiting goal approval / evaluation from Manager.</p>
                     }*@
 
-                    <div style="display: inline-block; height: auto; width: 100%;">
-                        @if (goalviewmodel.Editable)
+                <div style="display: inline-block; height: auto; width: 100%;">
+                    @if (goalviewmodel.Editable)
                         {
-                            <a href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use this button to ADD a new goal." class=" fa fa-plus-circle btnaddgoal" onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
-                                <label>Add</label>
-                            </a>
+                        <a href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use this button to ADD a new goal." class=" fa fa-plus-circle btnaddgoal" onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
+                            <label>Add</label>
+                        </a>
                         }
-                        @if (goalviewmodel.ButtonToShow == "Publish")
+                    @if (goalviewmodel.ButtonToShow == "Publish")
                         {
-                            <a title="Click to submit to manager for approval" style="float: right;" href="javascript:void(0);" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them." class="fa fi-web  btnpublishgoals" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
-                                <label>Submit to manager</label>
-                            </a>
-                            @*<input type="submit" value="Submit to Manager" onclick="SetAction('publish');" />*@
+                        <a title="Click to submit to manager for approval" style="float: right;" href="javascript:void(0);" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them." class="fa fi-web  btnpublishgoals" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
+                            <label>Submit to manager</label>
+                        </a>
+                        @*<input type="submit" value="Submit to Manager" onclick="SetAction('publish');" />*@
                         }
                         else if (goalviewmodel.ButtonToShow == "Approve")
                         {
-                            <a style="float: right;" href="javascript:void(0);" class="fa fa-thumbs-o-up  btnpublishgoals"
-                               data-step="4" data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button."
-                               onclick="Approve()">
-                                <label>Approve</label>
-                            </a>
-                            <a style="float: right;" href="javascript:void(0);" data-toggle="modal"
-                               data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
-                               data-target="#myModal" class="fa fa-thumbs-o-down  btnpublishgoals">
-                                <label>Reject</label>
-                            </a>
-                            @*<input type="submit" value="Approve" onclick="SetAction('approve')" />*@
+                        <a style="float: right;" href="javascript:void(0);" class="fa fa-thumbs-o-up  btnpublishgoals"
+                           data-step="4" data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button."
+                           onclick="Approve()">
+                            <label>Approve</label>
+                        </a>
+                        <a style="float: right;" href="javascript:void(0);" data-toggle="modal"
+                           data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
+                           data-target="#myModal" class="fa fa-thumbs-o-down  btnpublishgoals">
+                            <label>Reject</label>
+                        </a>
+                        @*<input type="submit" value="Approve" onclick="SetAction('approve')" />*@
                         }
 
-                    </div>
+                </div>
 
                     foreach (var item in goalviewmodel.Goals.OrderBy(x => x.Fixed).ThenByDescending(y => y.EmployeeId).ThenBy(f => f.gid).ToList())
                     {
-                        <div class="widget singlegoal widget-default widget-item-icon"> 
-                            <div class="widget-data">
-                                @*<div class="widget-int num-count num-count-20px">@item.Title</div>*@
-                                <div class="widget-title"><label class="goalsubheadings">@(item.Fixed ? (item.EmployeeId.HasValue ? "Avalara's People Management Goal" : "Success Trait") : "Goal")</label> : @item.Title</div>
-                                <div class="widget-subtitle">
-                                    <label class="goalsubheadings">Description</label> : @Html.Raw(item.Goal1)
-                                </div>
-                                <div class="widget-subtitle">
-                                    @*<label class="goalsubheadings">Weightage</label> :  @item.Weightage %*@
-                                </div>
-                                @if (goalviewmodel.ManagerEvaluations != null && goalviewmodel.ManagerEvaluations.Count > 0)
+                <div class="widget singlegoal widget-default widget-item-icon">
+                    <div class="widget-data">
+                        @*<div class="widget-int num-count num-count-20px">@item.Title</div>*@
+                        <div class="widget-title"><label class="goalsubheadings">@(item.Fixed ? (item.EmployeeId.HasValue ? "Avalara's People Management Goal" : "Success Trait") : "Goal")</label> : @item.Title</div>
+                        <div class="widget-subtitle">
+                            <label class="goalsubheadings">Description</label> : @Html.Raw(item.Goal1)
+                        </div>
+                        <div class="widget-subtitle">
+                            @*<label class="goalsubheadings">Weightage</label> :  @item.Weightage %*@
+                        </div>
+                        @if (goalviewmodel.ManagerEvaluations != null && goalviewmodel.ManagerEvaluations.Count > 0)
                                 {
                                     DataService.ManagerEvaluation mgreval = goalviewmodel.ManagerEvaluations.FirstOrDefault(x => x.GoalId == item.gid && item.Evalcycleid == x.EvalCycleId);
                                     if (mgreval != null && !string.IsNullOrWhiteSpace(mgreval.Comment))
                                     {
-                                        @*<div class="widget-subtitle managercomment">
-                                            <label class="goalsubheadings">Manager Comment</label> :  @goalviewmodel.ManagerEvaluations.First(x => x.GoalId == item.gid && item.Evalcycleid == x.EvalCycleId).Comment
-                                        </div>*@
-                                        <script>
+                                @*<div class="widget-subtitle managercomment">
+                                        <label class="goalsubheadings">Manager Comment</label> :  @goalviewmodel.ManagerEvaluations.First(x => x.GoalId == item.gid && item.Evalcycleid == x.EvalCycleId).Comment
+                                    </div>*@
+                                <script>
                                             rejected =1;
-                                        </script>
+                                </script>
                                     }
                                 }
-                                <br />
-                                @if ((goalviewmodel.Editable && (item.EmployeeId.HasValue && item.EmployeeId.Value!=new Guid())) || ViewBag.FixedGoals == true)
-                                {
-                                    <span class="goalactioncontainer">
-                                        <a href="javascript:void(0);" class="btn btn-success fa fa-edit" onclick="EditGoal('@item.gid')">
-                                            <label>Edit</label>
-                                        </a>
-                                        <a href="javascript:void(0);" class="btn btn-danger fa fa-times-circle" onclick="DeleteGoal('@item.gid')">
-                                            <label>Delete</label>
-                                        </a>
-                                    </span>
-                                }
-                            </div>
-
-                        </div>
                         <br />
+                        @if ((goalviewmodel.Editable && (item.EmployeeId.HasValue && item.EmployeeId.Value!=new Guid())) || ViewBag.FixedGoals == true)
+                                {
+                                <span class="goalactioncontainer">
+                                    <a href="javascript:void(0);" class="btn btn-success fa fa-edit" onclick="EditGoal('@item.gid')">
+                                        <label>Edit</label>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-danger fa fa-times-circle" onclick="DeleteGoal('@item.gid')">
+                                        <label>Delete</label>
+                                    </a>
+                                </span>
+                                }
+                    </div>
+
+                </div>
+                <br />
 
                                 counter++;
                     }
                 }
-            </div>
+                </div>
 
-                tabcounter++;
-        }
+                    tabcounter++;
+            }
         }
         @if (ViewBag.FixedGoals != true)
-        { 
+        {
             <div id="_0" class="tab-pane fade  @(Model==null?"in active":"")">
                 @Html.Action("AllEvalCycles", "Evaluation", new { empid = empId })
                 <div id="historicaldatacontent">
                 </div>
+            </div>
+            <div id="_FB" style="background-color:#eee;" class="tab-pane fade  @(Model==null?"in active":"")">
+                @*@Html.Action("ActiveFeedback", "Evaluation", new { empid = empId, pecycle = ViewBag.CurrentCycle.Id })*@
+
             </div>
         }
     </div>
@@ -313,17 +319,18 @@
         </div>
     </div>
 </div>
+
 <script>
     function exportgoals(empid,evalid) {
         window.location.href="@(Url.Content("~/evaluation/ExportSelfEvaluation"))?empid="+empid+"&evalcycleid="+evalid;
     }
-   function evalcycleselected(selObj)
+    function evalcycleselected(selObj)
     {
-       var evalcycleid= selObj.val();
-       if(evalcycleid=="0")
-       {
-           return;
-       }
+        var evalcycleid= selObj.val();
+        if(evalcycleid=="0")
+        {
+            return;
+        }
         getpastevaluations(evalcycleid);
     }
 
@@ -355,6 +362,9 @@
             });
 
         }
+    }
+    function loadactivefeedback(evalcycleid) {
+        $("#_FB").load("@Url.Content("~/evaluation/ActiveFeedback")",{"empid" : "@empId","pecycle":evalcycleid});
     }
     function onbacktolist() {
         window.scrollTo(1, $("#goalslist").offset().top);
@@ -461,9 +471,14 @@
 
 
 <style>
-    .u {
-    /*text-decoration:underline;*/
+    .tab-content > div {
+    border: 2px solid #eee;
+    background-color:#eee;
     }
+    .u {
+        /*text-decoration:underline;*/
+    }
+
     .rejectionmodal .modal-content {
         border-radius: 0px !important;
         border-width: 0px;
@@ -496,14 +511,20 @@
     }
 
     .nav-tabs > li > a {
-        background: #eee;
+        background-color: #fff;
+        color: #545f79;
         border: #eee #eee #ddd;
     }
 
         .nav-tabs > li > a:hover {
-            background: #fff;
+            background: #545f79;
+            color: #fff;
             border: #eee #eee #ddd;
         }
+    .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active> a:focus{
+        background-color: #eee;
+        color: #545f79;
+    }
 
     #goalslist {
         background-color: white;
@@ -612,10 +633,11 @@
     }
 
     .inner-wrap.removemargin {
-             margin-left: 0 !important;
-         }
+        margin-left: 0 !important;
+    }
+
     .goaldesc {
-        width:300px;
-        display:inline-block;
+        width: 300px;
+        display: inline-block;
     }
 </style>

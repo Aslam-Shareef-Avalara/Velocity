@@ -444,6 +444,7 @@ namespace MvcApplication2.Controllers
             {
                 return View("Message", (object)"You are not authorized to view your manager's evaulations.");
             }
+
             ViewBag.ReporteeId = idOfEmployeeForGoals.Value;
             ViewBag.Title = "Goals";
             List<GoalsViewModel> viewmodel = new List<GoalsViewModel>();
@@ -478,7 +479,15 @@ namespace MvcApplication2.Controllers
                 }
             }
 
-
+            if (ht.Count > 0)
+            {
+                var en = ht.Values.GetEnumerator();
+                en.MoveNext();
+                ViewBag.CurrentCycle = en.Current;
+            }
+            else
+                ViewBag.CurrentCycle = new EvaluationCycle() { Id = 0 };
+            
             ViewBag.GoalJson = Newtonsoft.Json.JsonConvert.SerializeObject(new Goal());
 
             if (Request.IsAjaxRequest())

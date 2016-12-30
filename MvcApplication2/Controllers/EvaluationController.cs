@@ -697,7 +697,39 @@ namespace MvcApplication2.Controllers
 
                 });
         }
+        public void tooglefeedbackvisibility(long evalCycleId, Guid empId, bool isprivate, string fbtext)
+        {
+            EmployeeService es = new EmployeeService(OrgId, AppName, db.Employees.FirstOrDefault(x => x.gid == empId));
+            es.UpdateActiveFeedbackVisibility(empId, evalCycleId, !isprivate,fbtext);
+            return;
+        }
+        public ActionResult ActiveFeedback(Guid empId, long pecycle)
+        {
 
+            ViewBag.IsSelf = empId == currentUser.gid;
+            EmployeeService es = new EmployeeService(OrgId, AppName, db.Employees.FirstOrDefault(x => x.gid == empId));
+            List<EmployeeService.OnGoingFeedback> fb = es.GetOnGoingFeedbackFor(empId,pecycle);
+            ViewBag.AllCycles = empEvalService.GetAllCycles(empId);
+            Hashtable ht = es.GetPECycleStatus(empId);
+            if (ht.Count > 0)
+            {
+                var en = ht.Values.GetEnumerator();
+                en.MoveNext();
+                ViewBag.CurrentCycle = en.Current;
+            }
+            else
+                ViewBag.CurrentCycle = new EvaluationCycle() { Id = 0 };
+
+            ViewBag.pecycleId = pecycle;
+            ViewBag.employeeid = empId;
+            return View(fb.OrderByDescending(x=>x.FeedbackDate).ToList());
+        }
+        public void saveactivefeedback(long evalCycleId, string feedback, Guid empId, bool isprivate)
+        {
+            EmployeeService es = new EmployeeService(OrgId, AppName, db.Employees.FirstOrDefault(x => x.gid == empId));
+            es.SaveOnGoingFeedbackFor(empId, evalCycleId, feedback, isprivate);
+            return;
+        }
         private string filetype(string ext)
         {
 

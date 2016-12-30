@@ -200,9 +200,16 @@ namespace DataService
                 }
                 else
                 {
-                    if(dbx.Goals.Any(x => x.EmployeeId == empid))
+                    bool gf=false, erf=false;
+                    if ((gf=dbx.Goals.Any(x => x.EmployeeId == empid)) || (erf=dbx.EvaluationRatings.Any(x => x.EmpId == empid)))
                     {
-                        List<long?> evalcycleIds= dbx.Goals.Where(x => x.EmployeeId == empid).Select(y => y.Evalcycleid).Distinct().ToList();
+                        List<long?> evalcycleIds = new List<long?>();
+                        if(gf)
+                            evalcycleIds= dbx.Goals.Where(x => x.EmployeeId == empid).Select(y => y.Evalcycleid).Distinct().ToList();
+                        else if (erf)
+                        {
+                            evalcycleIds = dbx.EvaluationRatings.Where(x => x.EmpId== empid).Select(y => (long?)y.EvalCycleId).Distinct().ToList();
+                        }
                         evalCycles = dbx.EvaluationCycles.Where(x => evalcycleIds.Contains(x.Id) && x.EvaluationEnd < DateTime.Today).ToList();
                     }
                 }

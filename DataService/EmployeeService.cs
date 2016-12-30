@@ -28,11 +28,12 @@ namespace DataService
         }
     }
 
-    public class EmployeeExtended : Employee {
+    public class EmployeeExtended : Employee
+    {
         public bool HasReportees = false;
         public Guid RoleId = new Guid();
         public string Role = "";
-        public Employee ManagerObj = new Employee() { FirstName="Not Assigned"};
+        public Employee ManagerObj = new Employee() { FirstName = "Not Assigned" };
         public Employee ReviewerObj = new Employee() { FirstName = "Not Assigned" };
         public string Organization = "";
         public EmployeeExtended(Employee e)
@@ -56,7 +57,7 @@ namespace DataService
             this.OrgId = e.OrgId;
             this.Phone = e.Phone;
             this.OrgLocationId = e.OrgLocationId;
-            this.ProfilePix= e.ProfilePix;
+            this.ProfilePix = e.ProfilePix;
             this.UserId = e.UserId;
             this.LastVisit = e.LastVisit;
             using (PEntities dbx = new PEntities())
@@ -77,7 +78,7 @@ namespace DataService
     public class EmployeeService : BaseModel, IEmployeeService
     {
         public EmployeeService(int orgid, string appname, Employee emp)
-            : base(orgid, appname,emp)
+            : base(orgid, appname, emp)
         {
 
         }
@@ -92,7 +93,8 @@ namespace DataService
                     employee = dbx.Employees.FirstOrDefault(x => x.gid == employee.gid);
 
                 }
-                else {
+                else
+                {
 
                     employee.OrgId = 1;// dbx.OrgLocations.Where(x=>x.OrgId==employee.OrgId)
                 }
@@ -113,6 +115,111 @@ namespace DataService
             }
         }
 
+        public List<OnGoingFeedback> GetOnGoingFeedbackFor(Guid empId, long evalCycleId)
+        {
+            using (PEntities dbx = new PEntities())
+            {
+                var empR = dbx.EvaluationRatings.FirstOrDefault(e => e.EmpId == empId && e.EvalCycleId == evalCycleId);
+                if (empR != null && !string.IsNullOrEmpty(empR.OnGoingFeedBack))
+                {
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<OnGoingFeedback>>(empR.OnGoingFeedBack);
+                }
+                return null;
+
+            }
+        }
+
+        public class OnGoingFeedback
+        {
+            
+            public DateTime FeedbackDate;
+            public string FeedbackText;
+            public long evalCycleId;
+            public Guid EmployeeId;
+            public Guid ManagerId;
+            public string ManagerName;
+            public bool isPublic=true;
+        }
+        public void UpdateActiveFeedbackVisibility(Guid empId, long evalCycleId, bool ispublic, string fbtext)
+        {
+            using (PEntities dbx = new PEntities())
+            {
+                var currentemp = dbx.Employees.FirstOrDefault(x => x.gid == empId);
+                var currentManager = dbx.Employees.FirstOrDefault(x => x.gid == currentemp.Manager);
+                var empR = dbx.EvaluationRatings.FirstOrDefault(e => e.EmpId == empId && e.EvalCycleId == evalCycleId);
+
+                if (empR != null)
+                {
+
+                    var feedbacks = new List<OnGoingFeedback>();
+                    if (!string.IsNullOrEmpty(empR.OnGoingFeedBack))
+                        feedbacks = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OnGoingFeedback>>(empR.OnGoingFeedBack);
+
+                    if (feedbacks.Any(x => x.EmployeeId == empId && x.evalCycleId == evalCycleId && x.FeedbackText == fbtext && x.isPublic!=ispublic))
+                    {
+                        var fb = feedbacks.FirstOrDefault(x => x.EmployeeId == empId && x.evalCycleId == evalCycleId && x.FeedbackText == fbtext && x.isPublic != ispublic);
+                        feedbacks.Remove(fb);
+                        fb.isPublic = ispublic;
+                        feedbacks.Add(fb);
+                    }
+                    
+                    string feedback = Newtonsoft.Json.JsonConvert.SerializeObject(feedbacks);
+                    empR.OnGoingFeedBack = feedback;
+                    dbx.SaveChanges();
+                }
+            }
+        
+        }
+        public void SaveOnGoingFeedbackFor(Guid empId, long evalCycleId, string feedback, bool isprivate)
+        {
+            try
+            {
+                using (PEntities dbx = new PEntities())
+                {
+                    var currentemp = dbx.Employees.FirstOrDefault(x => x.gid == empId);
+                    var currentManager = dbx.Employees.FirstOrDefault(x => x.gid == currentemp.Manager);
+                    var empR = dbx.EvaluationRatings.FirstOrDefault(e => e.EmpId == empId && e.EvalCycleId == evalCycleId);
+                    if (empR == null)
+                    {
+                        var evalRating = new EvaluationRating();
+                        evalRating.EvalCycleId = evalCycleId;
+                        evalRating.EmpId = empId;
+                        evalRating.ManagerId = currentemp.Manager;
+                        //evalRating.SelfOverallRating = avgSelfRating;
+                        //evalRating.ManagerOverllRating = avgMgrRating;
+                        dbx.EvaluationRatings.Add(evalRating);
+                        dbx.SaveChanges();
+                        empR = dbx.EvaluationRatings.FirstOrDefault(e => e.EmpId == empId && e.EvalCycleId == evalCycleId);
+                    }
+                    if (empR != null)
+                    {
+
+                        var feedbacks = new List<OnGoingFeedback>();
+                        if (!string.IsNullOrEmpty(empR.OnGoingFeedBack))
+                            feedbacks = Newtonsoft.Json.JsonConvert.DeserializeObject<List<OnGoingFeedback>>(empR.OnGoingFeedBack);
+                        feedbacks.Add(new OnGoingFeedback()
+                        {
+                            EmployeeId = empId,
+                            evalCycleId = evalCycleId,
+                            FeedbackDate = DateTime.Now,
+                            FeedbackText = feedback,
+                            ManagerId = currentemp.Manager.HasValue ? currentemp.Manager.Value : Guid.Empty,
+                            ManagerName = currentemp.Manager.HasValue ? currentManager.FullName() : "",
+                            isPublic = !isprivate
+                        });
+                        feedback = Newtonsoft.Json.JsonConvert.SerializeObject(feedbacks);
+                        empR.OnGoingFeedBack = feedback;
+                        dbx.SaveChanges();
+                    }
+
+                }
+            }
+            catch (Exception x)
+            {
+                throw new Exception(x.Message);
+            }
+
+        }
         public Employee GetEmployee(Guid empId)
         {
             using (PEntities dbx = new PEntities())
@@ -128,8 +235,8 @@ namespace DataService
             List<Employee> co_workers = new List<Employee>();
             using (var dbx = new PEntities())
             {
-                Employee self = dbx.Employees.FirstOrDefault(x=>x.gid==empId);
-                if(self!=null)
+                Employee self = dbx.Employees.FirstOrDefault(x => x.gid == empId);
+                if (self != null)
                 {
                     try
                     {
@@ -145,7 +252,7 @@ namespace DataService
             using (var dbx = new PEntities())
             {
                 var emps = dbx.Employees.Where(x => x.Manager == managerId && x.Active).ToList();
-                List<EmployeeExtended>  empsX = new List<EmployeeExtended>();
+                List<EmployeeExtended> empsX = new List<EmployeeExtended>();
                 if (emps != null)
                 {
                     foreach (Employee e in emps)
@@ -154,8 +261,8 @@ namespace DataService
                     }
                     return empsX.ToList();
                 }
-                
-                
+
+
             }
             return null;
         }
@@ -188,11 +295,11 @@ namespace DataService
                 {
                     foreach (Employee e in listOfMatchingEmployees)
                     {
-                        
-                            Employee emp = dbx.Employees.SingleOrDefault(x => x.gid == e.gid);
-                            emp.Manager = guid;
-                            dbx.SaveChanges();
-                        
+
+                        Employee emp = dbx.Employees.SingleOrDefault(x => x.gid == e.gid);
+                        emp.Manager = guid;
+                        dbx.SaveChanges();
+
 
                     }
                 }
@@ -205,13 +312,13 @@ namespace DataService
             return base.GetPECycleStatus(empId);
         }
 
-        
-
-      
 
 
 
-       
+
+
+
+
 
         public List<Employee> OrgStructure()
         {
@@ -278,7 +385,7 @@ namespace DataService
             using (PEntities dbx = new PEntities())
             {
                 username = username.ToLower();
-                
+
                 if (username.Contains("@"))
                 {
                     username = username.Split(new string[] { "@" }, StringSplitOptions.None)[0];
@@ -312,9 +419,9 @@ namespace DataService
 
         public IQueryable<Employee> GetAllEmployees()
         {
-             using (PEntities dbx = new PEntities())
+            using (PEntities dbx = new PEntities())
             {
-                return dbx.Employees.Where(x=>x.Active==true);
+                return dbx.Employees.Where(x => x.Active == true);
             }
         }
 
@@ -341,7 +448,9 @@ namespace DataService
 
 
             }
-            return null;   
+            return null;
         }
+
+        
     }
 }

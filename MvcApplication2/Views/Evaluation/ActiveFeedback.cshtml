@@ -1,0 +1,645 @@
+﻿@model List<DataService.EmployeeService.OnGoingFeedback>
+@{
+    Layout = null;
+    int counter = 0;
+}
+<style>
+ /*! ========================================================================
+ * Bootstrap Toggle: bootstrap-toggle.css v2.2.0
+ * http://www.bootstraptoggle.com
+ * ========================================================================
+ * Copyright 2014 Min Hur, The New York Times Company
+ * Licensed under MIT
+ * ======================================================================== */
+.checkbox label .toggle,.checkbox-inline .toggle{margin-left:-20px;margin-right:5px}
+.toggle{position:relative;overflow:hidden}
+.toggle input[type=checkbox]{display:none}
+.toggle-group{position:absolute;width:200%;top:0;bottom:0;left:0;transition:left .35s;-webkit-transition:left .35s;-moz-user-select:none;-webkit-user-select:none}
+.toggle.off .toggle-group{left:-100%}
+.toggle-on{position:absolute;top:0;bottom:0;left:0;right:50%;margin:0;border:0;border-radius:0}
+.toggle-off{position:absolute;top:0;bottom:0;left:50%;right:0;margin:0;border:0;border-radius:0}
+.toggle-handle{position:relative;margin:0 auto;padding-top:0;padding-bottom:0;height:100%;width:0;border-width:0 1px}
+.toggle.btn{min-width:59px;min-height:34px;margin-bottom: 10px;
+    margin-top: 3px;}
+.toggle-on.btn{padding-right:24px}
+.toggle-off.btn{padding-left:24px}
+.toggle.btn-lg{min-width:79px;min-height:45px}
+.toggle-on.btn-lg{padding-right:31px}
+.toggle-off.btn-lg{padding-left:31px}
+.toggle-handle.btn-lg{width:40px}
+.toggle.btn-sm{min-width:50px;min-height:30px}
+.toggle-on.btn-sm{padding-right:20px}
+.toggle-off.btn-sm{padding-left:20px}
+.toggle.btn-xs{min-width:35px;min-height:22px}
+.toggle-on.btn-xs{padding-right:12px}
+.toggle-off.btn-xs{padding-left:12px}
+    
+    .btn.btn-default.toggle-off {
+    background-color:#afeeee; 
+
+    }
+    .btn.btn-primary.toggle-on {
+    background-color:#FBC57D; 
+    color:black;
+    }
+    
+
+</style>
+<style type="text/css">
+    /* -------------------------------- 
+
+Primary style
+
+-------------------------------- */
+
+
+*, *:after, *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+    p.privatefb {
+    border:3px dashed #ccc;
+    padding:5px;
+    }
+
+
+
+
+
+
+
+/* -------------------------------- 
+
+Modules - reusable parts of our design
+
+-------------------------------- */
+.cd-container {
+  /* this class is used to give a max-width to the element it is applied to, and center it horizontally when it reaches that max-width */
+  width: 90%;
+  /*max-width: 1170px;*/
+  margin: 0 auto;
+}
+.cd-container::after {
+  /* clearfix */
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* -------------------------------- 
+
+Main components 
+
+-------------------------------- */
+header {
+  height: 200px;
+  line-height: 200px;
+  text-align: center;
+  background: #303e49;
+}
+header h1 {
+  color: white;
+  font-size: 18px;
+  font-size: 1.125rem;
+}
+@@media only screen and (min-width: 1170px) {
+  header {
+    height: 300px;
+    line-height: 300px;
+  }
+  header h1 {
+    font-size: 24px;
+    font-size: 1.5rem;
+  }
+}
+
+#cd-timeline {
+  position: relative;
+  padding: 2em 0;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+#cd-timeline::before {
+  /* this is the vertical line */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18px;
+  height: 100%;
+  width: 4px;
+  background: #d7e4ed;
+}
+@@media only screen and (min-width: 1170px) {
+  #cd-timeline {
+    margin-top: 3em;
+    margin-bottom: 3em;
+     background-color: #e9f0f5;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+  }
+  #cd-timeline::before {
+    left: 50%;
+    margin-left: -2px;
+  }
+}
+
+.cd-timeline-block {
+  position: relative;
+  margin: 2em 0;
+}
+.cd-timeline-block:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.cd-timeline-block:first-child {
+  margin-top: 0;
+}
+.cd-timeline-block:last-child {
+  margin-bottom: 0;
+}
+@@media only screen and (min-width: 1170px) {
+  .cd-timeline-block {
+    margin: 4em 0;
+  }
+  .cd-timeline-block:first-child {
+    margin-top: 0;
+  }
+  .cd-timeline-block:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cd-timeline-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+}
+.cd-timeline-img img {
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  margin-left: -12px;
+  margin-top: -12px;
+}
+.cd-timeline-img.cd-picture {
+  background: #AFEEEE ;
+}
+.cd-timeline-img.cd-picture.privatefb {
+  background: #FBC57D;
+}
+
+.cd-timeline-img.cd-movie {
+  background: #c03b44;
+}
+.cd-timeline-img.cd-location {
+  background: #f0ca45;
+}
+@@media only screen and (min-width: 1170px) {
+  .cd-timeline-img {
+    width: 60px;
+    height: 60px;
+    left: 50%;
+    margin-left: -30px;
+    /* Force Hardware Acceleration in WebKit */
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+  }
+  .cssanimations .cd-timeline-img.is-hidden {
+    visibility: hidden;
+  }
+  .cssanimations .cd-timeline-img.bounce-in {
+    visibility: visible;
+    -webkit-animation: cd-bounce-1 0.6s;
+    -moz-animation: cd-bounce-1 0.6s;
+    animation: cd-bounce-1 0.6s;
+  }
+}
+
+@@-webkit-keyframes cd-bounce-1 {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.5);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: scale(1.2);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+  }
+}
+@@-moz-keyframes cd-bounce-1 {
+  0% {
+    opacity: 0;
+    -moz-transform: scale(0.5);
+  }
+
+  60% {
+    opacity: 1;
+    -moz-transform: scale(1.2);
+  }
+
+  100% {
+    -moz-transform: scale(1);
+  }
+}
+@@keyframes cd-bounce-1 {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.5);
+    -moz-transform: scale(0.5);
+    -ms-transform: scale(0.5);
+    -o-transform: scale(0.5);
+    transform: scale(0.5);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+}
+.cd-timeline-content {
+  position: relative;
+  margin-left: 60px;
+  background: white;
+  border-radius: 0.25em;
+  padding: 1em;
+  box-shadow: 0 3px 0 #d7e4ed;
+}
+.cd-timeline-content:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.cd-timeline-content h2 {
+  color: #303e49;
+}
+.cd-timeline-content p, .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  font-family:sans-serif;
+}
+.cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
+  display: inline-block;
+}
+.cd-timeline-content p {
+  margin: 1em 0;
+  line-height: 1.6;
+}
+.cd-timeline-content .cd-read-more {
+  float: right;
+  padding: .8em 1em;
+  background: #acb7c0;
+  color: white;
+  border-radius: 0.25em;
+}
+.no-touch .cd-timeline-content .cd-read-more:hover {
+  background-color: #bac4cb;
+}
+.cd-timeline-content .cd-date {
+  float: left;
+  padding: .8em 0;
+  opacity: .7;
+}
+.cd-timeline-content::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  right: 100%;
+  height: 0;
+  width: 0;
+  border: 7px solid transparent;
+  border-right: 7px solid white;
+}
+@@media only screen and (min-width: 768px) {
+  .cd-timeline-content h2 {
+    font-size: 20px;
+    font-size: 1.25rem;
+  }
+  .cd-timeline-content p {
+    font-size: 16px;
+    font-size: 1rem;
+  }
+  .cd-timeline-content .cd-read-more, .cd-timeline-content .cd-date {
+    font-size: 14px;
+    font-size: 0.875rem;
+  }
+}
+@@media only screen and (min-width: 1170px) {
+  .cd-timeline-content {
+    margin-left: 0;
+    padding: 1.6em;
+    width: 45%;
+  }
+  .cd-timeline-content::before {
+    top: 24px;
+    left: 100%;
+    border-color: transparent;
+    border-left-color: white;
+  }
+  .cd-timeline-content .cd-read-more {
+    float: left;
+  }
+  .cd-timeline-content .cd-date {
+    position: absolute;
+    width: 100%;
+    left: 122%;
+    top: 14px;
+    font-size: 16px;
+    font-size: 1rem;
+    font-weight:bold;
+    color:#374659;
+  }
+  .cd-timeline-block:nth-child(even) .cd-timeline-content {
+    float: right;
+  }
+  .cd-timeline-block:nth-child(even) .cd-timeline-content::before {
+    top: 24px;
+    left: auto;
+    right: 100%;
+    border-color: transparent;
+    border-right-color: white;
+  }
+  .cd-timeline-block:nth-child(even) .cd-timeline-content .cd-read-more {
+    float: right;
+  }
+  .cd-timeline-block:nth-child(even) .cd-timeline-content .cd-date {
+    left: auto;
+    right: 122%;
+    text-align: right;
+  }
+  .cssanimations .cd-timeline-content.is-hidden {
+    visibility: hidden;
+  }
+  .cssanimations .cd-timeline-content.bounce-in {
+    visibility: visible;
+    -webkit-animation: cd-bounce-2 0.6s;
+    -moz-animation: cd-bounce-2 0.6s;
+    animation: cd-bounce-2 0.6s;
+  }
+}
+
+@@media only screen and (min-width: 1170px) {
+  /* inverse bounce effect on even content blocks */
+  .cssanimations .cd-timeline-block:nth-child(even) .cd-timeline-content.bounce-in {
+    -webkit-animation: cd-bounce-2-inverse 0.6s;
+    -moz-animation: cd-bounce-2-inverse 0.6s;
+    animation: cd-bounce-2-inverse 0.6s;
+  }
+}
+@@-webkit-keyframes cd-bounce-2 {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-100px);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translateX(20px);
+  }
+
+  100% {
+    -webkit-transform: translateX(0);
+  }
+}
+@@-moz-keyframes cd-bounce-2 {
+  0% {
+    opacity: 0;
+    -moz-transform: translateX(-100px);
+  }
+
+  60% {
+    opacity: 1;
+    -moz-transform: translateX(20px);
+  }
+
+  100% {
+    -moz-transform: translateX(0);
+  }
+}
+@@keyframes cd-bounce-2 {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-100px);
+    -moz-transform: translateX(-100px);
+    -ms-transform: translateX(-100px);
+    -o-transform: translateX(-100px);
+    transform: translateX(-100px);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translateX(20px);
+    -moz-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    -o-transform: translateX(20px);
+    transform: translateX(20px);
+  }
+
+  100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    -o-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+@@-webkit-keyframes cd-bounce-2-inverse {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(100px);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translateX(-20px);
+  }
+
+  100% {
+    -webkit-transform: translateX(0);
+  }
+}
+@@-moz-keyframes cd-bounce-2-inverse {
+  0% {
+    opacity: 0;
+    -moz-transform: translateX(100px);
+  }
+
+  60% {
+    opacity: 1;
+    -moz-transform: translateX(-20px);
+  }
+
+  100% {
+    -moz-transform: translateX(0);
+  }
+}
+@@keyframes cd-bounce-2-inverse {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(100px);
+    -moz-transform: translateX(100px);
+    -ms-transform: translateX(100px);
+    -o-transform: translateX(100px);
+    transform: translateX(100px);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translateX(-20px);
+    -moz-transform: translateX(-20px);
+    -ms-transform: translateX(-20px);
+    -o-transform: translateX(-20px);
+    transform: translateX(-20px);
+  }
+
+  100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    -o-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+</style>
+
+@if (ViewBag.AllCycles != null && ViewBag.AllCycles.Count > 0)
+{
+    <text>Select Cycle: </text>
+    <select id="fbevalcycle" onchange="loadactivefeedback($(this).val())" style="width:auto;">
+        <option value="0">--Select--</option>
+        <option @(ViewBag.pecycleId == ViewBag.CurrentCycle.Id ? "Selected" : "") value="@ViewBag.CurrentCycle.Id">@ViewBag.CurrentCycle.Title </option>
+        @foreach (DataService.EvaluationCycle evalcycle in ViewBag.AllCycles)
+        {
+            <option value="@evalcycle.Id" @(ViewBag.pecycleId==evalcycle.Id?"Selected":"")>@evalcycle.Title </option>
+        }
+    </select>
+    <br />
+}
+
+@if ((!ViewBag.IsSelf && ViewBag.pecycleId == ViewBag.CurrentCycle.Id))
+{ 
+    <H4 style='font-family:"Open Sans",​sans-serif;'>Type the performance feedback here: </H4>
+    <textarea name="avtivefeedback" id="activefeedback" data-evalcycle="@ViewBag.pecycleId" spellcheck="true" style="height:330px;font-family:sans-serif;" data-employeeid="@ViewBag.employeeid">
+
+    </textarea>
+    <label id="lblvisibility">The feedback will NOT be visible to reportee </label>
+    <input checked data-width="100"  data-toggle="toggle" data-on="Private" data-off="Open" type="checkbox" id="isprivate"> <text>(Click to change)</text>
+    <br />
+    <input type="button" value="Save" onclick="savefeedback();"/>
+}
+@if (Model != null && Model.Count > 0) { 
+    <h4 style="left: 50%;    position: absolute;    transform: translateX(-50%);">FEEDBACK HISTORY</h4>
+<section id="cd-timeline" class="cd-container">
+    @foreach(var m in Model)
+    {
+        if (!m.isPublic && ViewBag.IsSelf)
+        {
+            continue; // Dont show private feedback to employee
+        }
+    <div class="cd-timeline-block">
+        <div class="cd-timeline-img cd-picture @(!m.isPublic?"privatefb":"")">
+            <img src="~/img/icon.svg" alt="Picture">
+        </div> <!-- cd-timeline-img -->
+        <div class="cd-timeline-content">
+            <p @(!m.isPublic ? "class=privatefb" : "")>@m.FeedbackText</p>
+            
+            <span class="cd-date">@m.FeedbackDate.ToString("MMM dd")</span>
+        @if (!ViewBag.IsSelf)
+        {
+           <label class="label-control">Visible to reportee? : </label> <input @(m.isPublic ? "" : "checked") data-width="50" onchange="changevisibility('@m.EmployeeId',@m.evalCycleId,$(this).prop('checked'),$(this).parent().parent().find('p').text() )" data-toggle="toggle" data-on="No" data-off="Yes" type="checkbox" id="@(counter++)_@(m.evalCycleId)">
+        }
+        </div> <!-- cd-timeline-content -->
+    </div> <!-- cd-timeline-block -->
+    }
+</section> <!-- cd-timeline -->
+}
+<script>
+    function changevisibility(eid,evcid,ispriv,fbtxt) {
+        $.post("@Url.Content("~/evaluation/tooglefeedbackvisibility")", { "evalCycleId": evcid, "isprivate": ispriv, "empId": eid, "fbtext": fbtxt }, function (r) { 
+        loadactivefeedback($("#fbevalcycle").val());
+    });
+    }
+    function savefeedback() {
+        $.post("@Url.Content("~/evaluation/saveactivefeedback")", { "evalCycleId": $("#activefeedback").data("evalcycle"),"isprivate":$("#isprivate").prop('checked'), "empId": $("#activefeedback").data("employeeid"), "feedback": $("#activefeedback").val() }, function (r) { 
+            loadactivefeedback($("#fbevalcycle").val());
+        });
+    }
+</script>
+<script>
+    jQuery(document).ready(function ($) {
+        $('#isprivate').change(function () {
+            if ($(this).prop('checked'))
+                $('#lblvisibility').html("The feedback will NOT be visible to reportee");
+            else
+                $('#lblvisibility').html("The feedback will be visible to reportee");
+        })
+        var timelineBlocks = $('.cd-timeline-block'),
+            offset = 0.8;
+
+        //hide timeline blocks which are outside the viewport
+        hideBlocks(timelineBlocks, offset);
+
+        //on scolling, show/animate timeline blocks when enter the viewport
+        $(window).on('scroll', function () {
+            (!window.requestAnimationFrame)
+                ? setTimeout(function () { showBlocks(timelineBlocks, offset); }, 100)
+                : window.requestAnimationFrame(function () { showBlocks(timelineBlocks, offset); });
+        });
+
+        function hideBlocks(blocks, offset) {
+            blocks.each(function () {
+                ($(this).offset().top > $(window).scrollTop() + $(window).height() * offset) && $(this).find('.cd-timeline-img, .cd-timeline-content').addClass('is-hidden');
+            });
+        }
+
+        function showBlocks(blocks, offset) {
+            blocks.each(function () {
+                ($(this).offset().top <= $(window).scrollTop() + $(window).height() * offset && $(this).find('.cd-timeline-img').hasClass('is-hidden')) && $(this).find('.cd-timeline-img, .cd-timeline-content').removeClass('is-hidden').addClass('bounce-in');
+            });
+        }
+    });
+   
+</script>
+<script>
+    /*! ========================================================================
+     * Bootstrap Toggle: bootstrap-toggle.js v2.2.0
+     * http://www.bootstraptoggle.com
+     * ========================================================================
+     * Copyright 2014 Min Hur, The New York Times Company
+     * Licensed under MIT
+     * ======================================================================== */
+    $(document).ready(function () {
+        
+        //+function (a) { "use strict"; function b(b) { return this.each(function () { var d = a(this), e = d.data("bs.toggle"), f = "object" == typeof b && b; e || d.data("bs.toggle", e = new c(this, f)), "string" == typeof b && e[b] && e[b]() }) } var c = function (b, c) { this.$element = a(b), this.options = a.extend({}, this.defaults(), c), this.render() }; c.VERSION = "2.2.0", c.DEFAULTS = { on: "On", off: "Off", onstyle: "primary", offstyle: "default", size: "normal", style: "", width: null, height: null }, c.prototype.defaults = function () { return { on: this.$element.attr("data-on") || c.DEFAULTS.on, off: this.$element.attr("data-off") || c.DEFAULTS.off, onstyle: this.$element.attr("data-onstyle") || c.DEFAULTS.onstyle, offstyle: this.$element.attr("data-offstyle") || c.DEFAULTS.offstyle, size: this.$element.attr("data-size") || c.DEFAULTS.size, style: this.$element.attr("data-style") || c.DEFAULTS.style, width: this.$element.attr("data-width") || c.DEFAULTS.width, height: this.$element.attr("data-height") || c.DEFAULTS.height } }, c.prototype.render = function () { this._onstyle = "btn-" + this.options.onstyle, this._offstyle = "btn-" + this.options.offstyle; var b = "large" === this.options.size ? "btn-lg" : "small" === this.options.size ? "btn-sm" : "mini" === this.options.size ? "btn-xs" : "", c = a('<label class="btn">').html(this.options.on).addClass(this._onstyle + " " + b), d = a('<label class="btn">').html(this.options.off).addClass(this._offstyle + " " + b + " active"), e = a('<span class="toggle-handle btn btn-default">').addClass(b), f = a('<div class="toggle-group">').append(c, d, e), g = a('<div class="toggle btn" data-toggle="toggle">').addClass(this.$element.prop("checked") ? this._onstyle : this._offstyle + " off").addClass(b).addClass(this.options.style); this.$element.wrap(g), a.extend(this, { $toggle: this.$element.parent(), $toggleOn: c, $toggleOff: d, $toggleGroup: f }), this.$toggle.append(f); var h = this.options.width || Math.max(c.outerWidth(), d.outerWidth()) + e.outerWidth() / 2, i = this.options.height || Math.max(c.outerHeight(), d.outerHeight()); c.addClass("toggle-on"), d.addClass("toggle-off"), this.$toggle.css({ width: h, height: i }), this.options.height && (c.css("line-height", c.height() + "px"), d.css("line-height", d.height() + "px")), this.update(!0), this.trigger(!0) }, c.prototype.toggle = function () { this.$element.prop("checked") ? this.off() : this.on() }, c.prototype.on = function (a) { return this.$element.prop("disabled") ? !1 : (this.$toggle.removeClass(this._offstyle + " off").addClass(this._onstyle), this.$element.prop("checked", !0), void (a || this.trigger())) }, c.prototype.off = function (a) { return this.$element.prop("disabled") ? !1 : (this.$toggle.removeClass(this._onstyle).addClass(this._offstyle + " off"), this.$element.prop("checked", !1), void (a || this.trigger())) }, c.prototype.enable = function () { this.$toggle.removeAttr("disabled"), this.$element.prop("disabled", !1) }, c.prototype.disable = function () { this.$toggle.attr("disabled", "disabled"), this.$element.prop("disabled", !0) }, c.prototype.update = function (a) { this.$element.prop("disabled") ? this.disable() : this.enable(), this.$element.prop("checked") ? this.on(a) : this.off(a) }, c.prototype.trigger = function (b) { this.$element.off("change.bs.toggle"), b || this.$element.change(), this.$element.on("change.bs.toggle", a.proxy(function () { this.update() }, this)) }, c.prototype.destroy = function () { this.$element.off("change.bs.toggle"), this.$toggleGroup.remove(), this.$element.removeData("bs.toggle"), this.$element.unwrap() }; var d = a.fn.bootstrapToggle; a.fn.bootstrapToggle = b, a.fn.bootstrapToggle.Constructor = c, a.fn.toggle.noConflict = function () { return a.fn.bootstrapToggle = d, this }, a(function () { a("input[type=checkbox][data-toggle^=toggle]").bootstrapToggle() }), a(document).on("click.bs.toggle", "div[data-toggle^=toggle]", function (b) { var c = a(this).find("input[type=checkbox]"); c.bootstrapToggle("toggle"), b.preventDefault() }) }(jQuery);
+        +function (t) { "use strict"; function e(e) { return this.each(function () { var s = t(this), i = s.data("bs.toggle"), n = "object" == typeof e && e; i || s.data("bs.toggle", i = new o(this, n)), "string" == typeof e && i[e] && i[e]() }) } var o = function (e, o) { this.$element = t(e), this.options = t.extend({}, this.defaults(), o), this.render() }; o.VERSION = "2.2.0", o.DEFAULTS = { on: "On", off: "Off", onstyle: "primary", offstyle: "default", size: "normal", style: "", width: null, height: null }, o.prototype.defaults = function () { return { on: this.$element.attr("data-on") || o.DEFAULTS.on, off: this.$element.attr("data-off") || o.DEFAULTS.off, onstyle: this.$element.attr("data-onstyle") || o.DEFAULTS.onstyle, offstyle: this.$element.attr("data-offstyle") || o.DEFAULTS.offstyle, size: this.$element.attr("data-size") || o.DEFAULTS.size, style: this.$element.attr("data-style") || o.DEFAULTS.style, width: this.$element.attr("data-width") || o.DEFAULTS.width, height: this.$element.attr("data-height") || o.DEFAULTS.height } }, o.prototype.render = function () { this._onstyle = "btn-" + this.options.onstyle, this._offstyle = "btn-" + this.options.offstyle; var e = "large" === this.options.size ? "btn-lg" : "small" === this.options.size ? "btn-sm" : "mini" === this.options.size ? "btn-xs" : "", o = t('<label class="btn">').html(this.options.on).addClass(this._onstyle + " " + e), s = t('<label class="btn">').html(this.options.off).addClass(this._offstyle + " " + e + " active"), i = t('<span class="toggle-handle btn btn-default">').addClass(e), n = t('<div class="toggle-group">').append(o, s, i), l = t('<div class="toggle btn" data-toggle="toggle">').addClass(this.$element.prop("checked") ? this._onstyle : this._offstyle + " off").addClass(e).addClass(this.options.style); this.$element.wrap(l), t.extend(this, { $toggle: this.$element.parent(), $toggleOn: o, $toggleOff: s, $toggleGroup: n }), this.$toggle.append(n); var h = this.options.width || Math.max(o.outerWidth(), s.outerWidth()) + i.outerWidth() / 2, a = this.options.height || Math.max(o.outerHeight(), s.outerHeight()); o.addClass("toggle-on"), s.addClass("toggle-off"), this.$toggle.css({ width: h, height: a }), this.options.height && (o.css("line-height", o.height() + "px"), s.css("line-height", s.height() + "px")), this.update(!0), this.trigger(!0) }, o.prototype.toggle = function () { this.$element.prop("checked") ? this.off() : this.on() }, o.prototype.on = function (t) { return this.$element.prop("disabled") ? !1 : (this.$toggle.removeClass(this._offstyle + " off").addClass(this._onstyle), this.$element.prop("checked", !0), void (t || this.trigger())) }, o.prototype.off = function (t) { return this.$element.prop("disabled") ? !1 : (this.$toggle.removeClass(this._onstyle).addClass(this._offstyle + " off"), this.$element.prop("checked", !1), void (t || this.trigger())) }, o.prototype.enable = function () { this.$toggle.removeAttr("disabled"), this.$element.prop("disabled", !1) }, o.prototype.disable = function () { this.$toggle.attr("disabled", "disabled"), this.$element.prop("disabled", !0) }, o.prototype.update = function (t) { this.$element.prop("disabled") ? this.disable() : this.enable(), this.$element.prop("checked") ? this.on(t) : this.off(t) }, o.prototype.trigger = function (e) { this.$element.off("change.bs.toggle"), e || this.$element.change(), this.$element.on("change.bs.toggle", t.proxy(function () { this.update() }, this)) }, o.prototype.destroy = function () { this.$element.off("change.bs.toggle"), this.$toggleGroup.remove(), this.$element.removeData("bs.toggle"), this.$element.unwrap() }; var s = t.fn.bootstrapToggle; t.fn.bootstrapToggle = e, t.fn.bootstrapToggle.Constructor = o, t.fn.toggle.noConflict = function () { return t.fn.bootstrapToggle = s, this }, t(function () { t("input[type=checkbox][data-toggle^=toggle]").bootstrapToggle() }), t(document).off("click.bs.toggle", "div[data-toggle^=toggle]"), t(document).off("click.bs.toggle", "div[data-toggle^=toggle]", function (e) { var o = t(this).find("input[type=checkbox]"); o.bootstrapToggle("toggle"), e.preventDefault() }), t(document).on("click.bs.toggle", "div[data-toggle^=toggle]", function (e) { var o = t(this).find("input[type=checkbox]"); o.bootstrapToggle("toggle"), e.preventDefault() }) }(jQuery);
+    });
+    
+        //# sourceMappingURL=bootstrap-toggle.min.js.map
+</script>
