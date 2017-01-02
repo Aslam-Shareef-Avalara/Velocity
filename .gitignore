@@ -10,3 +10,9 @@ MvcApplication2/Web_3.config
 *.txt
 *.cache
 *.suo
+DataService/bin/Debug/DataService.dll.config
+DataService/obj/Debug/edmxResourcesToEmbed/PEModel.csdl
+DataService/obj/Debug/edmxResourcesToEmbed/PEModel.msl
+DataService/obj/Debug/edmxResourcesToEmbed/PEModel.ssdl
+MvcApplication2/bin/MvcApplication2.dll.config
+MvcApplication2/bin/Newtonsoft.Json.xml
