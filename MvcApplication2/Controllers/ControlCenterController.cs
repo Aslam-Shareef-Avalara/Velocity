@@ -479,7 +479,8 @@ namespace MvcApplication2.Controllers
         public ActionResult Index()
         {
             //  var employees = new ActiveDirectoryHelper().GetUserReportees();
-            var emps = db.Employees.Where(x => x.OrgId == OrgId && x.Active).Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid }).OrderBy(x=>x.Name);
+            var OiD = db.OrgLocations.FirstOrDefault(x => x.Id == OrgId).OrgId;
+            var emps = db.Employees.Where(x => x.OrgId == OiD && x.Active).Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid }).OrderBy(x=>x.Name);
             ViewBag.Employees = new SelectList(emps, "gid", "Name");
             Hashtable viewmodel = new Hashtable();
             long evalcycleid = 0;

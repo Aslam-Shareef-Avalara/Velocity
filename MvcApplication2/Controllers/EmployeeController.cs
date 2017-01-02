@@ -512,6 +512,8 @@ namespace MvcApplication2.Controllers
         {
             var e = db.Employees.FirstOrDefault(x => x.gid == currentUser.gid);
             e.OrgLocationId = locationid;
+            var o = db.OrgLocations.FirstOrDefault(x => x.Id == locationid);
+            e.OrgId = o.Id;
             db.SaveChanges();
         }
 
