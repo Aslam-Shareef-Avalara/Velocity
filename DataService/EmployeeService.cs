@@ -60,6 +60,7 @@ namespace DataService
             this.ProfilePix = e.ProfilePix;
             this.UserId = e.UserId;
             this.LastVisit = e.LastVisit;
+            this.Reviewer = e.Reviewer;
             using (PEntities dbx = new PEntities())
             {
                 if (dbx.Employees.Any(x => x.gid == e.Manager && x.Active))

@@ -85,8 +85,10 @@ namespace MvcApplication2.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.OrgId = new SelectList(db.Organizations, "Id", "Name", employee.OrgId);
+            ViewBag.OrgLocationId = new SelectList(db.OrgLocations.Where(x=>x.OrgId==1).ToList(), "Id", "LocationName", employee.OrgLocationId);
             ViewBag.manager = new SelectList(db.Employees.Where(x => x.Active).Select(y => new {gid=y.gid,Name=y.FirstName+" "+y.LastName }).ToList(), "gid", "Name", employee.Manager);
+            var potentialManagersList = db.Employees.Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid });
+            ViewBag.ReviewerList = new SelectList(potentialManagersList, "gid", "Name", employee.Reviewer);
             return View(employee);
         }
 
@@ -124,7 +126,7 @@ namespace MvcApplication2.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.OrgId = new SelectList(db.Organizations, "Id", "Name", employee.OrgId);
+            ViewBag.OrgLocationId = new SelectList(db.OrgLocations.Where(x => x.OrgId == 1).ToList(), "Id", "LocationName", employee.OrgLocationId);
             return View(employee);
         }
         private string propertyStrCompare(string dbvalue, string newvalue)

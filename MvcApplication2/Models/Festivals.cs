@@ -44,34 +44,38 @@ namespace MvcApplication2.Models
         public Festival GetFestival()
         {
             List<Festival> festivals = new List<Festival>();
-            DateTime DiwaliDate = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.Diwali.ToString().ToLower()];
-            DateTime HoliDate = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.Holi.ToString().ToLower()];
-            DateTime RamadanEid = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.Eid.ToString().ToLower()];
-            DateTime Bakrid = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.BakriEid.ToString().ToLower()];
-            DateTime Rakhi = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.Rakhi.ToString().ToLower()];
-            DateTime IndependanceDay = new DateTime(DateTime.Today.Year, 8, 15);
-            DateTime RepublicDay = new DateTime(DateTime.Today.Year, 1, 26);
-
-            festivals.Add(new Festival(new DateTime(2999, 12, 30), new DateTime(2999, 12, 30), FestivalType.None, "login2"));
-            festivals.Add(new Festival(new DateTime(DateTime.Today.Year, 12, 24), new DateTime(DateTime.Today.Year, 12, 26), FestivalType.Christmas, "christmaslogin"));
-            festivals.Add(new Festival(DiwaliDate.AddDays(-2), DiwaliDate.AddDays(2), FestivalType.Diwali, "diwalilogin"));
-            festivals.Add(new Festival(RamadanEid.AddDays(-1), RamadanEid.AddDays(1), FestivalType.Eid, "eidlogin"));
-            festivals.Add(new Festival(Bakrid.AddDays(-1), Bakrid.AddDays(1), FestivalType.Eid, "eidlogin"));
-            festivals.Add(new Festival(new DateTime(DateTime.Today.Year, 12, 30), new DateTime(DateTime.Today.Month == 12 ? DateTime.Today.Year + 1 : DateTime.Today.Year, 1, 4), FestivalType.NewYear));
-            festivals.Add(new Festival(Rakhi.AddDays(-1), Rakhi.AddDays(1), FestivalType.Rakhi, "Rakhilogin"));
-            festivals.Add(new Festival(IndependanceDay.AddDays(-1), IndependanceDay.AddDays(1), FestivalType.Independanceday, "independencedaylogin"));
-            festivals.Add(new Festival(RepublicDay.AddDays(-1), RepublicDay, FestivalType.Republicday, "republicdaylogin"));
-            festivals.Add(new Festival(HoliDate.AddDays(-2), HoliDate.AddDays(2), FestivalType.Holi, "holilogin"));
-
-            DateTime today = DateTime.Today;
-
-            Festival currentFestival = null;
-            foreach (Festival festival in festivals)
+            try
             {
-                if (today >= festival.StartDate && today <= festival.EndDate)
-                    return festival;
+                DateTime DiwaliDate = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.Diwali.ToString().ToLower()];
+                DateTime HoliDate = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.Holi.ToString().ToLower()];
+                DateTime RamadanEid = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.Eid.ToString().ToLower()];
+                DateTime Bakrid = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.BakriEid.ToString().ToLower()];
+                DateTime Rakhi = (DateTime)System.Web.HttpContext.Current.Cache[FestivalType.Rakhi.ToString().ToLower()];
+                DateTime IndependanceDay = new DateTime(DateTime.Today.Year, 8, 15);
+                DateTime RepublicDay = new DateTime(DateTime.Today.Year, 1, 26);
 
+                festivals.Add(new Festival(new DateTime(2999, 12, 30), new DateTime(2999, 12, 30), FestivalType.None, "login2"));
+                festivals.Add(new Festival(new DateTime(DateTime.Today.Year, 12, 24), new DateTime(DateTime.Today.Year, 12, 26), FestivalType.Christmas, "christmaslogin"));
+                festivals.Add(new Festival(DiwaliDate.AddDays(-2), DiwaliDate.AddDays(2), FestivalType.Diwali, "diwalilogin"));
+                festivals.Add(new Festival(RamadanEid.AddDays(-1), RamadanEid.AddDays(1), FestivalType.Eid, "eidlogin"));
+                festivals.Add(new Festival(Bakrid.AddDays(-1), Bakrid.AddDays(1), FestivalType.Eid, "eidlogin"));
+                festivals.Add(new Festival(new DateTime(DateTime.Today.Year, 12, 30), new DateTime(DateTime.Today.Month == 12 ? DateTime.Today.Year + 1 : DateTime.Today.Year, 1, 4), FestivalType.NewYear));
+                festivals.Add(new Festival(Rakhi.AddDays(-1), Rakhi.AddDays(1), FestivalType.Rakhi, "Rakhilogin"));
+                festivals.Add(new Festival(IndependanceDay.AddDays(-1), IndependanceDay.AddDays(1), FestivalType.Independanceday, "independencedaylogin"));
+                festivals.Add(new Festival(RepublicDay.AddDays(-1), RepublicDay, FestivalType.Republicday, "republicdaylogin"));
+                festivals.Add(new Festival(HoliDate.AddDays(-2), HoliDate.AddDays(2), FestivalType.Holi, "holilogin"));
+
+                DateTime today = DateTime.Today;
+
+                Festival currentFestival = null;
+                foreach (Festival festival in festivals)
+                {
+                    if (today >= festival.StartDate && today <= festival.EndDate)
+                        return festival;
+
+                }
             }
+            catch { }
             return new Festival();
         }
 

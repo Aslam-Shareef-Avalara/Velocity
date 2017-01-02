@@ -94,7 +94,8 @@
             function savelocation()
             {
                 $.post("@Url.Content("~/employee/savelocation")", { "locationid": $("#poplocationid").val() }, function () {
-                    window.location.reload();
+                   alert("Your location is now set. You will now be logged out so that your profile gets refreshed. Please login again.");
+                    window.location.href="@Url.Content("~/account/logout")";
                 });
             }
         </script>

@@ -206,7 +206,7 @@
                     <div class="col-md-8 col-xs-7">
                         @if (ViewBag.HrEdit == true)
                         {
-                            @Html.DropDownList("Reviewer", ((SelectList)ViewBag.ManagerList), new { id = "Reviewer" })
+                            @Html.DropDownList("Reviewer", ((SelectList)ViewBag.ReviewerList), new { id = "Reviewer" })
                         }
                         else
                         {

@@ -394,6 +394,10 @@ namespace MvcApplication2.Controllers
             Employee emp = db.Employees.FirstOrDefault(x => x.gid == g.Value);
             if (g.Value == currentUser.Manager)
                 return View("Message", (object)"Sorry! You cannot impersonate your manager.");
+            if(System.Web.Security.Roles.IsUserInRole(emp.Email.Split(new string[]{"@"},StringSplitOptions.RemoveEmptyEntries)[0],"Hr")
+                || emp.Department.ToLower()=="hr")
+                return View("Message", (object)"Sorry! You cannot impersonate another HR.");
+                
             if (emp == null)
                 return new EmptyResult();
             Impersonator = currentUser;

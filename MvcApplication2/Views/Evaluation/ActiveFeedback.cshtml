@@ -46,6 +46,14 @@
 
 </style>
 <style type="text/css">
+    .cd-timeline-content p span::before {
+    content: "\a ";
+    display: block;
+ 
+}
+
+
+
     /* -------------------------------- 
 
 Primary style
@@ -568,7 +576,10 @@ header h1 {
             <img src="~/img/icon.svg" alt="Picture">
         </div> <!-- cd-timeline-img -->
         <div class="cd-timeline-content">
-            <p @(!m.isPublic ? "class=privatefb" : "")>@m.FeedbackText</p>
+            <p @(!m.isPublic ? "class=privatefb" : "")>@m.FeedbackText
+            
+            <span style="color:#aaa;font-style:italic"> - @m.ManagerName </span>
+            </p>
             
             <span class="cd-date">@m.FeedbackDate.ToString("MMM dd")</span>
         @if (!ViewBag.IsSelf)

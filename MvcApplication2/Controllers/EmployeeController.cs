@@ -394,6 +394,7 @@ namespace MvcApplication2.Controllers
             EmployeeExtended emp = new EmployeeExtended(employee);
             var potentialManagersList = db.Employees.Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid });
             ViewBag.ManagerList = new SelectList(potentialManagersList, "gid", "Name", emp.Manager);
+            ViewBag.ReviewerList = new SelectList(potentialManagersList, "gid", "Name", emp.Reviewer);
             ViewBag.OrgId = new SelectList(db.Organizations, "Id", "Name", emp.OrgId);
             //ViewBag.Role = new SelectList(db.Roles, "Id", "Role1", employee.Role);
             return View(emp);
@@ -454,7 +455,7 @@ namespace MvcApplication2.Controllers
             emp.Department = e.Department;
             if (!string.IsNullOrEmpty(e.Designation))
                 emp.Designation = e.Designation;
-            if (!e.Reviewer.HasValue)
+            if (e.Reviewer.HasValue)
                 emp.Reviewer= e.Reviewer;
             if(e.DoB.HasValue)
                 emp.DoB = e.DoB;
@@ -512,8 +513,9 @@ namespace MvcApplication2.Controllers
         {
             var e = db.Employees.FirstOrDefault(x => x.gid == currentUser.gid);
             e.OrgLocationId = locationid;
+            OrgId = locationid;
             var o = db.OrgLocations.FirstOrDefault(x => x.Id == locationid);
-            e.OrgId = o.Id;
+            e.OrgId = o.OrgId;
             db.SaveChanges();
         }
 

@@ -79,11 +79,11 @@
 
         <div class="form-group">
 			<label class="control-label col-md-2">
-            OrgId (OrgId)
+            Base Location :
             </label>
 			<div class="col-md-10">
-                @Html.BootstrapDropDownList("OrgId", String.Empty)                 
-                @Html.ValidationMessageFor(model => model.OrgId)
+                @Html.BootstrapDropDownList("OrgLocationId", String.Empty)                 
+                @Html.ValidationMessageFor(model => model.OrgLocationId)
             </div>
         </div>
 
@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
 			<label class="control-label col-md-2">
             UserId
             </label>
@@ -105,7 +105,7 @@
                 @Html.BootstrapTextBoxFor(model => model.UserId)                 
                 @Html.ValidationMessageFor(model => model.UserId)
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
 			<label class="control-label col-md-2">
@@ -139,7 +139,7 @@
 
         <div class="form-group">
 			<label class="control-label col-md-2">
-            OrgEmpId
+            Employee Code
             </label>
 			<div class="col-md-10">
                 @Html.BootstrapTextBoxFor(model => model.OrgEmpId)                 
@@ -147,7 +147,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
 			<label class="control-label col-md-2">
             LocationId
             </label>
@@ -155,7 +155,7 @@
                 @Html.BootstrapTextBoxFor(model => model.LocationId)                 
                 @Html.ValidationMessageFor(model => model.LocationId)
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
 			<label class="control-label col-md-2">
@@ -207,7 +207,7 @@
 
         <div class="form-group">
 			<label class="control-label col-md-2">
-            EmpType
+            Employee Type
             </label>
 			<div class="col-md-10">
                 @Html.BootstrapTextBoxFor(model => model.EmpType)                 
@@ -230,7 +230,7 @@
             Reviewer
             </label>
 			<div class="col-md-10">
-                @Html.BootstrapTextBoxFor(model => model.Reviewer)                 
+                @Html.BootstrapDropDownList("ReviewerList",string.Empty)                 
                 @Html.ValidationMessageFor(model => model.Reviewer)
             </div>
         </div>
