@@ -37,7 +37,8 @@ namespace DataService
 
             using (PEntities dbx = new PEntities())
             {
-                var goalids = dbx.Goals.Where(x => x.OrgId== OrgId && employeeId != null && employeeId.HasValue? x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId: x.Fixed ).Select(y => y.gid);
+                //x.OrgId== OrgId &&
+                var goalids = dbx.Goals.Where(x =>  employeeId != null && employeeId.HasValue? x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId: x.Fixed ).Select(y => y.gid);
                 if (goalids != null)
                 {
                     foreach (Guid g in goalids.ToList())
@@ -74,7 +75,8 @@ namespace DataService
             }
             using (PEntities dbx = new PEntities())
             {
-                var goalids = dbx.Goals.Where(x => x.OrgId == OrgId && employeeId != null && employeeId.HasValue ? x.EmployeeId == employeeId && x.Evalcycleid == Evalcycleid : x.Fixed).Select(y => y.gid);
+                //x.OrgId == OrgId &&
+                var goalids = dbx.Goals.Where(x =>  employeeId != null && employeeId.HasValue ? x.EmployeeId == employeeId && x.Evalcycleid == Evalcycleid : x.Fixed).Select(y => y.gid);
                 if (goalids != null)
                 {
                     foreach (Guid g in goalids.ToList())
@@ -91,11 +93,12 @@ namespace DataService
         {
             using (PEntities dbx = new PEntities())
             {
+                var emp = dbx.Employees.FirstOrDefault(x => x.gid == employeeId);
                 IQueryable<Goal> goals = null;
                 if (dbx.Employees.Any(x => x.Manager == employeeId && x.Active))
-                    goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed == true && x.OrgId == OrgId ));
+                    goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed == true && x.OrgId == emp.OrgLocationId));
                 else
-                    goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed==true && x.OrgId==OrgId && !x.EmployeeId.HasValue));
+                    goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed == true && x.OrgId == emp.OrgLocationId && !x.EmployeeId.HasValue));
                 if(goals!=null)
                 return goals.ToList();
             }
@@ -112,7 +115,7 @@ namespace DataService
         {
             using (PEntities dbx = new PEntities())
             {
-                var goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId && x.OrgId == OrgId));
+                var goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId));//&& x.OrgId == OrgId
                 if (goals != null)
                     return goals.ToList();
             }
@@ -143,7 +146,8 @@ namespace DataService
             }
             using (PEntities dbx = new PEntities())
             {
-                var goalids = dbx.Goals.Where(x => x.OrgId == OrgId && employeeId != null && employeeId.HasValue ?  x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId : x.Fixed).Select(y => y.gid);
+                //x.OrgId == OrgId &&
+                var goalids = dbx.Goals.Where(x =>  employeeId != null && employeeId.HasValue ?  x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId : x.Fixed).Select(y => y.gid);
                 if (goalids != null)
                 {
                     foreach (Guid g in goalids.ToList())

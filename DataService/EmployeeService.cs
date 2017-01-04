@@ -178,7 +178,7 @@ namespace DataService
                 using (PEntities dbx = new PEntities())
                 {
                     var currentemp = dbx.Employees.FirstOrDefault(x => x.gid == empId);
-                    var currentManager = dbx.Employees.FirstOrDefault(x => x.gid == currentemp.Manager);
+                    var currentManager = dbx.Employees.FirstOrDefault(x => x.gid == CurrentUser.gid);
                     var empR = dbx.EvaluationRatings.FirstOrDefault(e => e.EmpId == empId && e.EvalCycleId == evalCycleId);
                     if (empR == null)
                     {
@@ -204,8 +204,8 @@ namespace DataService
                             evalCycleId = evalCycleId,
                             FeedbackDate = DateTime.Now,
                             FeedbackText = feedback,
-                            ManagerId = currentemp.Manager.HasValue ? currentemp.Manager.Value : Guid.Empty,
-                            ManagerName = currentemp.Manager.HasValue ? currentManager.FullName() : "",
+                            ManagerId = currentManager.gid,
+                            ManagerName = currentManager.FullName(),
                             isPublic = !isprivate
                         });
                         feedback = Newtonsoft.Json.JsonConvert.SerializeObject(feedbacks);

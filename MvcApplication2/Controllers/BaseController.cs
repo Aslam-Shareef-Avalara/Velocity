@@ -19,6 +19,18 @@ namespace MvcApplication2.Controllers
     {
         public PEntities db = new PEntities();
 
+        protected string GetUserName(Guid? gid = null)
+        {
+            Employee emp = null;
+            if (gid.HasValue)
+            {
+                emp = db.Employees.FirstOrDefault(x => x.gid == gid.Value);
+            }
+            else
+                emp = currentUser;
+
+            return "sanjuan\\" + emp.Email.Split(new string[] { "@" }, StringSplitOptions.RemoveEmptyEntries)[0].ToLower();
+        }
 
         protected HttpContext ctx
         {

@@ -158,7 +158,8 @@ namespace DataService
          
         public void SaveFinalReviewComment(string ReviewComment, Guid employeeId, long evalCycleId = 0)
         {
-            evalCycleId = GetEvalCycle().Id;
+            if(evalCycleId==0)
+                evalCycleId = GetEvalCycle().Id;
             using (PEntities dbx = new PEntities())
             {
                 var finalReview = dbx.EvaluationRatings.SingleOrDefault(x => x.EvalCycleId == evalCycleId && x.EmpId == employeeId);
@@ -277,8 +278,8 @@ namespace DataService
 
         public bool RejectEvaluations(int resetStep, Guid? employeeId = null, long evalCycleId = 0)
         {
-
-            evalCycleId = GetEvalCycle().Id;
+            if(evalCycleId<=0)
+                evalCycleId = GetEvalCycle().Id;
             using (PEntities dbx = new PEntities())
             {
                 var goals = dbx.Goals.Where(x => x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId).ToList();

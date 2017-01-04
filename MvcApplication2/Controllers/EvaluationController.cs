@@ -33,10 +33,12 @@ namespace MvcApplication2.Controllers
         public JsonResult reject(string reporteeId, int resetStep)
         {
             Guid reportee_id = Guid.Parse(reporteeId);
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
+            var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
             try
             {
                 var rejectedMessages = db.RejectedMessages.Where(x => x.ManagerID == currentUser.gid &&
-                 x.EvalCycleId == CurrentEvalCycle.Id && x.EvaluationPhase == PECycle.EVALUATION.ToString()
+                 x.EvalCycleId == currentEvalCycleId && x.EvaluationPhase == PECycle.EVALUATION.ToString()
                  && x.EmployeeId == reportee_id
                  ).ToList();
                 if (rejectedMessages != null && rejectedMessages.Count > 0)
@@ -52,8 +54,8 @@ namespace MvcApplication2.Controllers
             try
             {
 
-                new ManagerEvaluationService(OrgId, AppName,currentUser).RejectEvaluations(resetStep, reportee_id, CurrentEvalCycle.Id);
-                new Mail().SendEmail(Mail.ACTION_TYPE.EVALUATION_REJECTED_BY_MANAGER, reportee_id,currentUser.gid, CurrentEvalCycle.Id);
+                new ManagerEvaluationService(OrgId, AppName, currentUser).RejectEvaluations(resetStep, reportee_id, currentEvalCycleId);
+                new Mail().SendEmail(Mail.ACTION_TYPE.EVALUATION_REJECTED_BY_MANAGER, reportee_id, currentUser.gid, currentEvalCycleId);
 
                 return Json(new { msg = "success" });
             }
@@ -69,9 +71,10 @@ namespace MvcApplication2.Controllers
         public JsonResult getHRrejectionmessage(long evalcycleid, string employeeid)
         {
             Guid employeeId = Guid.Parse(employeeid);
-
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == employeeId);
+            var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
             var rejectedMessages = db.RejectedMessages.Where(x => x.ManagerID == currentUser.gid &&
-                    x.EvalCycleId == evalcycleid && x.EvaluationPhase == PECycle.EVALUATION.ToString()
+                    x.EvalCycleId == currentEvalCycleId && x.EvaluationPhase == PECycle.EVALUATION.ToString()
                     && x.EmployeeId == employeeId
                     ).ToList();
             if (rejectedMessages == null || rejectedMessages.Count == 0)
@@ -214,9 +217,11 @@ namespace MvcApplication2.Controllers
         {
             try
             {
-                ManagerEvaluationService mes = new ManagerEvaluationService(OrgId, AppName,currentUser);
-                mes.SaveFinalReviewComment(overallcomment, empid, CurrentEvalCycle.Id);
-                var rating= db.EvaluationRatings.Where(x => x.EmpId == empid && x.EvalCycleId == CurrentEvalCycle.Id).FirstOrDefault();
+                var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == empid);
+                var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
+                ManagerEvaluationService mes = new ManagerEvaluationService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest);
+                mes.SaveFinalReviewComment(overallcomment, empid, currentEvalCycleId);
+                var rating = db.EvaluationRatings.Where(x => x.EmpId == empid && x.EvalCycleId == currentEvalCycleId).FirstOrDefault();
                 rating.ManagerOverllRating = overallrating;
                 db.SaveChanges();
             }
@@ -230,6 +235,7 @@ namespace MvcApplication2.Controllers
         public JsonResult publish(string reporteeId)
         {
             Guid reportee_id = Guid.Parse(reporteeId);
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
             //try
             //{
 
@@ -249,8 +255,9 @@ namespace MvcApplication2.Controllers
             //}
             try
             {
-                new ManagerEvaluationService(OrgId, AppName,currentUser).Publish(reportee_id, CurrentEvalCycle.Id);
-                new Mail().SendEmail(Mail.ACTION_TYPE.SUBMIT_FEEDBACK, reportee_id,currentUser.gid, CurrentEvalCycle.Id);
+                var evalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
+                new ManagerEvaluationService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).Publish(reportee_id, evalCycleId);
+                new Mail().SendEmail(Mail.ACTION_TYPE.SUBMIT_FEEDBACK, reportee_id, currentUser.gid, evalCycleId);
                 return Json(new { msg = "success" });
             }
             catch (Exception x)
@@ -268,14 +275,17 @@ namespace MvcApplication2.Controllers
 
         public ActionResult ReporteeEvaluation(string reporteeId)
         {
-
             Guid reportee_id = Guid.Parse(reporteeId);
+            var employeeOfInterest =  db.Employees.FirstOrDefault(x => x.gid == reportee_id);
+            goalservice = new GoalService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest);
+            empEvalService = new EmployeeEvaluationService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest);
             ViewBag.AttachmentForUser = reporteeId.Trim();
-            evaluationViewModel.EmployeeDetails = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
-            evaluationViewModel.Goals = goalservice.GetGoals(reportee_id, CurrentEvalCycle.Id).OrderBy(x => x.Fixed).ThenBy(y => y.ModifiedDate).ToList();
-            evaluationViewModel.SelfEvaluations = empEvalService.GetSelfEvaluations(reportee_id, CurrentEvalCycle.Id).Where(x=>x.Comment!=null && x.Comment.Length>0).ToList();
-            evaluationViewModel.ManagerEvaluations = new ManagerEvaluationService(OrgId, AppName,currentUser).GetReviews(reportee_id, CurrentEvalCycle.Id);
-            evaluationViewModel.Rating = new ManagerEvaluationService(OrgId, AppName,currentUser).CalculateAvgRating(reportee_id, CurrentEvalCycle.Id);
+            var evalcycleid = ((EmployeeEvaluationService)empEvalService).GetEvalCycle().Id;
+            evaluationViewModel.EmployeeDetails = employeeOfInterest;
+            evaluationViewModel.Goals = goalservice.GetGoals(reportee_id, evalcycleid).OrderBy(x => x.Fixed).ThenBy(y => y.ModifiedDate).ToList();
+            evaluationViewModel.SelfEvaluations = empEvalService.GetSelfEvaluations(reportee_id, evalcycleid).Where(x => x.Comment != null && x.Comment.Length > 0).ToList();
+            evaluationViewModel.ManagerEvaluations = new ManagerEvaluationService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetReviews(reportee_id, evalcycleid);
+            evaluationViewModel.Rating = new ManagerEvaluationService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).CalculateAvgRating(reportee_id, evalcycleid);
 
             //var goalsList = evaluationViewModel.Goals;
             //List<Guid> goalsToRemove = new List<Guid>();
@@ -315,19 +325,21 @@ namespace MvcApplication2.Controllers
             if (currentUser.gid.ToString() != evaluationViewModel.EmployeeDetails.Manager.ToString())
                 evaluationViewModel.IsEditable = false;
 
-            evaluationViewModel.Conclusion = db.EvaluationConclusions.FirstOrDefault(x => x.employeeid == reportee_id && x.evalcycleid == CurrentEvalCycle.Id);
+            evaluationViewModel.Conclusion = db.EvaluationConclusions.FirstOrDefault(x => x.employeeid == reportee_id && x.evalcycleid == evalcycleid);
             return View("ManagerEvaluation", evaluationViewModel);
         }
 
         public JsonResult savesummary(string summary, string empid)
         {
             Guid reportee_id = Guid.Parse(empid);
-            var conc = db.EvaluationConclusions.FirstOrDefault(x => x.employeeid == reportee_id && x.evalcycleid == CurrentEvalCycle.Id);
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
+            var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
+            var conc = db.EvaluationConclusions.FirstOrDefault(x => x.employeeid == reportee_id && x.evalcycleid == currentEvalCycleId);
             if (conc == null)
             {
                 conc = new EvaluationConclusion();
                 conc.employeeid = reportee_id;
-                conc.evalcycleid = CurrentEvalCycle.Id;
+                conc.evalcycleid = currentEvalCycleId;
                 conc.gid = Guid.NewGuid();
                 conc.meetingsummary = summary;
                 conc.modifiedon = DateTime.Today;
@@ -354,12 +366,14 @@ namespace MvcApplication2.Controllers
         public JsonResult savetraining(string training, string empid)
         {
             Guid reportee_id = Guid.Parse(empid);
-            var conc = db.EvaluationConclusions.FirstOrDefault(x => x.employeeid == reportee_id && x.evalcycleid == CurrentEvalCycle.Id);
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
+            var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
+            var conc = db.EvaluationConclusions.FirstOrDefault(x => x.employeeid == reportee_id && x.evalcycleid == currentEvalCycleId);
             if (conc == null)
             {
                 conc = new EvaluationConclusion();
                 conc.employeeid = reportee_id;
-                conc.evalcycleid = CurrentEvalCycle.Id;
+                conc.evalcycleid = currentEvalCycleId;
                 conc.gid = Guid.NewGuid();
                 conc.training = training;
                 conc.modifiedon = DateTime.Today;
@@ -387,6 +401,7 @@ namespace MvcApplication2.Controllers
             try
             {
                 Guid reportee_id = Guid.Parse(reporteeid);
+                var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
                 //int count = 0;
                 //var gs = db.Goals.Where(x => !x.Fixed && x.EmployeeId == reportee_id && x.Evalcycleid == CurrentEvalCycle.Id && x.Status.Value == GoalStatus.MANAGER_EVAL_SAVED);
                 //if (gs != null)
@@ -394,12 +409,12 @@ namespace MvcApplication2.Controllers
                 //if (count == 0)
                 //    new Mail().SendEmail(Mail.ACTION_TYPE.SEND_EVALUATION_TO_HR, currentUser.gid, CurrentEvalCycle.Id);
 
-                ManagerEvaluationService mgrEvalService = new ManagerEvaluationService(OrgId, AppName,currentUser);
-               
+                ManagerEvaluationService mgrEvalService = new ManagerEvaluationService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest);
+                var evalcycleid = mgrEvalService.GetEvalCycle().Id;
                 EvaluationViewModel viewmodel = new EvaluationViewModel();
-                mgrEvalService.DraftReview(Guid.Parse(goalid), currentUser.gid, reviewcomment, int.Parse(reviewrating), reportee_id, CurrentEvalCycle.Id);
+                mgrEvalService.DraftReview(Guid.Parse(goalid), currentUser.gid, reviewcomment, int.Parse(reviewrating), reportee_id, evalcycleid);
 
-                viewmodel.Rating = viewmodel.Rating = new ManagerEvaluationService(OrgId, AppName,currentUser).CalculateAvgRating(reportee_id, CurrentEvalCycle.Id);
+                viewmodel.Rating = viewmodel.Rating = new ManagerEvaluationService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).CalculateAvgRating(reportee_id, evalcycleid);
 
                 return Json(new { msg = "success", viewmodel = viewmodel });
             }
@@ -413,13 +428,15 @@ namespace MvcApplication2.Controllers
         public JsonResult PublishReporteeEvaluation(string reporteeId)
         {
             Guid reportee_id = Guid.Parse(reporteeId);
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
+            var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
             try
             {
-
-                new Mail().SendEmail(Mail.ACTION_TYPE.APPROVE_EVALUATIONS, reportee_id, currentUser.gid, CurrentEvalCycle.Id);
+               
+                new Mail().SendEmail(Mail.ACTION_TYPE.APPROVE_EVALUATIONS, reportee_id, currentUser.gid, currentEvalCycleId);
 
                 var rejectedMessages = db.RejectedMessages.Where(x => x.ManagerID == currentUser.gid &&
-                x.EvalCycleId == CurrentEvalCycle.Id && x.EvaluationPhase == PECycle.EVALUATION.ToString()
+                x.EvalCycleId == currentEvalCycleId && x.EvaluationPhase == PECycle.EVALUATION.ToString()
                 && x.EmployeeId == reportee_id
                 ).ToList();
                 if (rejectedMessages != null && rejectedMessages.Count > 0)
@@ -438,7 +455,7 @@ namespace MvcApplication2.Controllers
 
 
 
-                new ManagerEvaluationService(OrgId, AppName,currentUser).PublishReview(reportee_id, CurrentEvalCycle.Id);
+                new ManagerEvaluationService(OrgId, AppName, currentUser).PublishReview(reportee_id, currentEvalCycleId);
                 return Json(new { msg = "success" });
             }
             catch (Exception x)
@@ -456,6 +473,9 @@ namespace MvcApplication2.Controllers
         [OutputCache(VaryByParam = "*", Duration = 0, NoStore = true)]
         public ActionResult FileUpload(string goalid, string empid, string evaltype = EvaluationType.SELF_EVALUATION)
         {
+            Guid reportee_id = Guid.Parse(empid);
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == reportee_id);
+            var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
             List<Attachment> attachments = new List<Attachment>();
             if (string.IsNullOrEmpty(goalid))
                 return new EmptyResult();
@@ -478,7 +498,7 @@ namespace MvcApplication2.Controllers
                 }
                 else if (evaltype == EvaluationType.MANAGER_EVALUATION)
                 {
-                    var mgrEval = db.ManagerEvaluations.FirstOrDefault(x => x.GoalId == gid && x.EvalCycleId == CurrentEvalCycle.Id);
+                    var mgrEval = db.ManagerEvaluations.FirstOrDefault(x => x.GoalId == gid && x.EvalCycleId == currentEvalCycleId);
                     if (mgrEval != null)
                     {
                         var allattachments = db.Attachments.Where(x => x.EvaluationGoalId == mgrEval.Id);
@@ -523,6 +543,8 @@ namespace MvcApplication2.Controllers
             {
                 return new EmptyResult();
             }
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == empid);
+            var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
             List<Attachment> attachments = new List<Attachment>();
             if (goalid != null)
             {
@@ -533,7 +555,7 @@ namespace MvcApplication2.Controllers
 
                 if (evaltype == EvaluationType.SELF_EVALUATION)
                 {
-                    var empeval = db.EmployeeEvaluations.FirstOrDefault(x => x.GoalId == goal_id && x.EmployeeId == empid && x.EvalCycleId == CurrentEvalCycle.Id);
+                    var empeval = db.EmployeeEvaluations.FirstOrDefault(x => x.GoalId == goal_id && x.EmployeeId == empid && x.EvalCycleId == currentEvalCycleId);
                     if (empeval != null)
                     {
                         var allattachments = db.Attachments.Where(x => x.EvaluationGoalId == empeval.Id);
@@ -543,7 +565,7 @@ namespace MvcApplication2.Controllers
                 }
                 else if (evaltype == EvaluationType.MANAGER_EVALUATION)
                 {
-                    var mgrEval = db.ManagerEvaluations.FirstOrDefault(x => x.GoalId == goal_id && x.EmployeeId == empid && x.EvalCycleId == CurrentEvalCycle.Id);
+                    var mgrEval = db.ManagerEvaluations.FirstOrDefault(x => x.GoalId == goal_id && x.EmployeeId == empid && x.EvalCycleId == currentEvalCycleId);
                     if (mgrEval != null)
                     {
                         var allattachments = db.Attachments.Where(x => x.EvaluationGoalId == mgrEval.Id);
@@ -572,13 +594,15 @@ namespace MvcApplication2.Controllers
         {
             Guid goal_id = Guid.Parse(goalid);
             Guid empId = Guid.Parse(empid);
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == empId);
+            var currentEvalCycleId = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest).GetEvalCycle().Id;
             Guid evaluationId = new Guid();
             int totalAttachments = 0;
             var fullPath = Path.Combine(StorageRoot, goalid + "_" + Path.GetFileName(files.FileName));
             files.SaveAs(fullPath);
             if (evaltype == EvaluationType.SELF_EVALUATION)
             {
-                var empeval = db.EmployeeEvaluations.FirstOrDefault(x => x.EmployeeId == empId && x.GoalId == goal_id && x.EvalCycleId == CurrentEvalCycle.Id);
+                var empeval = db.EmployeeEvaluations.FirstOrDefault(x => x.EmployeeId == empId && x.GoalId == goal_id && x.EvalCycleId == currentEvalCycleId);
                 var allattachments = db.Attachments.Where(x => x.EvaluationGoalId == empeval.Id);
                 if (empeval != null)
                     evaluationId = empeval.Id;
@@ -587,7 +611,7 @@ namespace MvcApplication2.Controllers
             }
             else if (evaltype == EvaluationType.MANAGER_EVALUATION)
             {
-                var mgrEval = db.ManagerEvaluations.FirstOrDefault(x => x.EmployeeId == empId && x.GoalId == goal_id && x.EvalCycleId == CurrentEvalCycle.Id);
+                var mgrEval = db.ManagerEvaluations.FirstOrDefault(x => x.EmployeeId == empId && x.GoalId == goal_id && x.EvalCycleId == currentEvalCycleId);
                 var allattachments = db.Attachments.Where(x => x.EvaluationGoalId == mgrEval.Id);
                 if (mgrEval != null)
                     evaluationId = mgrEval.Id;
@@ -705,10 +729,11 @@ namespace MvcApplication2.Controllers
         }
         public ActionResult ActiveFeedback(Guid empId, long pecycle)
         {
-
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == empId);
             ViewBag.IsSelf = empId == currentUser.gid;
-            EmployeeService es = new EmployeeService(OrgId, AppName, db.Employees.FirstOrDefault(x => x.gid == empId));
+            EmployeeService es = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest);
             List<EmployeeService.OnGoingFeedback> fb = es.GetOnGoingFeedbackFor(empId,pecycle);
+            empEvalService = new EmployeeEvaluationService(employeeOfInterest.OrgLocationId.Value, AppName, employeeOfInterest);
             ViewBag.AllCycles = empEvalService.GetAllCycles(empId);
             Hashtable ht = es.GetPECycleStatus(empId);
             if (ht.Count > 0)
@@ -720,13 +745,17 @@ namespace MvcApplication2.Controllers
             else
                 ViewBag.CurrentCycle = new EvaluationCycle() { Id = 0 };
 
+            ViewBag.Employee = employeeOfInterest;
             ViewBag.pecycleId = pecycle;
             ViewBag.employeeid = empId;
-            return View(fb.OrderByDescending(x=>x.FeedbackDate).ToList());
+            //ViewBag.AllowEditing = (!ViewBag.IsSelf && (ViewBag.pecycleId == ViewBag.CurrentCycle.Id || ViewBag.pecycleId == )) ;
+
+            return View(fb!=null ? fb.OrderByDescending(x => x.FeedbackDate).ToList():fb);
         }
         public void saveactivefeedback(long evalCycleId, string feedback, Guid empId, bool isprivate)
         {
-            EmployeeService es = new EmployeeService(OrgId, AppName, db.Employees.FirstOrDefault(x => x.gid == empId));
+            var employeeOfInterest = db.Employees.FirstOrDefault(x => x.gid == empId);
+            EmployeeService es = new EmployeeService(employeeOfInterest.OrgLocationId.Value, AppName, currentUser);
             es.SaveOnGoingFeedbackFor(empId, evalCycleId, feedback, isprivate);
             return;
         }
@@ -784,7 +813,7 @@ namespace MvcApplication2.Controllers
 
                     break;
 
-                case ".gif":
+                case ".gif": ;
 
                     contenttype = System.Net.Mime.MediaTypeNames.Image.Gif;
 
@@ -1036,17 +1065,17 @@ namespace MvcApplication2.Controllers
             }
 
             viewmodel.Employee = emp;
-            var org = db.Organizations.FirstOrDefault(x => x.Id == OrgId);
+            var org = db.OrgLocations.FirstOrDefault(x => x.Id == OrgId);
             if (org != null)
-                viewmodel.OrgName = org.Name;
-            viewmodel.Goals = db.Goals.Where(x => (x.Fixed || (x.EmployeeId == gid && x.Evalcycleid == evalcycleid)) && x.OrgId == OrgId).OrderBy(z => z.Fixed).ThenBy(y => y.ModifiedDate).ToList();
+                viewmodel.OrgName = org.LocationName;
+            viewmodel.Goals = db.Goals.Where(x => (x.Fixed || (x.EmployeeId == gid && x.Evalcycleid == evalcycleid)) ).OrderBy(z => z.Fixed).ThenBy(y => y.ModifiedDate).ToList();
             try
             {
                 if (viewmodel.Goals.Where(x => !x.Fixed).FirstOrDefault().Status == GoalStatus.PUBLISHED || currentUser.gid.ToString() == Manager.gid.ToString())
                 {
                     viewmodel.MgrEvals = empEvalService.GetManagersEvaluation(gid, evalcycleid);
                 }
-                viewmodel.GradingObject = new EmployeeEvaluationService(OrgId, AppName,currentUser).GetOverallEvaluationRating(gid, evalcycleid);
+                viewmodel.GradingObject = new EmployeeEvaluationService(org.Id, AppName, currentUser).GetOverallEvaluationRating(gid, evalcycleid);
                 if (viewmodel.GradingObject == null)
                 {
                     viewmodel.GradingObject = new EvaluationRating();

@@ -9,11 +9,12 @@ using System.Web.Mvc;
 using X.Scaffolding.Core;
 using PagedList;
 using DataService;
+using System.Web.Security;
 
 namespace MvcApplication2.Controllers
 {
     [Authorize]
-    public class EmpController : Controller
+    public class EmpController : BaseController
     {
         private PEntities db = new PEntities();
 
@@ -85,10 +86,12 @@ namespace MvcApplication2.Controllers
             {
                 return HttpNotFound();
             }
+            string username = "sanjuan\\" + employee.Email.Split(new string[] { "@" }, StringSplitOptions.RemoveEmptyEntries)[0].ToLower();
             ViewBag.OrgLocationId = new SelectList(db.OrgLocations.Where(x=>x.OrgId==1).ToList(), "Id", "LocationName", employee.OrgLocationId);
             ViewBag.manager = new SelectList(db.Employees.Where(x => x.Active).Select(y => new {gid=y.gid,Name=y.FirstName+" "+y.LastName }).ToList(), "gid", "Name", employee.Manager);
             var potentialManagersList = db.Employees.Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid });
             ViewBag.ReviewerList = new SelectList(potentialManagersList, "gid", "Name", employee.Reviewer);
+            ViewBag.UserRoles = new SelectList(Roles.GetAllRoles().Where(x=>x.ToLower()!="admin").ToArray(), Roles.GetRolesForUser(username).FirstOrDefault());
             return View(employee);
         }
 
@@ -98,7 +101,7 @@ namespace MvcApplication2.Controllers
         [HttpPost]
         //[ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="gid,FirstName,LastName,Department,Manager,Email,Phone,OrgId,Active,UserId,Designation,DoJ,OrgEmpId,LocationId,Mobile,FirstTime,DoB,Gender,EmpType,LastVisit,Reviewer")] Employee employee)
+        public ActionResult Edit([Bind(Include = "gid,FirstName,OrgLocationId,LastName,Department,Manager,Email,Phone,OrgId,Active,UserId,Designation,DoJ,OrgEmpId,LocationId,Mobile,FirstTime,DoB,Gender,EmpType,LastVisit,Reviewer")] Employee employee, string UserRoles)
         {
             if (ModelState.IsValid)
             {
@@ -124,6 +127,11 @@ namespace MvcApplication2.Controllers
 
                 db.Entry(dbemp).State = EntityState.Modified;
                 db.SaveChanges();
+
+                string username = "sanjuan\\"+dbemp.Email.Split(new string[]{"@"},StringSplitOptions.RemoveEmptyEntries)[0].ToLower();
+
+                Roles.RemoveUserFromRoles(username, Roles.GetRolesForUser(username));
+                Roles.AddUserToRole(username, UserRoles);
                 return RedirectToAction("Index");
             }
             ViewBag.OrgLocationId = new SelectList(db.OrgLocations.Where(x => x.OrgId == 1).ToList(), "Id", "LocationName", employee.OrgLocationId);

@@ -46,10 +46,14 @@
 
 </style>
 <style type="text/css">
-    .cd-timeline-content p span::before {
-    content: "\a ";
+    .cd-timeline-content  span.managernamespan::before {
+    content: "\a";
     display: block;
  
+}
+ .cd-timeline-content  span.managernamespan::after {
+    content: "\a";
+ display: block;
 }
 
 
@@ -537,21 +541,24 @@ header h1 {
 
 </style>
 
-@if (ViewBag.AllCycles != null && ViewBag.AllCycles.Count > 0)
-{
+@*@if (ViewBag.AllCycles != null && ViewBag.AllCycles.Count > 0)
+{*@
     <text>Select Cycle: </text>
     <select id="fbevalcycle" onchange="loadactivefeedback($(this).val())" style="width:auto;">
         <option value="0">--Select--</option>
-        <option @(ViewBag.pecycleId == ViewBag.CurrentCycle.Id ? "Selected" : "") value="@ViewBag.CurrentCycle.Id">@ViewBag.CurrentCycle.Title </option>
+        @if (ViewBag.CurrentCycle!=null)
+        { 
+            <option @(ViewBag.pecycleId == ViewBag.CurrentCycle.Id ? "Selected" : "") value="@ViewBag.CurrentCycle.Id">@ViewBag.CurrentCycle.Title </option>
+        }
         @foreach (DataService.EvaluationCycle evalcycle in ViewBag.AllCycles)
         {
             <option value="@evalcycle.Id" @(ViewBag.pecycleId==evalcycle.Id?"Selected":"")>@evalcycle.Title </option>
         }
     </select>
     <br />
-}
+@*}*@
 
-@if ((!ViewBag.IsSelf && ViewBag.pecycleId == ViewBag.CurrentCycle.Id))
+@if (ViewBag.Employee!=null && (!ViewBag.IsSelf && ViewBag.pecycleId == ViewBag.CurrentCycle.Id && ViewBag.Employee.Manager == ViewBag.Me.gid))
 { 
     <H4 style='font-family:"Open Sans",​sans-serif;'>Type the performance feedback here: </H4>
     <textarea name="avtivefeedback" id="activefeedback" data-evalcycle="@ViewBag.pecycleId" spellcheck="true" style="height:330px;font-family:sans-serif;" data-employeeid="@ViewBag.employeeid">
@@ -576,11 +583,8 @@ header h1 {
             <img src="~/img/icon.svg" alt="Picture">
         </div> <!-- cd-timeline-img -->
         <div class="cd-timeline-content">
-            <p @(!m.isPublic ? "class=privatefb" : "")>@m.FeedbackText
-            
-            <span style="color:#aaa;font-style:italic"> - @m.ManagerName </span>
-            </p>
-            
+            <p @(!m.isPublic ? "class=privatefb" : "")>@m.FeedbackText</p>
+            <span style="color:#aaa;font-style:italic" class="managernamespan"> - @m.ManagerName </span><br />
             <span class="cd-date">@m.FeedbackDate.ToString("MMM dd")</span>
         @if (!ViewBag.IsSelf)
         {
@@ -605,7 +609,7 @@ header h1 {
 </script>
 <script>
     jQuery(document).ready(function ($) {
-        $('#isprivate').change(function () {
+        $('#isprivate').change(function () {.
             if ($(this).prop('checked'))
                 $('#lblvisibility').html("The feedback will NOT be visible to reportee");
             else

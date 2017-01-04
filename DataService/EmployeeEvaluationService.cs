@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace DataService
 {
-    public class EmployeeEvaluationService:BaseModel,IEmployeeEvaluationService
+    public class EmployeeEvaluationService : BaseModel, IEmployeeEvaluationService
     {
         private ManagerEvaluationService mgrEvalService = null;
         public EmployeeEvaluationService(int orgid, string appname, Employee emp)
-            : base(orgid,appname,emp)
+            : base(orgid, appname, emp)
         {
-            mgrEvalService = new ManagerEvaluationService(orgid, appname,emp);
+            mgrEvalService = new ManagerEvaluationService(orgid, appname, emp);
         }
 
 
@@ -59,7 +59,7 @@ namespace DataService
 
                 dbx.SaveChanges();
 
-                
+
 
             }
             mgrEvalService.CalculateAvgRating(empid, evalCycleId, goalid);
@@ -67,8 +67,9 @@ namespace DataService
 
         public void SaveSelfEvaluation(Guid employeeId, long evalCycleId = 0)
         {
-            evalCycleId = GetEvalCycle().Id;
-            
+            if (evalCycleId <= 0)
+                evalCycleId = GetEvalCycle().Id;
+
             using (PEntities dbx = new PEntities())
             {
                 var goals = dbx.Goals.Where(x => x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId).ToList();
@@ -83,8 +84,8 @@ namespace DataService
 
         public void PublishSelfEvaluation(Guid employeeId, long evalCycleId = 0)
         {
-            
-            evalCycleId = GetEvalCycle().Id;
+            if (evalCycleId <= 0)
+                evalCycleId = GetEvalCycle().Id;
             SaveSelfEvaluation(employeeId, evalCycleId);
             using (PEntities dbx = new PEntities())
             {
@@ -95,7 +96,7 @@ namespace DataService
                     dbx.SaveChanges();
                 }
 
-                var selfevals = dbx.EmployeeEvaluations.Where(x => x.EmployeeId == employeeId && x.EvalCycleId== evalCycleId).ToList();
+                var selfevals = dbx.EmployeeEvaluations.Where(x => x.EmployeeId == employeeId && x.EvalCycleId == evalCycleId).ToList();
                 foreach (EmployeeEvaluation selfeval in selfevals)
                 {
                     selfeval.Status = GoalStatus.EMPLOYEE_EVAL_PUBLISHED;
@@ -115,7 +116,7 @@ namespace DataService
                     badge = dbx.Badges.Where(x => x.BadgeType == BadgeType.EVALUATION_REJECTED && x.FromBadge == emp.Manager.Value && x.ToBadge == emp.gid).FirstOrDefault();
                     if (badge != null)
                     {
-                        Badges badgesService = new Badges(OrgId, AppName,CurrentUser);
+                        Badges badgesService = new Badges(OrgId, AppName, CurrentUser);
                         badgesService.Delete(badge.Id);
                     }
                 }
@@ -126,13 +127,13 @@ namespace DataService
 
         public List<EmployeeEvaluation> GetSelfEvaluations(Guid employeeId, long evalCycleId = 0)
         {
-            if (evalCycleId==0)
-            evalCycleId = GetEvalCycle().Id;
+            if (evalCycleId == 0)
+                evalCycleId = GetEvalCycle().Id;
             List<EmployeeEvaluation> returnList = new List<EmployeeEvaluation>();
             using (PEntities dbx = new PEntities())
             {
-                 var goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed && x.OrgId==OrgId)).Select(c => c.gid);
-                 return dbx.EmployeeEvaluations.Where(x => goals.Contains(x.GoalId) && x.EvalCycleId == evalCycleId && x.EmployeeId==employeeId).ToList();
+                var goals = dbx.Goals.Where(x => (x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId) || (x.Fixed && x.OrgId == OrgId)).Select(c => c.gid);
+                return dbx.EmployeeEvaluations.Where(x => goals.Contains(x.GoalId) && x.EvalCycleId == evalCycleId && x.EmployeeId == employeeId).ToList();
                 //foreach(Guid id in goals)
                 //{
 
@@ -144,12 +145,12 @@ namespace DataService
 
         public List<ManagerEvaluation> GetManagersEvaluation(Guid employeeId, long evalCycleId = 0)
         {
-            if (evalCycleId==0)
-            evalCycleId = GetEvalCycle().Id;
+            if (evalCycleId == 0)
+                evalCycleId = GetEvalCycle().Id;
             using (PEntities dbx = new PEntities())
             {
                 var goals = dbx.Goals.Where(x => x.EmployeeId == employeeId && x.Evalcycleid == evalCycleId || (x.Fixed && x.OrgId == OrgId)).Select(c => c.gid);
-                return dbx.ManagerEvaluations.Where(x => goals.Contains(x.GoalId) && x.EvalCycleId == evalCycleId && x.EmployeeId==employeeId).ToList();
+                return dbx.ManagerEvaluations.Where(x => goals.Contains(x.GoalId) && x.EvalCycleId == evalCycleId && x.EmployeeId == employeeId).ToList();
             }
         }
 
@@ -157,8 +158,8 @@ namespace DataService
 
         public EvaluationRating GetOverallEvaluationRating(Guid employeeId, long evalCycleId = 0)
         {
-            if (evalCycleId==0)
-            evalCycleId = GetEvalCycle().Id;
+            if (evalCycleId == 0)
+                evalCycleId = GetEvalCycle().Id;
             using (PEntities dbx = new PEntities())
             {
                 var overallRating = dbx.EvaluationRatings.SingleOrDefault(x => x.EmpId == employeeId && x.EvalCycleId == evalCycleId);
@@ -177,7 +178,7 @@ namespace DataService
                 if (GetEvalCycle() != null)
                     evalCycleId = GetEvalCycle().Id;
                 else
-                   return true;
+                    return true;
 
             using (PEntities dbx = new PEntities())
             {
@@ -187,7 +188,7 @@ namespace DataService
         }
 
 
-        public List<EvaluationCycle> GetAllCycles(Guid? empid=null)
+        public List<EvaluationCycle> GetAllCycles(Guid? empid = null)
         {
             List<EvaluationCycle> evalCycles = null;
 
@@ -200,15 +201,15 @@ namespace DataService
                 }
                 else
                 {
-                    bool gf=false, erf=false;
-                    if ((gf=dbx.Goals.Any(x => x.EmployeeId == empid)) || (erf=dbx.EvaluationRatings.Any(x => x.EmpId == empid)))
+                    bool gf = false, erf = false;
+                    if ((gf = dbx.Goals.Any(x => x.EmployeeId == empid)) || (erf = dbx.EvaluationRatings.Any(x => x.EmpId == empid)))
                     {
                         List<long?> evalcycleIds = new List<long?>();
-                        if(gf)
-                            evalcycleIds= dbx.Goals.Where(x => x.EmployeeId == empid).Select(y => y.Evalcycleid).Distinct().ToList();
+                        if (gf)
+                            evalcycleIds = dbx.Goals.Where(x => x.EmployeeId == empid).Select(y => y.Evalcycleid).Distinct().ToList();
                         else if (erf)
                         {
-                            evalcycleIds = dbx.EvaluationRatings.Where(x => x.EmpId== empid).Select(y => (long?)y.EvalCycleId).Distinct().ToList();
+                            evalcycleIds = dbx.EvaluationRatings.Where(x => x.EmpId == empid).Select(y => (long?)y.EvalCycleId).Distinct().ToList();
                         }
                         evalCycles = dbx.EvaluationCycles.Where(x => evalcycleIds.Contains(x.Id) && x.EvaluationEnd < DateTime.Today).ToList();
                     }

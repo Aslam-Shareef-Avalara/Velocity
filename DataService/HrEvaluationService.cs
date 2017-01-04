@@ -36,6 +36,7 @@ namespace DataService
 
         public List<Employee> GetEmployeesWhoHaveNotPublishedComments(long evalCycleId = 0)
         {
+            if(evalCycleId<=0)
             evalCycleId = GetEvalCycle().Id;
 
             using (PEntities dbx = new PEntities())
@@ -51,6 +52,7 @@ namespace DataService
 
         public List<Employee> GetManagersWhoHaveNotStartedReviews(long evalCycleId = 0)
         {
+            if (evalCycleId <= 0)
             evalCycleId = GetEvalCycle().Id;
 
             using (PEntities dbx = new PEntities())
@@ -65,6 +67,7 @@ namespace DataService
 
         public List<Employee> GetManagersWhoHaveNotPublishedReviews(long evalCycleId = 0)
         {
+            if (evalCycleId <= 0)
             evalCycleId = GetEvalCycle().Id;
 
             using (PEntities dbx = new PEntities())
