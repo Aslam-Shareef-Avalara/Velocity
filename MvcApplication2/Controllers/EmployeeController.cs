@@ -99,9 +99,16 @@ namespace MvcApplication2.Controllers
                 ViewBag.Salutation = "Your";
             else
                 ViewBag.Salutation = db.Employees.FirstOrDefault(x => x.gid == reporteeID).FirstName + "'s";
-            if (db.EvaluationRatings.Join(db.EvaluationCycles, e => e.EvalCycleId, g => g.Id, (e, g) => new { e, g }).Any(x => x.e.EmpId == reporteeID && x.g.EvaluationEnd < DateTime.Today && x.e.ManagerOverllRating.HasValue))
-                ViewBag.PerformanceData = db.EvaluationRatings.Join(db.EvaluationCycles, e => e.EvalCycleId, g => g.Id, (e, g) => new { e, g }).Where(x => x.e.EmpId == reporteeID && x.g.EvaluationEnd < DateTime.Today).OrderBy(x => x.g.EvaluationEnd).Select(x => new PerformanceChartModel { Rating = x.e.ManagerOverllRating.Value, PETitle = x.g.Title }).ToList();
-            else ViewBag.PerformanceData = new List<PerformanceChartModel>();
+            try
+            {
+                if (db.EvaluationRatings.Join(db.EvaluationCycles, e => e.EvalCycleId, g => g.Id, (e, g) => new { e, g }).Any(x => x.e.EmpId == reporteeID && x.g.EvaluationEnd < DateTime.Today && x.e.ManagerOverllRating.HasValue))
+                    ViewBag.PerformanceData = db.EvaluationRatings.Join(db.EvaluationCycles, e => e.EvalCycleId, g => g.Id, (e, g) => new { e, g }).Where(x => x.e.EmpId == reporteeID && x.g.EvaluationEnd < DateTime.Today).OrderBy(x => x.g.EvaluationEnd).Select(x => new PerformanceChartModel { Rating = x.e.ManagerOverllRating.Value, PETitle = x.g.Title }).ToList();
+                else ViewBag.PerformanceData = new List<PerformanceChartModel>();
+            }
+            catch {
+                ViewBag.PerformanceData = new List<PerformanceChartModel>();
+            }
+            
             try
             {
                 if (ViewBag.PerformanceData.Count > 0)

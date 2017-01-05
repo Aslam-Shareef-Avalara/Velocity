@@ -1,13 +1,18 @@
 ﻿@model MvcApplication2.ViewModel.EvaluationViewModel
 @{
     ViewBag.Title = "Self-Evaluation";
-    Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+    if (ViewContext.IsChildAction) {
+        Layout = null;
+    }
+    else
+    {Layout = "~/Views/Shared/_2Col_Layout.cshtml";
+    }
 
 
 
 
 }
-
+<script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
 <script src="~/Scripts/ckeditor/ckeditor.js"></script>
 @functions{
 
@@ -67,15 +72,7 @@
         return t;
     }
 }
-<link href="~/Content/style.css" rel="stylesheet" />
-<script src="~/Scripts/jquery.mousewheel.js"></script>
-<script src="~/Scripts/jquery.easing.1.3.js"></script>
-<script src="~/Scripts/jquery.vaccordion.js"></script>
-<link href="@Url.Content("~/content/jquery.jscrollpane.css")" rel="stylesheet" />
-<link href="@Url.Content("~/content/jquery.jscrollpane.lozenge.css")" rel="stylesheet" />
-<script type="text/javascript" src="@Url.Content("~/scripts/jquery.jscrollpane.min.js")"></script>
-<link href="~/Content/jquery.rateyo.css" rel="stylesheet" />
-<script src="~/Scripts/jquery.rateyo.min.js"></script>
+
 <div id="ratingsoverlay" style="opacity:1.0; background-color:white;padding:10px;box-shadow:2px 2px 5px lightgray;z-index:10000; border-radius:5px; position:fixed;bottom:5px; left:5px;">
     <div style="opacity:1.0;background-color:white;display:block;height:20px;float:right;clear:right;">
         <a href="javascript:void(0);" id="toolbaractionforoverlay" style="text-decoration:underline;" onclick="minimizeoverlay()">Minimize</a>&nbsp; |&nbsp;
@@ -111,81 +108,78 @@
         </table>
    
     </div>
-<div class="large-11 small-12 small-nomargin" style="top:0px;  height:auto;position: fixed;background-color:#F5F5F5; z-index:15;left:114px;" id="fixedheader1">
-    <h2 style="margin-bottom:0px;">Self-Evaluation</h2><p>Click each goal title to view it. You can use the navigation keys (onscreen up and down arrows) to move to other goals or scroll with your mouse-wheel.</p>
-    <div class="pull-left" style="width: 100%;">
+<div class="large-12 small-12 small-nomargin" style="top:0px;  height:auto;background-color:#eee; z-index:15;left:114px;" id="fixedheader1">
+    @*<h2 style="margin-bottom:0px;">Self-Evaluation</h2><p>Click each goal title to view it. You can use the navigation keys (onscreen up and down arrows) to move to other goals or scroll with your mouse-wheel.</p>*@
+    <div class="" style="width: 100%;height:11px;display:block;">
         @if (Model.IsEditable)
         {
             <button class="btn btn-lg btn-success  pull-left" onclick="return publishreview('@Model.EmployeeDetails.gid')" style="margin-bottom:10px;"><span class="fi-flag" style="font-size:15px;padding-right:5px;">&nbsp;</span>Submit To Manager</button>
             <span id="publishmsg" style="padding:10px;margin-left:5px;"></span>
         }
 
-      
+
         <a href="javascript:void(0);" style="font-size:12px;float:right;" onclick="javascript:$('#ratingsoverlay').fadeIn()">Click to view grading descriptions</a>
-                    @*<div class="counter" id="overallrating">@Model.Rating.SelfOverallRating</div>*@
-                </div>
-    
-            </div>
-        </div>
-<div id="evalgoalscontainer" class="row">
-    <div class="modal fade" id="evalrating" role="dialog" style="padding-left: 5px;padding-right: 5px;margin-left:20px;margin-right: 25px;"
-         data-step="1" data-intro="This represents an average of the grading you give yourself.">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Self Overall Grade</h4>
-                </div>
-                <div class="modal-body">
-                    <span style="padding-left:2px;color: olivedrab;font-size: 16px;">
-                        How would you grade your overall performance this evaluation cycle? : 
-                        <span id="selfoverallrating_value" >
-                            <select class="ratingdropdown" id="overall_self_grading">
-                                <option>-- Select One --</option>
-                                <option value="1">Not a fit</option>
-                                <option value="2">Underachieving</option>
-                                <option value="3">Orange</option>
-                                <option value="4">G'in the JD</option>
-                                <option value="5">Crushed It!</option>s
-                            </select>
-                        </span>
-                    </span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
-                </div>
-            </div>
-
-        </div>
-        @*<div data-initval="@Model.Rating.SelfOverallRating" class="selfoverallrating goalrating">*@
-        @*<div class="progress" style="margin-top:3px;">
-                <div style="width: @(Model.Rating.SelfOverallRating*20)%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-warning" id="selfoverallrating_progressbar"></div>
-            </div>*@
+        @*<div class="counter" id="overallrating">@Model.Rating.SelfOverallRating</div>*@
     </div>
-    <div class="large-12 end">
 
-        <div id="va-accordion"
-             @*data-position="center" data-intro="This is the list of goals. To view them you can click the headers or scroll with the mouse wheel. You may also use the green arrows to move through the goals."*@
-             class="va-container" style="margin-top:11px;padding-right:10px;width:100%">
-            <div class="va-nav">
-                <span class="va-nav-prev" style="top:10px;" title="Previous goal">Previous</span>
-                <span class="va-nav-next" style="bottom:10px;" title="Next goal">Next</span>
+
+
+    <div id="evalgoalscontainer" class="row" style="margin-top: 50px;">
+        <div class="modal fade" id="evalrating" role="dialog" style="padding-left: 5px;padding-right: 5px;margin-left:20px;margin-right: 25px;"
+             data-step="1" data-intro="This represents an average of the grading you give yourself.">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Self Overall Grade</h4>
+                    </div>
+                    <div class="modal-body">
+                        <span style="padding-left:2px;color: olivedrab;font-size: 16px;">
+                            How would you grade your overall performance this evaluation cycle? :
+                            <span id="selfoverallrating_value">
+                                <select class="ratingdropdown" id="overall_self_grading">
+                                    <option>-- Select One --</option>
+                                    <option value="1">Not a fit</option>
+                                    <option value="2">Underachieving</option>
+                                    <option value="3">Orange</option>
+                                    <option value="4">G'in the JD</option>
+                                    <option value="5">Crushed It!</option>s
+                                </select>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
+
             </div>
-            <div class="va-wrapper">
+            @*<div data-initval="@Model.Rating.SelfOverallRating" class="selfoverallrating goalrating">*@
+            @*<div class="progress" style="margin-top:3px;">
+                    <div style="width: @(Model.Rating.SelfOverallRating*20)%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-warning" id="selfoverallrating_progressbar"></div>
+                </div>*@
+        </div>
+        <div class="large-12 end">
+            <span style="background-color:yellow; padding:3px;">** Only <b>TWO</b> success traits are mandatory</span>
+            <div id="va-accordion"
+                 @*data-position="center" data-intro="This is the list of goals. To view them you can click the headers or scroll with the mouse wheel. You may also use the green arrows to move through the goals."*@
+                 class="va-container" style="margin-top:11px;padding-right:10px;width:100%">
+
                 @foreach (DataService.Goal g in Model.Goals.OrderBy(x => x.Fixed).ThenByDescending(y => y.EmployeeId).ToList())
                 {
 
                     counter++;
                     var mgrevalObj = GetManagerEvalObj(g.gid);
                     <!--Individual Goals Template Start -->
-                    <div class="va-slice va-slice-color-1" id="_@g.gid">
-                        <h3 @Html.Raw(getnavstep("Clicking on these goal headers will expand/collapse the goals."))
-                            class="va-title @(g.Fixed ? "CompetencyHeader" : "GoalHeader")">
-                            @(g.Fixed ? (g.EmployeeId.HasValue ? "Avalara's People Management Goal" : "Success Trait") : "Goal") : @g.Title @*<span class="pull-right bold">Weightage : @g.Weightage %</span>*@
-                        </h3>
-                        <div class="va-content">
+
+                    <h3 @Html.Raw(getnavstep("Clicking on these goal headers will expand/collapse the goals."))
+                        class="va-title @(g.Fixed ? "CompetencyHeader" : "GoalHeader")">
+                        @(g.Fixed ? (g.EmployeeId.HasValue ? "Avalara's People Management Goal" : "Success Trait") : "Goal") : @g.Title @*<span class="pull-right bold">Weightage : @g.Weightage %</span>*@
+                    </h3>
+                    <div style="display:table;padding:5px;width: 100%;">
+                        <div class="va-content" style="min-height:200px;display:block; height:auto;">
                             @if (ViewBag.ShowSelfRating == false && Model.ManagerEvaluations != null
                                 && Model.ManagerEvaluations.Any(x => x.GoalId == g.gid)
                                 && !string.IsNullOrWhiteSpace(Model.ManagerEvaluations.FirstOrDefault(x => x.GoalId == g.gid).Comment))
@@ -213,8 +207,21 @@
                                 && !string.IsNullOrWhiteSpace(Model.ManagerEvaluations.FirstOrDefault(x => x.GoalId == g.gid).Comment))
                             {
 
-
                                 @:</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                                 <div id="mgrevaluation_@g.gid" class="mrgeval tab-pane fade">
@@ -232,7 +239,7 @@
                                     </div>
                                     <div id="managerattachments" class="pull-left clear-fix" style="padding-top:10px;width:100%">
                                         @{
-                                            var mgrattachments = Model.Attachments.Where(x => x.EvaluationGoalId == mgrevalObj.Id && x.EvaluationType == DataService.EvaluationType.SELF_EVALUATION).ToList();
+                                var mgrattachments = Model.Attachments.Where(x => x.EvaluationGoalId == mgrevalObj.Id && x.EvaluationType == DataService.EvaluationType.SELF_EVALUATION).ToList();
                                         }
                                         @if (mgrattachments != null && mgrattachments.Count > 0)
                                         {
@@ -259,33 +266,33 @@
                                     <textarea data-goaltitle="@g.Title.Replace("'","").Replace("\"","")" @Html.Raw(getnavstep("Enter your comments here for this goal."))
                                               data-goalid="@g.gid" id="selfeval_@g.gid" data-isfixed="@(g.Fixed?"Yes":"No")" style="width:100%;height:200px;">
                                         @GetValidEmployeeEvalObj(g.gid).Comment
-                                        </textarea>
-                                        <script type="text/javascript">
-                                            var editor_@(g.gid.ToString().Replace("-","_")) = CKEDITOR.replace( 'selfeval_@g.gid',{
-                                                //extraPlugins : 'jqueryspellchecker',
-                                                height: 200,  removePlugins: 'elementspath' ,resize_enabled:false,disableNativeSpellChecker : false,
-                                                contentsCss: '@Url.Content("~/Scripts/ckeditor/plugins/jqueryspellchecker/jquery.spellchecker.css")',
-                                                toolbarGroups :
-                                                [
-                                                    { name: 'basicstyles', groups : [ 'Bold','Italic' ] },
-                                                    { name: 'paragraph', groups : [ 'NumberedList','BulletedList' ] },
-                                                    { name: 'styles', groups : [ 'Styles','Format' ] },
-                                                    { name: 'links', groups: [ 'links' ] }
-                                                
+                                    </textarea>
+                                    <script type="text/javascript">
+                                        var editor_@(g.gid.ToString().Replace("-","_")) = CKEDITOR.replace( 'selfeval_@g.gid',{
 
-                                                ]
-                                            } );
-                                            editor_@(g.gid.ToString().Replace("-","_")).on("change",function (evt) {
-                                                $('#selfeval_@g.gid').val(evt.editor.getData())
-                                            });
-                                        </script>
-                                        <text>
+                                            height: 200,  removePlugins: 'elementspath' ,resize_enabled:false,disableNativeSpellChecker : false,
+                                            contentsCss: '@Url.Content("~/Scripts/ckeditor/plugins/jqueryspellchecker/jquery.spellchecker.css")',
+                                            toolbarGroups :
+                                            [
+                                                { name: 'basicstyles', groups : [ 'Bold','Italic' ] },
+                                                { name: 'paragraph', groups : [ 'NumberedList','BulletedList' ] },
+                                                { name: 'styles', groups : [ 'Styles','Format' ] },
+                                                { name: 'links', groups: [ 'links' ] }
 
-                                            <input data-goaltitle="@g.Title.Replace("'","").Replace("\"","")" data-isfixed="@(g.Fixed?"Yes":"No")" type="hidden" id="numericRating_@g.gid" data-goalid="@g.gid" class="numericRating" value="@GetValidEmployeeEvalObj(g.gid).GoalRating" />
-                                        </text>
-                                        <div class="ratingcontainer " @Html.Raw(getnavstep("Grade yourself on this goal by moving your mouse to select the stars and clicking."))>
-                                            <p style="margin-bottom:20px!important;">Grade your self : </p>@*<div id="ratingfor_@g.gid" data-initval="@GetValidEmployeeEvalObj(g.gid).GoalRating" class=" goalrating selfrating">*@
-                                          @*<select class="ratingdropdown" id="grading_@g.gid" onclick="savegrading('@g.gid',$(this));">
+
+                                            ]
+                                        } );
+                                        editor_@(g.gid.ToString().Replace("-","_")).on("change",function (evt) {
+                                            $('#selfeval_@g.gid').val(evt.editor.getData())
+                                        });
+                                    </script>
+                                    <text>
+
+                                        <input data-goaltitle="@g.Title.Replace("'","").Replace("\"","")" data-isfixed="@(g.Fixed?"Yes":"No")" type="hidden" id="numericRating_@g.gid" data-goalid="@g.gid" class="numericRating" value="@GetValidEmployeeEvalObj(g.gid).GoalRating" />
+                                    </text>
+                                    <div class="ratingcontainer " @Html.Raw(getnavstep("Grade yourself on this goal by moving your mouse to select the stars and clicking."))>
+                                        <p style="margin-bottom:20px!important;">Grade your self : </p>@*<div id="ratingfor_@g.gid" data-initval="@GetValidEmployeeEvalObj(g.gid).GoalRating" class=" goalrating selfrating">*@
+                                        @*<select class="ratingdropdown" id="grading_@g.gid" onclick="savegrading('@g.gid',$(this));">
                                                 <option>-- Select One --</option>
                                                 <option value="1">Not a fit</option>
                                                 <option value="2">Underachieving</option>
@@ -293,25 +300,25 @@
                                                 <option value="4">G'in the JD</option>
                                                 <option value="5">Crushed It!</option>s
                                             </select>*@
-                                            @Html.Partial("GradeDropDown", new string[] { g.gid.ToString(), GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue? GetValidEmployeeEvalObj(g.gid).GoalRating.Value.ToString():"","savegrading('"+Html.Raw(g.gid.ToString())+"',null,$(this).data('rating'))"})
-                                            <label id="ratingdesc_@g.gid" class="ratingdesc"></label>
-                                            @*</div>*@
-                                            <button onclick="AddAttachments('@g.gid')"
-                                                    @Html.Raw(getnavstep("After you have saved the comment, you can attach files to support your evaluation comments and self-grading. A maximum of 5 files can be attached per goal."))
-                                                    class="btn btn-info pull-right" style="margin-left:5px;margin-bottom:10px;" data-toggle="modal" data-target="#attachmentscontainer_popup">
-                                                Attach
-                                            </button>
-                                            <button @Html.Raw(getnavstep("After you have entered the comment and graded yourself, save your self-evaluation by clicking this SAVE button."))
-                                                    style="margin-bottom:10px;" id="save_@g.gid" class="btn btn-success pull-right" data-goalid="@g.gid" onclick="SaveSelfEvaluation('@g.gid')">
-                                                Save
-                                            </button>
-                                        </div>
+                                        @Html.Partial("GradeDropDown", new string[] { g.gid.ToString(), GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value.ToString() : "", "savegrading('" + Html.Raw(g.gid.ToString()) + "',null,$(this).data('rating'))" })
+                                        <label id="ratingdesc_@g.gid" class="ratingdesc"></label>
                                         @*</div>*@
-                                        
+                                        <button onclick="AddAttachments('@g.gid')"
+                                                @Html.Raw(getnavstep("After you have saved the comment, you can attach files to support your evaluation comments and self-grading. A maximum of 5 files can be attached per goal."))
+                                                class="btn btn-info pull-right" style="margin-left:5px;margin-bottom:10px;" data-toggle="modal" data-target="#attachmentscontainer_popup">
+                                            Attach
+                                        </button>
+                                        <button @Html.Raw(getnavstep("After you have entered the comment and graded yourself, save your self-evaluation by clicking this SAVE button."))
+                                                style="margin-bottom:10px;" id="save_@g.gid" class="btn btn-success pull-right" data-goalid="@g.gid" onclick="SaveSelfEvaluation('@g.gid')">
+                                            Save
+                                        </button>
+                                    </div>
+                                    @*</div>*@
+
                                 }
                                 else
                                 {
-                                    <h3 style="margin-bottom:15px;color:white;font-weight:300;">Your self-evaluation:</h3>
+                                    <h3 style="margin-bottom:15px;color:#999;font-weight:300;">Your self-evaluation:</h3>
                                     <div class="scroll-pane" style="margin-bottom:15px;float:left;display:inline-block;width:100%;height:200px;overflow-y:auto;">
                                         <p>
                                             @Html.Raw(GetValidEmployeeEvalObj(g.gid).Comment)
@@ -322,7 +329,7 @@
                                         <p style="margin-bottom:0px!important;margin-top:5px;">Your self-grade : </p><div class="selfratingcounter" id="rating_@g.gid">@translateRating(GetValidEmployeeEvalObj(g.gid).GoalRating.HasValue ? GetValidEmployeeEvalObj(g.gid).GoalRating.Value : 0) </div>
                                     </div>
                                 }
-                                <hr style="margin:0px!important"/>
+                                <hr style="margin:0px!important" />
                                 <div id="selfattachments_@g.gid" class="pull-left clear-fix" style="width:100%">
 
                                     @{var se = GetValidEmployeeEvalObj(g.gid);
@@ -346,35 +353,58 @@
 
                         </div>
                     </div>
+
                             <!--Individual Goals Template End-->
                 }
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="attachmentscontainer_popup" class="modal fade" role="dialog">
+        <div class="modal-dialog  large-8 small-5">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Attach Files : </h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
 
         </div>
     </div>
-</div>
 
-<div id="attachmentscontainer_popup" class="modal fade" role="dialog">
-    <div class="modal-dialog  large-8 small-5">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Attach Files : </h4>
-            </div>
-            <div class="modal-body">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
-    </div>
 </div>
 
 <style>
+     #evalgoalscontainer #va-accordion h3,#evalgoalscontainer #va-accordion  .h3
+    {
+        margin-bottom:2px;
+        border-bottom:2px solid, gray;
+
+    padding:10px;
+    }
+    #evalgoalscontainer .va-content ul li a{
+        font-size: 15px;
+    font-weight:bold;
+    color:#2DC3E8;
+    }
+     #evalgoalscontainer .va-content ul li {
+        list-style:none;
+    }
+    #evalgoalscontainer .va-content {
+    display:table-cell;
+    height:auto;
+    }
     .dropdownContain {
         background-color: #fff;
         height: 100px;
@@ -739,13 +769,20 @@
         $("#overall_self_grading").val(ratingval);
     }
     $(function () {
-        $('#va-accordion').vaccordion({
-            accordionW: "100%",
-            accordionH: (500+50*@Model.Goals.Count),
-            expandedHeight	: 550,
-            visibleSlices: @Model.Goals.Count,
-            animOpacity: 1.0,
-            contentAnimSpeed: 100
+        setWidth() ;
+        var icons2 = {
+            header: "fa fa-plus",
+            activeHeader: "fa fa-minus"
+        };
+        $('#evalgoalscontainer #va-accordion').accordion({
+            //accordionW: "100%",
+            //accordionH: (500+50*@Model.Goals.Count),
+            //expandedHeight	: 550,
+        visibleSlices: @Model.Goals.Count,
+            collapsible :true,
+            icons: icons2
+            //animOpacity: 1.0,
+            //contentAnimSpeed: 100
         });
         $(".mgrrating").rateYo({
             precision: 0,
@@ -801,17 +838,17 @@
     function setWidth() {
         setTimeout(function(){
             adjustHeaderWidth();
-            var c = $($(".va-slice")[0]).find(".scroll-pane").width();
+            var c = $($("#evalgoalscontainer .va-slice")[0]).find(".scroll-pane").width();
             if(c<100)
             {
                 setWidth();
                 return;
             }
-            $(".scroll-pane").each(function(i,o){
+            $("#evalgoalscontainer .scroll-pane").each(function(i,o){
                 $(o).css("width",c);
             });
 
-            $(".scroll-pane").css("max-width",c);
+            $("#evalgoalscontainer .scroll-pane").css("max-width",c);
 
 
         },500);
@@ -819,7 +856,7 @@
 
     function externalEventHandler_Navigate() {
         var idoftitle="";
-        $(".va-slice").each(function(i,o){
+        $("#evalgoalscontainer .va-slice").each(function(i,o){
             if($(o).data("expanded"))
             {
                 idoftitle = $(o).attr("id");
@@ -827,7 +864,7 @@
                 return false;
             }
         });
-        $(".va-slice").each(function(i,o){
+        $("#evalgoalscontainer .va-slice").each(function(i,o){
             $("#"+$(o).attr("id") +" .va-title").removeClass("expandedpane");
         });
         $("#"+idoftitle +" .va-title").addClass("expandedpane");
@@ -838,9 +875,9 @@
 
         automove=true;
         setTimeout(function(){
-            if($(".scroll-pane:visible").data("eval_scrollpane")=="initialized")
+            if($("#evalgoalscontainer .scroll-pane:visible").data("eval_scrollpane")=="initialized")
                 return;
-            $('.scroll-pane:visible').jScrollPane({
+            $('#evalgoalscontainer.scroll-pane:visible').jScrollPane({
                 showArrows: true,
                 horizontalGutter: 10
             });
@@ -880,7 +917,7 @@
     });
 </script>
 <style>
-    #selfoverallrating_value {
+    #evalgoalscontainer #selfoverallrating_value {
         /*background-color: #374659;*/
         border-radius: 5px;
         color: white;
@@ -889,12 +926,12 @@
         font-weight: bold;
     }
 
-    .va-title.expandedpane {
-        background-color: rgb(55, 70, 89) !important;
+    #evalgoalscontainer .va-title.expandedpane {
+        background-color: #3B455D !important;
         color: white !important;
     }
 
-    .alertpublished {
+    #evalgoalscontainer .alertpublished {
         background-color: none;
         border-color: lightblue;
         border-width: thin;
@@ -902,7 +939,7 @@
         border-radius: 5px;
     }
 
-    .alertpublished_error {
+    #evalgoalscontainer .alertpublished_error {
         border-color: red;
         background-color: none;
         border-width: thin;
@@ -910,35 +947,35 @@
         border-radius: 5px;
     }
 
-    .alertsaved, .alertsaved_error {
+    #evalgoalscontainer .alertsaved, #evalgoalscontainer .alertsaved_error {
         background-color: #33414E !important;
         border-color: lightblue;
     }
 
-    .alertsaved_error {
+    #evalgoalscontainer .alertsaved_error {
         border-color: red;
     }
 
-    .va-slice {
+    #evalgoalscontainer .va-slice {
         cursor: default !important;
         border-bottom-style: double;
     }
 
-    .va-title {
+    #evalgoalscontainer .va-title {
         cursor: pointer;
     }
 
-    .va-slice ul.nav-tabs li a {
+    #evalgoalscontainer .va-slice ul.nav-tabs li a {
         background-color: gray;
         color: lightgray;
     }
 
-    .va-slice ul.nav-tabs li.active a {
+    #evalgoalscontainer .va-slice ul.nav-tabs li.active a {
         background-color: white;
         color: #555;
     }
 
-    .tab-content {
+    #evalgoalscontainer .tab-content {
         padding-top: 10px;
     }
 
@@ -1015,30 +1052,30 @@
         margin-top: 7px;
     }
 
-    .va-slice-color-1 {
+    #evalgoalscontainer .va-slice-color-1 {
         background-color: #FFF;
     }
 
-    .va-title {
+    #evalgoalscontainer .va-title {
         font-size: 16px;
         font-weight: 300;
-        color: gray !important;
-        background-color: #eee;
+        color: White !important;
+        background-color: #3B455D !important;
         margin-left: 0px !important;
         padding-left: 10px;
     }
 
-    .va-wrapper {
+    #evalgoalscontainer .va-wrapper {
         background: none;
     }
 
-    .va-slice p {
+    #evalgoalscontainer .va-slice p {
         font-size: 15px;
         color: #888;
     }
 
-    .scroll-pane,
-    .scroll-pane-arrows {
+    #evalgoalscontainer .scroll-pane,
+    #evalgoalscontainer .scroll-pane-arrows {
         width: 100%;
         height: 200px;
         overflow: auto;
@@ -1075,7 +1112,7 @@
         border-radius: 5px;
     }
 
-    .va-nav span {
+    #evalgoalscontainer .va-nav span {
         height: 40px !important;
     }
 
@@ -1085,12 +1122,12 @@
         vertical-align: middle;
     }
 
-    .va-slice .q {
+    #evalgoalscontainer .va-slice .q {
         color: #888;
         font-size: 15px;
     }
 
-    .va-slice .q {
+    #evalgoalscontainer .va-slice .q {
         font-family: Georgia,serif;
         font-style: italic;
         font-weight: normal;
@@ -1102,24 +1139,24 @@
     }
 
     #evalgoalscontainer {
-        position: relative;
+        /*position: relative;*/
         top: 118px;
     }
 
-    #overallrating {
+    #evalgoalscontainer #overallrating {
         margin: 0;
         position: relative;
         right: -45px;
         top: -25px;
     }
 
-    H3 span {
-        font-family: georgia;
-        font-size: 14px;
+   #evalgoalscontainer  H3 span {
+        /*font-family: georgia;*/
+        /*font-size: 14px;
         font-style: italic;
         font-weight: normal;
         margin-right: 10px;
-        text-transform: none;
+        text-transform: none;*/
     }
 
     #fixedheader1 h2 {
@@ -1165,5 +1202,9 @@
     font-size: 15px;
     font-style: italic;
     font-weight: 300;
+    }
+     .tab-pane  .navbar
+    {
+        display:none;
     }
 </style>

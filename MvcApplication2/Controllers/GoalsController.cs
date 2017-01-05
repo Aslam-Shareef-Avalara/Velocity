@@ -133,6 +133,7 @@ namespace MvcApplication2.Controllers
         private string EvaluationPhaseForManager(int goalstatus, ref GoalsViewModel goalsviewmodel, Guid empid, EvaluationCycleExtended ec)
         {
             string titleSuffix = "";
+            var personofinterest =  db.Employees.FirstOrDefault(x=>x.gid==empid);
             switch (goalstatus)
             {
                 case GoalStatus.EMPLOYEE_EVAL_SAVED: titleSuffix += "Waiting for self-evaluation";
@@ -140,7 +141,10 @@ namespace MvcApplication2.Controllers
                     break;
                 case GoalStatus.EMPLOYEE_EVAL_PUBLISHED:
                 case GoalStatus.MANAGER_EVAL_SAVED:
-                    titleSuffix += "Awaiting your evaluation";
+                    if (personofinterest.Manager!=currentUser.gid)
+                        titleSuffix += "Awaiting manager evaluation";
+                    else
+                        titleSuffix += "Awaiting your evaluation";
                     break;
                 case GoalStatus.MANAGER_GOAL_PUBLISHED: titleSuffix += "Evaluation published";
 

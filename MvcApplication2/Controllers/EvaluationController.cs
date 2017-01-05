@@ -163,7 +163,7 @@ namespace MvcApplication2.Controllers
                 ViewBag.ShowFeedback = false;
                 ViewBag.ShowSelfRating = false;
                 ViewBag.Evalcycleid = evalcycleid;
-                return View("HrEvaluation", evaluationViewModel);
+                return PartialView("HrEvaluation", evaluationViewModel);
             }
         }
 
@@ -326,7 +326,10 @@ namespace MvcApplication2.Controllers
                 evaluationViewModel.IsEditable = false;
 
             evaluationViewModel.Conclusion = db.EvaluationConclusions.FirstOrDefault(x => x.employeeid == reportee_id && x.evalcycleid == evalcycleid);
-            return View("ManagerEvaluation", evaluationViewModel);
+            if(ControllerContext.IsChildAction)
+                return PartialView("ManagerEvaluation", evaluationViewModel);
+            else
+                return View("ManagerEvaluation", evaluationViewModel);
         }
 
         public JsonResult savesummary(string summary, string empid)
