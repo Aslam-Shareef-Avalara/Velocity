@@ -1,4 +1,0 @@
-obj\Release\_DataWorkFlow.g.cs
-obj\Release\GoalSettingActivity.g.cs
-obj\Release\DataWorkFlow_GoalSettingActivity_BeforeInitializeComponentHelper.cs
-C:\Users\Aslam.Shareef\Documents\Visual Studio 2013\Projects\MvcApplication2\DataWorkFlow\obj\Release\DataWorkFlow_GoalSettingActivity_CompiledExpressionRoot.cs

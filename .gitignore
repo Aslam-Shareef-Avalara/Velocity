@@ -12,3 +12,7 @@ MvcApplication2/Web_3.config
 *.suo
 DataWorkFlow/obj/Debug/DataWorkFlow_GoalSettingActivity_CompiledExpressionRoot.cs
 DataWorkFlow/obj/Debug/GoalSettingActivity.g.xaml
+MvcApplication2/attachments/
+DataService/bin/
+DataWorkFlow/obj/
+MvcApplication2/bin/
