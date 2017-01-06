@@ -16,3 +16,9 @@ DataService/obj/Debug/edmxResourcesToEmbed/PEModel.msl
 DataService/obj/Debug/edmxResourcesToEmbed/PEModel.ssdl
 MvcApplication2/bin/MvcApplication2.dll.config
 MvcApplication2/bin/Newtonsoft.Json.xml
+DataWorkFlow/bin/
+MvcApplication2/attachments/
+DataService/bin/Release/DataService.dll.config
+DataService/obj/
+DataWorkFlow/obj/
+DataService/bin/
