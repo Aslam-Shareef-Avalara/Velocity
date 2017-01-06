@@ -162,11 +162,11 @@ namespace MvcApplication2.Controllers
             if ((string)ctx.Cache["showholidays"] == "on")
             {
                 Festival festival = new Festival(ctx);
-                festival.GetEventDate< FestivalSourceOfficeHoldaysDotCom>(new string[] { "Fitar", "Fitr" });
-                festival.GetEventDate<FestivalSourceOfficeHoldaysDotCom>(new string[] { "Diwali", "Deepavali" });
-                festival.GetEventDate<FestivalSourceOfficeHoldaysDotCom>(new string[] { "Adha", "Azha", "Bakri", "Juha" });
-                festival.GetEventDate<FestivalSourceOfficeHoldaysDotCom>(new string[] { "Rakhi", "Raksha" });
-                festival.GetEventDate<FestivalSourceOfficeHoldaysDotCom>(new string[] { "Holi" });
+                festival.GetEventDate<FestivalSourceCalendarLabsDotCom>(new string[] { "Fitar", "Fitr" });
+                festival.GetEventDate<FestivalSourceCalendarLabsDotCom>(new string[] { "Diwali", "Deepavali" });
+                festival.GetEventDate<FestivalSourceCalendarLabsDotCom>(new string[] { "Adha", "Azha", "Bakri", "Juha" });
+                festival.GetEventDate<FestivalSourceCalendarLabsDotCom>(new string[] { "Rakhi", "Raksha" });
+                festival.GetEventDate<FestivalSourceCalendarLabsDotCom>(new string[] { "Holi" });
                 loginView = festival.GetFestival().LoginView;
             }
             return loginView;

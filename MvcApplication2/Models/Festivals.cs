@@ -42,7 +42,7 @@ namespace MvcApplication2.Models
             None
         }
         public Festival GetFestival()
-        {
+        { 
             List<Festival> festivals = new List<Festival>();
             try
             {

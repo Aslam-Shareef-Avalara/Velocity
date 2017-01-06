@@ -240,6 +240,7 @@
     <Compile Include="Models\Festivals.cs" />
     <Compile Include="Models\FestivalSourceOfficeHoldaysDotCom.cs" />
     <Compile Include="Models\FestivalSourceTimeAndDateDotCom.cs" />
+    <Compile Include="Models\FestivalSourceCalendarLabsDotCom.cs" />
     <Compile Include="Models\Mail.cs" />
     <Compile Include="Models\OnlineUsers.cs" />
     <Compile Include="Models\PerformanceChartModel.cs" />
