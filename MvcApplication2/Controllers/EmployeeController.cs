@@ -288,6 +288,8 @@ namespace MvcApplication2.Controllers
         {
             string username = null;
             Hashtable reporteeList = new Hashtable();
+            Hashtable locationReportees = new Hashtable();
+            Hashtable locationCycles = new Hashtable();
             #region CommentedCodeForFetchingProfileImage
             //try
             //{
@@ -325,16 +327,37 @@ namespace MvcApplication2.Controllers
                 //}
                 EmployeeService empService = new EmployeeService(OrgId, AppName,currentUser);
                 var reportees = empService.GetReportees(g);
-                foreach (var reportee in reportees)
+                var locations = reportees.Select(x => x.OrgLocationId).Distinct().ToList();
+                foreach (var locs in locations)
                 {
-                    reporteeList[reportee.gid] = reportee;
+                    
+                    var locReps= reportees.Where(x => x.OrgLocationId == locs);
+                    Employee repG = null;
+                    foreach (var reportee in locReps)
+                    {
+                        if(repG==null)
+                        {
+                            repG = reportee;
+                        }
+                        reporteeList[reportee.gid] = reportee;
+                    }
+                    if(locReps!=null && locReps.Count()>0)
+                    {
+                        EmployeeEvaluationService err = new EmployeeEvaluationService(locs.Value, AppName, repG);
+                        var listOfCycles = err.GetCurrentCycle();
+                        locationCycles[db.OrgLocations.FirstOrDefault(x => x.Id == locs).LocationName] = listOfCycles;
+                        locationReportees[db.OrgLocations.FirstOrDefault(x=>x.Id==locs).LocationName] = reporteeList;
+                    }
+                    reporteeList = new Hashtable();
+
                 }
-            
-            
+
+
+                ViewBag.LocationCycles = locationCycles;
             ViewBag.Me = currentUser;
             ViewBag.reporteeid = gid;
             ViewBag.CurrentReportee = e;
-            return View("MyTeam", reporteeList);
+            return View("MyTeam", locationReportees);
         }
 
         // GET: /Employee/Details/5

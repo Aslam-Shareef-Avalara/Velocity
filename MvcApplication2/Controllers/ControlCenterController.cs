@@ -473,7 +473,7 @@ namespace MvcApplication2.Controllers
             }
 
             viewmodel.Add("goalstats", goalStats);
-            var cycles = db.EvaluationCycles.ToList();
+            var cycles = db.EvaluationCycles.Where(x=>x.OrgId==OrgId).ToList();
             ViewBag.Cycles = cycles;
             viewmodel.Add("pestatistics", pestatistics);
             return View(viewmodel);
@@ -484,7 +484,7 @@ namespace MvcApplication2.Controllers
         {
             //  var employees = new ActiveDirectoryHelper().GetUserReportees();
             var OiD = db.OrgLocations.FirstOrDefault(x => x.Id == OrgId).OrgId;
-            var emps = db.Employees.Where(x => x.OrgId == OiD && x.Active).Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid }).OrderBy(x=>x.Name);
+            var emps = db.Employees.Where(x => x.OrgLocationId == OrgId && x.Active).Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid }).OrderBy(x=>x.Name);
             ViewBag.Employees = new SelectList(emps, "gid", "Name");
             Hashtable viewmodel = new Hashtable();
             long evalcycleid = 0;

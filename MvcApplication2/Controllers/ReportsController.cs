@@ -47,7 +47,7 @@ namespace MvcApplication2.Controllers
             ViewBag.EvalCycleId = evalcycleid;
             ViewBag.GoalStatuses = db.GoalStatus.OrderBy(x => x.Id).ToList();
             PeProgressViewModel viewmodel = new PeProgressViewModel();
-            int empCount = db.Employees.Where(x => x.Active).ToList().Count;
+            int empCount = db.Employees.Where(x => x.Active && x.OrgLocationId==OrgId).ToList().Count;
             viewmodel.PageCount = empCount / 25;
             if (empCount % pagesize > 0)
                 viewmodel.PageCount++;
@@ -98,7 +98,7 @@ namespace MvcApplication2.Controllers
             ViewBag.EvalCycleId = evalcycleid;
             ViewBag.GoalStatuses = db.GoalStatus.OrderBy(x => x.Id).ToList();
             PeProgressViewModel viewmodel = new PeProgressViewModel();
-            int empCount = db.Employees.Where(x => x.Active).ToList().Count;
+            int empCount = db.Employees.Where(x => x.Active && x.OrgLocationId== OrgId).ToList().Count;
             viewmodel.PageCount = empCount / 25;
             if (empCount % pagesize > 0)
                 viewmodel.PageCount++;

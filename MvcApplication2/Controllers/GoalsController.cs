@@ -146,7 +146,7 @@ namespace MvcApplication2.Controllers
                     else
                         titleSuffix += "Awaiting your evaluation";
                     break;
-                case GoalStatus.MANAGER_GOAL_PUBLISHED: titleSuffix += "Evaluation published";
+                case GoalStatus.MANAGER_EVAL_PUBLISHED: titleSuffix += "Evaluation sent to HR";
 
                     break;
                 case GoalStatus.HR_APPROVED: titleSuffix += "Final publish and meeting pending";
@@ -453,7 +453,7 @@ namespace MvcApplication2.Controllers
                 reporteeId = Guid.Parse(ctx.Request.QueryString["reporteeid"]);
                 idOfEmployeeForGoals = reporteeId;
             }
-            if (Session["impersonator"] != null && ((Employee)Session["impersonator"]).Manager.ToString() == reporteeId.ToString())
+            if (Session["impersonator"] != null && ((Employee)Session["impersonator"]).Manager!=null && ((Employee)Session["impersonator"]).Manager.ToString() == reporteeId.ToString())
             {
                 return View("Message", (object)"You are not authorized to view your manager's evaulations.");
             }

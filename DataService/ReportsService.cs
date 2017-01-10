@@ -65,9 +65,9 @@ namespace DataService
             {
                 List<Employee> c = null;
                 if (string.IsNullOrEmpty(search))
-                    c = dbx.Employees.Where(x => x.Active).OrderBy(x => x.FirstName).ToList(); //.Skip((page - 1) * pagesize).Take(pagesize)
+                    c = dbx.Employees.Where(x => x.Active && x.OrgLocationId==OrgId).OrderBy(x => x.FirstName).ToList(); //.Skip((page - 1) * pagesize).Take(pagesize)
                 else
-                    c = dbx.Employees.Where(x => x.Active && (x.FirstName.Contains(search) || x.LastName.Contains(search))).OrderBy(x => x.FirstName).ToList();//.Skip((page - 1) * pagesize).Take(pagesize)
+                    c = dbx.Employees.Where(x => x.Active && x.OrgLocationId == OrgId && (x.FirstName.Contains(search) || x.LastName.Contains(search))).OrderBy(x => x.FirstName).ToList();//.Skip((page - 1) * pagesize).Take(pagesize)
                 foreach (var emp in c)
                 {
                     Goal g = new Goal();
