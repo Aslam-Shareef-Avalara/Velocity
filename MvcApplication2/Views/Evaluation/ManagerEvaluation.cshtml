@@ -23,7 +23,7 @@
         return;
     }
 }
-<script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+
 <script src="~/Scripts/ckeditor/ckeditor.js"></script>
 @functions{
     public string translateRating(int rating)
@@ -161,7 +161,7 @@
                 Self Overall Grade: <span id="selfoverallrating_value" class="btn-info">@translateRating((int)Math.Round(Model.Rating.SelfOverallRating.HasValue ? Model.Rating.SelfOverallRating.Value : 0))</span>
                 <br />
                 <br />
-                <a href="javascript:void(0);" style="font-size:12px;font-style:italic;font-weight:bold;" onclick="javascript:$('#ratingsoverlay').fadeIn()">Click to view grading descriptions</a>
+                <a href="javascript:void(0);" style="font-size:12px;font-style:italic;font-weight:bold;" onclick="javascript:$('#ratingsoverlay').fadeIn()">Click to view grading descriptions&nbsp;|&nbsp;</a>
             </span>
         </div>
         

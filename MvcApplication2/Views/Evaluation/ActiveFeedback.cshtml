@@ -595,6 +595,10 @@ header h1 {
     }
 </section> <!-- cd-timeline -->
 }
+else
+{
+    <h3>There is no Active feedback recorded for you currently. We encourage you to seek formal feedback from your manager at regular intervals. <br> set up regular meetings with him/her, so you are updated on your managers expectations from you.</h3>
+}
 <script>
     function changevisibility(eid,evcid,ispriv,fbtxt) {
         $.post("@Url.Content("~/evaluation/tooglefeedbackvisibility")", { "evalCycleId": evcid, "isprivate": ispriv, "empId": eid, "fbtext": fbtxt }, function (r) { 

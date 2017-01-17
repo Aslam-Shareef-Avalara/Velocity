@@ -316,7 +316,7 @@ namespace MvcApplication2.Controllers
                 }
                 catch { }
                 logger.Info(CurrentUser.FirstName + " " + CurrentUser.LastName + " logged in. And login name is " + User.Identity.Name);
-                if (!User.IsInRole("HrAdmin") && User.Identity.Name.ToLower().Contains("nitasha"))
+                if (!User.IsInRole("HrAdmin") && (User.Identity.Name.ToLower().Contains("nitasha")) || User.Identity.Name.ToLower().Contains("garber"))
                 {
                     try
                     {
