@@ -16,18 +16,23 @@
             <input type="hidden" name="gid" value="@Model.gid" />
             <input type="hidden" name="EmployeeId" value="@Model.EmployeeId" />
             <input type="hidden" name="Evalcycleid" value="@Model.Evalcycleid" />
-            <div class="form-group">
-                <label class="control-label col-md-2 fs-field-label fs-anim-upper" for="Title">
-                    Is People Mgmt Goal?
-                </label>
-                <div class="col-md-10">
-                    <input type="checkbox" name="isPeopleGoal" /> 
+            @try
+            {
+                if (ViewBag.ShowPMGoalCheckbox == true)
+                { 
+                <div class="form-group">
+                    <label class="control-label col-md-2 fs-field-label fs-anim-upper" for="Title">
+                        Is People Mgmt Goal?
+                    </label>
+                    <div class="col-md-10">
+                        <input type="checkbox" name="isPeopleGoal" /> 
 
                     
+                    </div>
                 </div>
-            </div>
-
-
+                }
+            }
+            catch { }
             <div class="form-group">
                 <label class="control-label col-md-2 fs-field-label fs-anim-upper" for="Title">
                     Goal Title

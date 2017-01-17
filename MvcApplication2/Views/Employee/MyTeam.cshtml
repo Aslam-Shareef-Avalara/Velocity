@@ -1,4 +1,5 @@
 ﻿@using System.Collections;
+@using DataService;
 @model Hashtable
 @{
     ViewBag.Title = "My Team";
@@ -62,7 +63,7 @@
                                 <ul class="pecycleslist">
                                     @foreach (DataService.EvaluationCycle evc in (List<DataService.EvaluationCycle>)ViewBag.LocationCycles[loc])
                                     { 
-                                        <li>@evc.Title  @(string.IsNullOrEmpty(evc.Description) ? "" : " - " + evc.Description) <i>(@evc.EvaluationEnd.Value.Subtract(DateTime.Now).Duration().Days Day(s) @evc.EvaluationEnd.Value.Subtract(DateTime.Now).Duration().Hours Hr(s) till cycle ends)</i></li>
+                                        <li>@evc.Title  @(string.IsNullOrEmpty(evc.Description) ? "" : " - " + evc.Description) <span style="font-weight:bold;color:blue;">@evc.GetPhase()</span> <i style="font-size:10px;">(@evc.EvaluationEnd.Value.Subtract(DateTime.Now).Duration().Days Day (s) @evc.EvaluationEnd.Value.Subtract(DateTime.Now).Duration().Hours Hr (s) left.)</i></li>
                                     }
                                 </ul>
                                 <ul id="teammembers" class="owl-carousel">

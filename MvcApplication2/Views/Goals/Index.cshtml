@@ -81,7 +81,7 @@
         @if (ViewBag.FixedGoals != true)
         {
             <li onclick="displaystatus('')" @(Model == null ? "class=active" : "") data-status="" data-pecycleid="0"><a data-toggle="tab" href="#_0">Past Evaluations</a></li>
-    <li onclick="loadactivefeedback(@ViewBag.CurrentCycle.Id)" @(Model == null ? "class=active" : "") data-status="" data-pecycleid="@ViewBag.CurrentCycle.Id"><a data-toggle="tab" href="#_FB">Active Feedback</a></li>
+    <li onclick="loadactivefeedback(@ViewBag.CurrentCycle.Id)"  data-status="" data-pecycleid="@ViewBag.CurrentCycle.Id"><a data-toggle="tab" href="#_FB">Active Feedback</a></li>
 
         }
         @if (Model != null && Model.Count > 0)
@@ -104,7 +104,7 @@
                 </script>
                 <div id="_@goalviewmodel.PECycle.Id" class="tab-pane fade @(tabcounter==1?"in active":"")">
                     <h5 style="color:#808080">@goalviewmodel.PECycle.Description</h5>
-                    <div><img src="~/images/i-icon-new.png" /> <a href="#" style="color:blue;text-decoration:underline;" onclick="exportgoals('@goalviewmodel.EmployeeId', @goalviewmodel.PECycle.Id)">Click here</a> to export goals / Evaluations</div>
+                    <div style="float:right;"><a href="#" style="color:blue;text-decoration:underline;" onclick="exportgoals('@goalviewmodel.EmployeeId', @goalviewmodel.PECycle.Id)">Click here</a> to export goals / Evaluations</div>
                     
                     @if (goalviewmodel.PE_Cycle == DataService.PECycle.GOAL_SETTING)
                     {

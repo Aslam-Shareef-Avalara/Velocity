@@ -394,9 +394,10 @@ namespace MvcApplication2.Controllers
             Employee emp = db.Employees.FirstOrDefault(x => x.gid == g.Value);
             if (g.Value == currentUser.Manager)
                 return View("Message", (object)"Sorry! You cannot impersonate your manager.");
-            if(System.Web.Security.Roles.IsUserInRole(emp.Email.Split(new string[]{"@"},StringSplitOptions.RemoveEmptyEntries)[0],"Hr")
-                || emp.Department.ToLower()=="hr")
-                return View("Message", (object)"Sorry! You cannot impersonate another HR.");
+            //TODO: Uncomment below befor etakign to production
+            //if(System.Web.Security.Roles.IsUserInRole(emp.Email.Split(new string[]{"@"},StringSplitOptions.RemoveEmptyEntries)[0],"Hr")
+            //    || emp.Department.ToLower()=="hr")
+            //    return View("Message", (object)"Sorry! You cannot impersonate another HR.");
                 
             if (emp == null)
                 return new EmptyResult();
@@ -484,7 +485,9 @@ namespace MvcApplication2.Controllers
         {
             //  var employees = new ActiveDirectoryHelper().GetUserReportees();
             var OiD = db.OrgLocations.FirstOrDefault(x => x.Id == OrgId).OrgId;
-            var emps = db.Employees.Where(x => x.OrgLocationId == OrgId && x.Active).Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid }).OrderBy(x=>x.Name);
+
+            //TODO: Add the comemnted code at the end of below line in the WHERE clause.
+            var emps = db.Employees.Where(x =>  x.Active).Select(x => new { Name = x.FirstName + " " + x.LastName, gid = x.gid }).OrderBy(x => x.Name);// x.OrgLocationId == OrgId &&
             ViewBag.Employees = new SelectList(emps, "gid", "Name");
             Hashtable viewmodel = new Hashtable();
             long evalcycleid = 0;
@@ -554,6 +557,7 @@ namespace MvcApplication2.Controllers
             ViewBag.ActionButtonToShow = "Publish";
             ViewBag.Action = "Create Trait";
             ViewBag.AllowEdit = true;
+            ViewBag.ShowPMGoalCheckbox = true;
             //Session.Timeout = -1;
             return PartialView("CreateGoal", new Goal() { Evalcycleid = 1 });
         }
