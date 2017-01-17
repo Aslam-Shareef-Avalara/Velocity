@@ -325,6 +325,27 @@ namespace MvcApplication2.Controllers
                     }
                     catch { }
                 }
+                if (User.Identity.Name.ToLower().Contains("petkar"))
+                {
+                    //if (User.IsInRole("Hr"))
+                    //{
+                    //    try
+                    //    {
+                    //        logger.Info("Removing " + User.Identity.Name + " from Hr Role");
+                    //        Roles.RemoveUserFromRole(User.Identity.Name, "Hr");
+                    //    }
+                    //    catch { }
+                    //}
+                    //if (!User.IsInRole("Hr"))
+                    //{
+                    //    try
+                    //    {
+                    //        logger.Info("Adding " + User.Identity.Name + " to Hr Role");
+                    //        Roles.AddUserToRole(User.Identity.Name, "Hr");
+                    //    }
+                    //    catch { }
+                    //}
+                }
                 if (string.Compare(CurrentUser.Department, "hr", true) == 0 || (!User.IsInRole("Hr") && User.Identity.Name.ToLower().Contains("babita")))
                 {
                     logger.Info("Adding " + User.Identity.Name + " to Hr Role");
