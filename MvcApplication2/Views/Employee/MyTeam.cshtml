@@ -21,17 +21,17 @@
                 <div class="panel-heading">
                     <div class="panel-title-box">
                         <h3 class="panel-title">
-                            @if (ViewBag.CurrentReportee.OrgEmpId== ViewBag.Me.OrgEmpId)
+                            @if (ViewBag.CurrentReportee.OrgEmpId == ViewBag.Me.OrgEmpId)
                             {
-                            <text>
-                                My Team :
-                            </text>
+                                <text>
+                                    My Team :
+                                </text>
                             }
                             else
                             {
-                            <text>
-                                @(ViewBag.CurrentReportee.FirstName)'s Team :
-                            </text>
+                                <text>
+                                    @(ViewBag.CurrentReportee.FirstName)'s Team :
+                                </text>
                             }
 
                         </h3>
@@ -41,67 +41,93 @@
 
                 </div>
                 @{
-                    int locationcounter=0;
+    int locationcounter = 0;
                 }
                 <ul class="nav nav-tabs">
-                    @foreach(var loc in Model.Keys)
+                    @foreach (var loc in Model.Keys)
                     {
 
-                    <li @(locationcounter==0?"class=active":"" )><a data-toggle="tab" href="#Location_@(locationcounter)">@loc</a></li>
+                        <li @(locationcounter == 0 ? "class=active" : "")><a data-toggle="tab" href="#Location_@(locationcounter)">@loc</a></li>
                         locationcounter++;
-                        }
+                    }
                 </ul>
                 @{
-                     locationcounter=0;
+    locationcounter = 0;
                 }
                 <div class="tab-content">
                     @foreach (var loc in Model.Keys)
                     {
-                        <div class="tab-pane fade  @(locationcounter==0?"in active":"" )"  id="Location_@(locationcounter++)">
+                        <div class="tab-pane fade  @(locationcounter==0?"in active":"" )" id="Location_@(locationcounter++)">
                             <div class="panel-body ">
                                 <div class="pecyclelisttitle">Currently active cycle(s) in @loc :</div>
-                                <ul class="pecycleslist">
-                                    @foreach (DataService.EvaluationCycle evc in (List<DataService.EvaluationCycle>)ViewBag.LocationCycles[loc])
-                                    { 
-                                        <li>@evc.Title  @(string.IsNullOrEmpty(evc.Description) ? "" : " - " + evc.Description) <span style="font-weight:bold;color:blue;">@evc.GetPhase()</span> <i style="font-size:10px;">(@evc.EvaluationEnd.Value.Subtract(DateTime.Now).Duration().Days Day (s) @evc.EvaluationEnd.Value.Subtract(DateTime.Now).Duration().Hours Hr (s) left.)</i></li>
-                                    }
-                                </ul>
+                                @if (ViewBag.LocationCycles[loc] != null)
+                                {
+                                    <ul class="pecycleslist">
+                                        @foreach (DataService.EvaluationCycle evc in (List<DataService.EvaluationCycle>)ViewBag.LocationCycles[loc])
+                                        {
+                                            <li>@evc.Title  @(string.IsNullOrEmpty(evc.Description) ? "" : " - " + evc.Description) <span style="font-weight:bold;color:blue;">@evc.GetPhase()</span> <i style="font-size:10px; display:none;">(@evc.EvaluationEnd.Value.Subtract(DateTime.Now).Duration().Days Day (s) @evc.EvaluationEnd.Value.Subtract(DateTime.Now).Duration().Hours Hr (s) left.)</i></li>
+                                        }
+                                    </ul>
+                                }
                                 <ul id="teammembers" class="owl-carousel">
                                     @foreach (Guid u in ((Hashtable)Model[loc]).Keys)
-                        {
-                            DataService.EmployeeExtended emp = ((Hashtable)Model[loc])[u] as DataService.EmployeeExtended;
-                            if (emp.gid.ToString() == ((DataService.Employee)ViewBag.Me).gid.ToString())
-                            {
-                                continue;
-                            }
-                                    <li class="badgeable" onmouseover="switchimage(this)" onmouseout="switchimage(this)">
-                                        <span id="mainbadgecount_@u.ToString().ToLower()" class="custombadge"></span>
-
-                                        <a href="@Url.Content("~/goals?")reporteeid=@u.ToString().ToLower()">
-                                            @*'@u.ToString().ToLower()'*@
-                                            @if(emp.ProfilePix==null || emp.ProfilePix.Count()==0)
                                     {
-                                            <img class="tooltips" title="" data-uid="@u.ToString().ToLower()" src="@Url.Content("~/images/follower-man-user-login-round-512.png")" style="width:100px" />
-                                    }
-                                    else
-                                    {
+                                        DataService.EmployeeExtended emp = ((Hashtable)Model[loc])[u] as DataService.EmployeeExtended;
+                                        if (emp.gid.ToString() == ((DataService.Employee)ViewBag.Me).gid.ToString())
+                                        {
+                                            continue;
+                                        }
+                                        <li class="badgeable" onmouseover="switchimage(this)" onmouseout="switchimage(this)">
+                                            <span id="mainbadgecount_@u.ToString().ToLower()" class="custombadge"></span>
 
-                                            <img class="tooltips actualphoto" title="" data-uid="@u.ToString().ToLower()" src="@(@"data:image/png;base64," + Convert.ToBase64String(emp.ProfilePix))" style="width:100px;" />
-                                    }
+                                            <a href="@(emp.OrgLocationId != null ? Url.Content("~/goals?reporteeid=") + u.ToString().ToLower() : "javascript:void(0);")">
+                                                @*<a href="@Url.Content("~/goals?")reporteeid=@u.ToString().ToLower()">*@
 
-                                        </a>
-                                        <br />
-                                        @emp.FirstName @emp.LastName
-                                        <br />
-                                        @if (emp.HasReportees) {
-                                        <a class="btn btn-sm  btn-default" href="~/employee?gid=@u.ToString().ToLower()">Reportees</a>
-                                }
-                                        <a class="btn btn-sm  btn-default" href="@Url.Content("~/goals?")reporteeid=@u.ToString().ToLower()">Goals</a>
-                                    </li>
-                        }
+
+                                                @*'@u.ToString().ToLower()'*@
+                                                @if (emp.ProfilePix == null || emp.ProfilePix.Count() == 0)
+                                                {
+                                                    <img class="tooltips" title="" data-uid="@u.ToString().ToLower()" src="@Url.Content("~/images/follower-man-user-login-round-512.png")" style="width:100px" />
+                                                }
+                                                else
+                                                {
+
+                                                    <img class="tooltips actualphoto" title="" data-uid="@u.ToString().ToLower()" src="@(@"data:image/png;base64," + Convert.ToBase64String(emp.ProfilePix))" style="width:100px;" />
+                                                }
+
+                                            </a>
+                                            <br />
+                                            @emp.FirstName @emp.LastName
+                                            <br />
+                                            @if (emp.HasReportees)
+                                            {
+                                                <a class="btn btn-sm  btn-default" href="~/employee?gid=@u.ToString().ToLower()">Reportees</a>
+                                            }
+
+                                            @if (emp.OrgLocationId != null)
+                                            {
+
+                                                <a class="btn btn-sm  btn-default" href="@Url.Content("~/goals?")reporteeid=@u.ToString().ToLower()">Goals</a>
+                                            }
+                                        </li>
+                                    }
 
                                 </ul>
-                                <div style="width:100%; text-align:center; padding-top:5px;">You can click each team members photo/icon above to view his/her goals.</div>
+                                
+
+                                    @if (Convert.ToString(loc).ToLower() != "unassigned locations")
+                                    {
+                                        <div style="width:100%; text-align:center; padding-top:5px;">
+                                            You can click each team members photo/icon above to view his/her goals.
+                                        </div>
+                                    }
+                                    else if (Convert.ToString(loc).ToLower() == "unassigned locations")
+                                    {
+                                        <div class="alert alert-danger">
+                                            <strong>Base Location is missing for above team members.</strong>
+                                        </div>
+                                    }
+
                             </div>
                         </div>
 
@@ -155,13 +181,14 @@
     </div>
     <style>
         .pecyclelisttitle {
-            font-family:Arial;
-            font-weight:600;
+            font-family: Arial;
+            font-weight: 600;
         }
-        .pecycleslist {
-        list-style:none;
 
+        .pecycleslist {
+            list-style: none;
         }
+
         #teammembers {
             list-style: none;
             font-size: 12px;

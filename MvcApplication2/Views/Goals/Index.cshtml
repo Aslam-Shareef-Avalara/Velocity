@@ -81,7 +81,7 @@
         @if (ViewBag.FixedGoals != true)
         {
             <li onclick="displaystatus('')" @(Model == null ? "class=active" : "") data-status="" data-pecycleid="0"><a data-toggle="tab" href="#_0">Past Evaluations</a></li>
-    <li onclick="loadactivefeedback(@ViewBag.CurrentCycle.Id)"  data-status="" data-pecycleid="@ViewBag.CurrentCycle.Id"><a data-toggle="tab" href="#_FB">Active Feedback</a></li>
+            <li onclick="loadactivefeedback(@ViewBag.CurrentCycle.Id)" data-status="" data-pecycleid="@ViewBag.CurrentCycle.Id"><a data-toggle="tab" href="#_FB">Active Feedback</a></li>
 
         }
         @if (Model != null && Model.Count > 0)
@@ -105,36 +105,55 @@
                 <div id="_@goalviewmodel.PECycle.Id" class="tab-pane fade @(tabcounter==1?"in active":"")">
                     <h5 style="color:#808080">@goalviewmodel.PECycle.Description</h5>
                     <div style="float:right;"><a href="#" style="color:blue;text-decoration:underline;" onclick="exportgoals('@goalviewmodel.EmployeeId', @goalviewmodel.PECycle.Id)">Click here</a> to export goals / Evaluations</div>
-                    
+
                     @if (goalviewmodel.PE_Cycle == DataService.PECycle.GOAL_SETTING)
                     {
-                        <div style="display: inline-block; height: auto; width: 100%;">
+                        <div style="display: inline-block; height: auto; width: 100%; margin:10px 2px 10px 2px;">
                             @if (goalviewmodel.Editable)
                             {
-                                <a href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use- this button to ADD a new goal." class=" fa fa-plus-circle btnaddgoal" onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
-                                    <label>Add</label>
+                                @*<a href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use- this button to ADD a new goal." class="fa fa-plus-circle btnaddgoal" onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
+                                        <label>Add</label>
+                                    </a>*@
+                                <a class="btn btn-primary btn-lg" href="javascript:void(0);" data-step="2" title="Click to add/create a new goal" data-intro="Use- this button to ADD a new goal." onclick="EditGoal('','@goalviewmodel.PECycle.Id')">
+                                    <span class="fa fa-plus-circle"></span>&nbsp;Add Goal
                                 </a>
                             }
                             @if (goalviewmodel.ButtonToShow == "Publish")
                             {
-                                <a style="float: right;" href="javascript:void(0);" title="Click to submit to manager for approval" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them." class="fa fi-web  btnpublishgoals" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
-                                    <label>Submit to manager</label>
-                                </a>
+                                @*<a style="float: right;" href="javascript:void(0);" title="Click to submit to manager for approval" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them." class="fa fi-web  btnpublishgoals" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
+                                        <label>Submit to manager</label>
+                                    </a>*@
                                 @*<input type="submit" value="Submit to Manager" onclick="SetAction('publish');" />*@
+
+                                <a href="javascript:void(0);" title="Click to submit to manager for approval" data-step="3" data-intro="After you have completed adding goals, you should publish it to your manager using this button. Only after you publish will the manager be able to approve them."
+                                   class="btn btn-primary btn-lg pull-right" onclick="PublishGoals(totalweightage_@goalviewmodel.PECycle.Id)">
+                                    <span class="fa fa-globe"></span>&nbsp;Submit to manager
+                                </a>
                             }
                             else if (goalviewmodel.ButtonToShow == "Approve")
                             {
-                                <a style="float: right;" href="javascript:void(0);" class="fa fa-thumbs-o-up  btnpublishgoals"
-                                   data-step="4" data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button."
-                                   onclick="Approve()">
-                                    <label>Approve</label>
+                                @*<a style="float: right;" href="javascript:void(0);" class="fa fa-thumbs-o-up  btnpublishgoals"
+                                       data-step="4" data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button."
+                                       onclick="Approve()">
+                                        <label>Approve</label>
+                                    </a>*@
+                                <a style="margin:0px 5px 0px 5px;" onclick="Approve()" href="javascript:void(0);" class="btn btn-primary btn-lg pull-right" data-step="4"
+                                   data-intro="Once you are satisfied with the goals suggested by your reportee, you may finalize the goals by approving them using this button.">
+                                    <span class="fa fa-thumbs-o-up"></span>&nbsp;Approve
                                 </a>
-                                <a style="float: right;" href="javascript:void(0);" data-toggle="modal"
-                                   data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
-                                   data-target="#myModal" class="fa fa-thumbs-o-down  btnpublishgoals">
-                                    <label>Reject</label>
-                                </a>
+
+                                @*<a style="float: right;" href="javascript:void(0);" data-toggle="modal"
+                                       data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
+                                       data-target="#myModal" class="fa fa-thumbs-o-down  btnpublishgoals">
+                                        <label>Reject</label>
+                                    </a>*@
                                 @*<input type="submit" value="Approve" onclick="SetAction('approve')" />*@
+
+                                <a style="margin:0px 5px 0px 5px;" href="javascript:void(0);" data-toggle="modal" class="btn btn-primary btn-lg pull-right"
+                                   data-step="5" data-intro="If however, you would like any changes to be done in these goals, you may reject by clicking this button. After rejection the reportee will be able to modify the goals and re-submit."
+                                   data-target="#myModal">
+                                    <span class="fa fa-thumbs-o-down"></span>&nbsp;Reject
+                                </a>
                             }
 
                         </div>
@@ -226,10 +245,10 @@
                 <div id="historicaldatacontent">
                 </div>
             </div>
-    <div id="_FB" style="background-color:#eee;" class="tab-pane fade  @(Model==null?"in active":"")">
-        @*@Html.Action("ActiveFeedback", "Evaluation", new { empid = empId, pecycle = ViewBag.CurrentCycle.Id })*@
+            <div id="_FB" style="background-color:#eee;" class="tab-pane fade  @(Model==null?"in active":"")">
+                @*@Html.Action("ActiveFeedback", "Evaluation", new { empid = empId, pecycle = ViewBag.CurrentCycle.Id })*@
 
-    </div>
+            </div>
 
         }
     </div>

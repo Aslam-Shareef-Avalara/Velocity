@@ -248,7 +248,7 @@
                 </div>
 
             </div>
-            <div class="panel-body list-group list-group-contacts scroll-pane">
+            <div class="panel-body list-group list-group-contacts scroll-pane" >
                 <span style="margin-left:5px;"> People you will be working with.</span>
                 @foreach (DataService.Employee coworker in Model.Coworkers)
                 {
@@ -414,20 +414,18 @@
                         //$("#ActionItems #tasks").css("list-style-type", "none");
                     }
                     else {
-
                         $("#ActionItems").fadeIn();
                         $("#coworkers").hide();
                     }
                 } catch (x) { }
             }
-            $('.scroll-pane').jScrollPane({
-                showArrows: true,
-                horizontalGutter: 10
-            });
+         
 
             waitforbadgeEffect = 0;
+            debugger;
             setPrimaryInfoWidth();
-            setTimeout(GetBadges, 3000);
+            setTimeout(GetBadges, 30000);
+            
         });
     }
     @*function GetBadges() {
@@ -551,9 +549,12 @@
         });
         </text>
          }
-   
-
-
+        setTimeout(function () {
+            $('.scroll-pane').jScrollPane({
+                showArrows: true,
+                horizontalGutter: 10
+            });
+        }, 1000);
 
     });
 </script>
@@ -561,6 +562,7 @@
 
 
 <style>
+  
     .strike {
         text-decoration: line-through !important;
         color: lightgray !important;

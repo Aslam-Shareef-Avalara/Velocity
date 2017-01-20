@@ -25,7 +25,7 @@ namespace MvcApplication2.Controllers
 
         public string GetInlineImage(Guid g)
         {
-            var e =  db.Employees.FirstOrDefault(x=>x.gid==g);
+            var e = db.Employees.FirstOrDefault(x => x.gid == g);
             if (e != null)
                 return Convert.ToBase64String(e.ProfilePix);
             else
@@ -35,7 +35,7 @@ namespace MvcApplication2.Controllers
         public string Image(Guid g)
         {
             string basepath = Server.MapPath("~/attachments");
-            if (System.IO.File.Exists(basepath+"\\" + g.ToString() + "profile.png"))
+            if (System.IO.File.Exists(basepath + "\\" + g.ToString() + "profile.png"))
             {
                 return Url.Content(basepath + "\\" + g.ToString() + "profile.png");
             }
@@ -52,7 +52,7 @@ namespace MvcApplication2.Controllers
         }
         public ActionResult Reviewees()
         {
-            EmployeeService empService = new EmployeeService(OrgId, AppName,currentUser);
+            EmployeeService empService = new EmployeeService(OrgId, AppName, currentUser);
             var reviewies = empService.GetReviewies(currentUser.gid);
             if (reviewies == null)
                 return View("Message", (object)"You do not have any reviewees");
@@ -60,7 +60,7 @@ namespace MvcApplication2.Controllers
         }
         public ActionResult AboutMe()
         {
-            EmployeeService empService = new EmployeeService(OrgId, AppName,currentUser);
+            EmployeeService empService = new EmployeeService(OrgId, AppName, currentUser);
             Hashtable reporteeList = new Hashtable();
             MvcApplication2.ViewModel.AboutMe me = new ViewModel.AboutMe();
             ActiveDirectoryHelper adHelper = new ActiveDirectoryHelper();
@@ -74,14 +74,14 @@ namespace MvcApplication2.Controllers
             //if (Roles.GetUsersInRole("HrAdmin") != null && Roles.GetUsersInRole("HrAdmin").Count() > 0)
             //    hradmin= Roles.GetUsersInRole("HrAdmin").FirstOrDefault();
             //else
-            me.HrPerson = adHelper.GetHRManager() ;
+            me.HrPerson = adHelper.GetHRManager();
             if (currentUser.Manager.HasValue)
             {
                 me.Manager = empService.GetManager(currentUser.Manager.Value);// adHelper.GetMyManager();
             }
             else me.Manager = null;
             me.Org = db.Organizations.Where(x => x.Id == currentUser.OrgId).FirstOrDefault();
-            
+
             var reportees = empService.GetReporteesOf(currentUser.gid);
             foreach (var reportee in reportees)
             {
@@ -89,8 +89,8 @@ namespace MvcApplication2.Controllers
             }
             me.Reportees = reporteeList;
 
-           
-            return View("Me",me);
+
+            return View("Me", me);
         }
 
         public ActionResult PerformanceData(Guid reporteeID)
@@ -105,10 +105,11 @@ namespace MvcApplication2.Controllers
                     ViewBag.PerformanceData = db.EvaluationRatings.Join(db.EvaluationCycles, e => e.EvalCycleId, g => g.Id, (e, g) => new { e, g }).Where(x => x.e.EmpId == reporteeID && x.g.EvaluationEnd < DateTime.Today).OrderBy(x => x.g.EvaluationEnd).Select(x => new PerformanceChartModel { Rating = x.e.ManagerOverllRating.Value, PETitle = x.g.Title }).ToList();
                 else ViewBag.PerformanceData = new List<PerformanceChartModel>();
             }
-            catch {
+            catch
+            {
                 ViewBag.PerformanceData = new List<PerformanceChartModel>();
             }
-            
+
             try
             {
                 if (ViewBag.PerformanceData.Count > 0)
@@ -197,14 +198,14 @@ namespace MvcApplication2.Controllers
             Hashtable ht = new EmployeeService(OrgId, AppName as string, currentUser).GetPECycleStatus(Guid.Parse(employeeid));
             if (ht.ContainsKey(CONSTANTS.GOAL_SETTING_CYCLE))
             {
-                
+
                 cyclestatuses.Add((EvaluationCycleExtended)ht[CONSTANTS.GOAL_SETTING_CYCLE]);
             }
             if (ht.ContainsKey(CONSTANTS.EVALUATION_CYCLE))
             {
-                 cyclestatuses.Add((EvaluationCycleExtended)ht[CONSTANTS.EVALUATION_CYCLE]);
+                cyclestatuses.Add((EvaluationCycleExtended)ht[CONSTANTS.EVALUATION_CYCLE]);
             }
-            return Json(cyclestatuses,JsonRequestBehavior.AllowGet);
+            return Json(cyclestatuses, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetOnlineEmployeeReport()
@@ -217,9 +218,9 @@ namespace MvcApplication2.Controllers
         {
             try
             {
-                Badges badgeSvc = new Badges(OrgId, AppName,currentUser);
+                Badges badgeSvc = new Badges(OrgId, AppName, currentUser);
                 badgeSvc.DeleteBadges(new List<long> { id.Value });
-                return Json(new { deleted = 1, idofbadge = id },JsonRequestBehavior.AllowGet);
+                return Json(new { deleted = 1, idofbadge = id }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception x)
             {
@@ -229,9 +230,9 @@ namespace MvcApplication2.Controllers
 
         public JsonResult getmyteambadges()
         {
-            EmployeeService empService = new EmployeeService(OrgId,AppName,currentUser);
+            EmployeeService empService = new EmployeeService(OrgId, AppName, currentUser);
             var reportees = empService.GetReportees(currentUser.gid);
-            Badges badgeSvc = new Badges(OrgId, AppName,currentUser);
+            Badges badgeSvc = new Badges(OrgId, AppName, currentUser);
             List<dynamic> badges = new List<dynamic>();
             if (reportees != null && reportees.Count > 0)
             {
@@ -245,7 +246,7 @@ namespace MvcApplication2.Controllers
                         //if (b.Count > 1)
                         //    badges.Add(new { eid = e.gid, badgecount = b.Count, tooltip = "" });
                         //else
-                            badges.Add(new { eid = e.gid, badgecount = b.Count, tooltip = b.First().Description });
+                        badges.Add(new { eid = e.gid, badgecount = b.Count, tooltip = b.First().Description });
                     }
                 }
                 if (badges != null && badges.Count > 0)
@@ -261,7 +262,7 @@ namespace MvcApplication2.Controllers
         public JsonResult getallbadges()
         {
 
-            Badges badgeSvc = new Badges(OrgId, AppName,currentUser);
+            Badges badgeSvc = new Badges(OrgId, AppName, currentUser);
             var badges = badgeSvc.GetAllBadgesFor(currentUser.gid);
             if (badges != null && badges.Count > 0)
             {
@@ -281,42 +282,44 @@ namespace MvcApplication2.Controllers
                     return Json(new List<Badge>(), JsonRequestBehavior.AllowGet);
 
             }
-                
+
         }
         // GET: /Employee/
         public ActionResult Index(string gid)
         {
-            string username = null;
-            Hashtable reporteeList = new Hashtable();
-            Hashtable locationReportees = new Hashtable();
-            Hashtable locationCycles = new Hashtable();
-            #region CommentedCodeForFetchingProfileImage
-            //try
-            //{
-            //    // Create the web request with the REST URL.
-            //    HttpWebRequest request =
-            //       WebRequest.Create("https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=aslam.shareef%40avalara.com&UA=0&size=HR96x96")
-            //       as HttpWebRequest;
-            //    // Submit the request.
-            //    using (HttpWebResponse resp = request.GetResponse() as HttpWebResponse)
-            //    {
-            //        // Take the response and save it as an image.
-            //        Bitmap image = new Bitmap(resp.GetResponseStream());
-            //        image.Save("aslam.jpg");
-            //    }
-            //}
-            //catch (Exception xc)
-            //{ }
-            //   var employees = db.Employees.Include(e => e.Employee1).Include(e => e.Organization).Include(e => e.Role1);
-            //return View(await employees.ToListAsync());     
-            #endregion
-            Guid g = new Guid();
-            if (string.IsNullOrEmpty(gid))
-                g = currentUser.gid;
-            else
-                g = Guid.Parse(gid);
-           
-                var e =db.Employees.FirstOrDefault(x => x.gid == g );
+            try
+            {
+                string username = null;
+                Hashtable reporteeList = new Hashtable();
+                Hashtable locationReportees = new Hashtable();
+                Hashtable locationCycles = new Hashtable();
+                #region CommentedCodeForFetchingProfileImage
+                //try
+                //{
+                //    // Create the web request with the REST URL.
+                //    HttpWebRequest request =
+                //       WebRequest.Create("https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=aslam.shareef%40avalara.com&UA=0&size=HR96x96")
+                //       as HttpWebRequest;
+                //    // Submit the request.
+                //    using (HttpWebResponse resp = request.GetResponse() as HttpWebResponse)
+                //    {
+                //        // Take the response and save it as an image.
+                //        Bitmap image = new Bitmap(resp.GetResponseStream());
+                //        image.Save("aslam.jpg");
+                //    }
+                //}
+                //catch (Exception xc)
+                //{ }
+                //   var employees = db.Employees.Include(e => e.Employee1).Include(e => e.Organization).Include(e => e.Role1);
+                //return View(await employees.ToListAsync());     
+                #endregion
+                Guid g = new Guid();
+                if (string.IsNullOrEmpty(gid))
+                    g = currentUser.gid;
+                else
+                    g = Guid.Parse(gid);
+
+                var e = db.Employees.FirstOrDefault(x => x.gid == g);
                 //if (e != null && e.UserId!=null)
                 //{
                 //    var ae = db.aspnet_Users.FirstOrDefault(x => x.UserId == e.UserId);
@@ -325,39 +328,54 @@ namespace MvcApplication2.Controllers
                 //        username = ae.LoweredUserName;
                 //    }
                 //}
-                EmployeeService empService = new EmployeeService(OrgId, AppName,currentUser);
+                EmployeeService empService = new EmployeeService(OrgId, AppName, currentUser);
                 var reportees = empService.GetReportees(g);
                 var locations = reportees.Select(x => x.OrgLocationId).Distinct().ToList();
                 foreach (var locs in locations)
                 {
-                    
-                    var locReps= reportees.Where(x => x.OrgLocationId == locs);
+
+                    var locReps = reportees.Where(x => x.OrgLocationId == locs);
                     Employee repG = null;
                     foreach (var reportee in locReps)
                     {
-                        if(repG==null)
+                        if (repG == null)
                         {
                             repG = reportee;
                         }
                         reporteeList[reportee.gid] = reportee;
                     }
-                    if(locReps!=null && locReps.Count()>0)
+                    if (locReps != null && locReps.Count() > 0 && locs.HasValue)
                     {
                         EmployeeEvaluationService err = new EmployeeEvaluationService(locs.Value, AppName, repG);
                         var listOfCycles = err.GetCurrentCycle();
                         locationCycles[db.OrgLocations.FirstOrDefault(x => x.Id == locs).LocationName] = listOfCycles;
-                        locationReportees[db.OrgLocations.FirstOrDefault(x=>x.Id==locs).LocationName] = reporteeList;
+                        locationReportees[db.OrgLocations.FirstOrDefault(x => x.Id == locs).LocationName] = reporteeList;
                     }
+                    else if (!locs.HasValue)
+                    {
+                        //EmployeeEvaluationService err = new EmployeeEvaluationService(locs.Value, AppName, repG);
+                        //var listOfCycles = err.GetCurrentCycle();
+                        //locationCycles[db.OrgLocations.FirstOrDefault(x => x.Id == locs).LocationName] = listOfCycles;
+                        locationReportees["Unassigned Locations"] = reporteeList;
+
+                    }
+
                     reporteeList = new Hashtable();
 
                 }
 
 
                 ViewBag.LocationCycles = locationCycles;
-            ViewBag.Me = currentUser;
-            ViewBag.reporteeid = gid;
-            ViewBag.CurrentReportee = e;
-            return View("MyTeam", locationReportees);
+                ViewBag.Me = currentUser;
+                ViewBag.reporteeid = gid;
+                ViewBag.CurrentReportee = e;
+                return View("MyTeam", locationReportees);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("ERROR : " + ex.Message + ex.StackTrace, ex);
+                return RedirectToAction("aboutme", "Employee");
+            }
         }
 
         // GET: /Employee/Details/5
@@ -402,14 +420,14 @@ namespace MvcApplication2.Controllers
 
             ViewBag.Manager = new SelectList(db.Employees, "gid", "FirstName", employee.Manager);
             ViewBag.OrgId = new SelectList(db.Organizations, "Id", "Name", employee.OrgId);
-           // ViewBag.Role = new SelectList(db.Roles, "Id", "Role1", employee.Role);
+            // ViewBag.Role = new SelectList(db.Roles, "Id", "Role1", employee.Role);
             return View(employee);
         }
 
         // GET: /Employee/Edit/5
         public async Task<ActionResult> Edit(Guid? id)
         {
-            
+
             if (id == null)
             {
                 id = currentUser.gid;
@@ -445,7 +463,7 @@ namespace MvcApplication2.Controllers
             }
             ViewBag.Manager = new SelectList(db.Employees, "gid", "FirstName", employee.Manager);
             ViewBag.OrgId = new SelectList(db.Organizations, "Id", "Name", employee.OrgId);
-          //  ViewBag.Role = new SelectList(db.Roles, "Id", "Role1", employee.Role);
+            //  ViewBag.Role = new SelectList(db.Roles, "Id", "Role1", employee.Role);
             return View(employee);
         }
 
@@ -453,20 +471,20 @@ namespace MvcApplication2.Controllers
         public ActionResult EditForEmployee(Employee e)
         {
             bool updatecurrentuser = e.gid == currentUser.gid;
-            
 
-            Employee emp = db.Employees.FirstOrDefault(x=>x.gid==e.gid);
+
+            Employee emp = db.Employees.FirstOrDefault(x => x.gid == e.gid);
             if (!string.IsNullOrEmpty(e.FirstName))
-            emp.FirstName = e.FirstName;
+                emp.FirstName = e.FirstName;
             if (!string.IsNullOrEmpty(e.LastName))
-            emp.LastName = e.LastName;
+                emp.LastName = e.LastName;
             if (!string.IsNullOrEmpty(e.Phone))
-            emp.Phone = e.Phone;
+                emp.Phone = e.Phone;
             if (!string.IsNullOrEmpty(e.Mobile))
-            emp.Mobile = e.Mobile;
+                emp.Mobile = e.Mobile;
             db.SaveChanges();
             string querystring = "";
-            if(updatecurrentuser)
+            if (updatecurrentuser)
                 currentUser = emp;
             TempData["msg"] = "Saved successfully!";
             if (!string.IsNullOrEmpty(Request.QueryString["id"]))
@@ -482,20 +500,20 @@ namespace MvcApplication2.Controllers
             if (e.Manager.HasValue)
                 emp.Manager = e.Manager;
             if (!string.IsNullOrEmpty(e.Department))
-            emp.Department = e.Department;
+                emp.Department = e.Department;
             if (!string.IsNullOrEmpty(e.Designation))
                 emp.Designation = e.Designation;
             if (e.Reviewer.HasValue)
-                emp.Reviewer= e.Reviewer;
-            if(e.DoB.HasValue)
+                emp.Reviewer = e.Reviewer;
+            if (e.DoB.HasValue)
                 emp.DoB = e.DoB;
             if (e.DoJ.HasValue)
                 emp.DoJ = e.DoJ;
-            if(!string.IsNullOrEmpty(Request.Form["Active"]))
+            if (!string.IsNullOrEmpty(Request.Form["Active"]))
                 emp.Active = Request.Form["Active"].ToLower() == "on" || Request.Form["Active"].ToLower() == "checked" || Request.Form["Active"].ToLower() == "true";
             db.SaveChanges();
             string querystring = "";
-            if(!string.IsNullOrEmpty(Request.QueryString["id"]))
+            if (!string.IsNullOrEmpty(Request.QueryString["id"]))
                 querystring = "?id=" + Request.QueryString["id"];
             TempData["msg"] = "Saved successfully!";
             if (updatecurrentuser)
