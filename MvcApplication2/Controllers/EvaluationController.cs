@@ -316,11 +316,11 @@ namespace MvcApplication2.Controllers
             var c = evaluationViewModel.Goals.FirstOrDefault();
             if (c != null)
             {
-                if (c.Status == GoalStatus.PUBLISHED || c.Status == GoalStatus.MANAGER_EVAL_PUBLISHED)
-                {
-                    evaluationViewModel.IsEditable = false;
+                //if (c.Status == GoalStatus.PUBLISHED || c.Status == GoalStatus.MANAGER_EVAL_PUBLISHED)
+                //{
+                    evaluationViewModel.IsEditable = c.Status >= GoalStatus.EMPLOYEE_EVAL_PUBLISHED && c.Status <= GoalStatus.MANAGER_EVAL_SAVED;
 
-                }
+                //}
             }
             if (currentUser.gid.ToString() != evaluationViewModel.EmployeeDetails.Manager.ToString())
                 evaluationViewModel.IsEditable = false;

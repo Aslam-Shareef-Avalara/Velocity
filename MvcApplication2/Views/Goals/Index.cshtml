@@ -81,7 +81,7 @@
         @if (ViewBag.FixedGoals != true)
         {
             <li onclick="displaystatus('')" @(Model == null ? "class=active" : "") data-status="" data-pecycleid="0"><a data-toggle="tab" href="#_0">Past Evaluations</a></li>
-            <li onclick="loadactivefeedback(@ViewBag.CurrentCycle.Id)" data-status="" data-pecycleid="@ViewBag.CurrentCycle.Id"><a data-toggle="tab" href="#_FB">Active Feedback</a></li>
+            <li onclick="loadactivefeedback(@ViewBag.CurrentCycle.Id)" data-status="" data-pecycleid="@ViewBag.CurrentCycle.Id"><a data-toggle="tab" href="#_FB">Feedback/ Comments</a></li>
 
         }
         @if (Model != null && Model.Count > 0)
