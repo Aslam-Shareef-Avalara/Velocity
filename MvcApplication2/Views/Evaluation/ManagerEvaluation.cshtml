@@ -558,15 +558,13 @@
         }
     }
     function saveoverallreviewcomment(empid)
-    {
-
-
-        if($("#overall_manager_grading").val()=="" || $("#overall_manager_grading").val()==null)
+    {        
+        if($("#overall_manager_grading").val()=="" || $("#overall_manager_grading").val()==null || $("#overall_manager_grading").val()=="-- Select One --")
         {
             alert("Please give an overall grade!");
             continuePublishing = false;
             return false;
-        }
+        }        
         var overallcomment =  $("#overallreviewcomment").val();
         $.post("@Url.Content("~/evaluation/saveoverallreviewcomment")",{"overallcomment":overallcomment,"empid":empid,"overallrating":$("#overall_manager_grading").val()},function(r){
             if(!r.status)
